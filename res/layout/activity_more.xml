@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="match_parent"
+	android:layout_height="match_parent" android:layout_gravity="top"
+	android:gravity="center_horizontal" android:background="#FFFFFFFF">
+
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:gravity="center"
+		android:background="@drawable/more_titlebar_bg">
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_gravity="center"
+			android:text="@string/activity_more" android:textSize="18sp"
+			android:textColor="#FF000000" />
+	</LinearLayout>
+
+	<ScrollView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_weight="1"
+		android:scrollbars="vertical">
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:gravity="center_horizontal"
+			android:orientation="vertical">
+			
+			<LinearLayout android:orientation="horizontal"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:layout_marginTop="10.0dp" android:clickable="true"
+				android:background="@drawable/more_list_above">
+				<TextView style="@style/more_list_font" android:text="其他功能..." />
+				<ImageView style="@style/more_list_triangle"
+					android:background="@drawable/more_list_triangle" />
+			</LinearLayout>
+			
+			<LinearLayout android:id="@+id/more_list_clean_cache"
+				android:orientation="horizontal" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:clickable="true"
+				android:background="@drawable/more_list_mid">
+				<TextView android:id="@+id/more_list_clean_cache_textview"
+					style="@style/more_list_font" android:text="清除缓存" />
+				<ImageView style="@style/more_list_triangle"
+					android:background="@drawable/more_list_triangle" />
+			</LinearLayout>
+			
+			<LinearLayout android:orientation="horizontal"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:clickable="true" android:background="@drawable/more_list_below">
+				<TextView style="@style/more_list_font" android:text="其他功能..." />
+				<ImageView style="@style/more_list_triangle"
+					android:background="@drawable/more_list_triangle" />
+			</LinearLayout>
+			
+		</LinearLayout>
+	</ScrollView>
+</LinearLayout>
+

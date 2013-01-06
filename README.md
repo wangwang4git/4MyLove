@@ -1,4 +1,5 @@
-4MyLove
-=======
+﻿# 4MyLove
 
-Create a better future.
+## 版本 **v0.1**
+
+#### 注意本文档必须采用 `utf-8` 编码，否则中文会乱码显示！

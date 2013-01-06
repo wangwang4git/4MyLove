@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFAFAFA"
+    android:minHeight="60dip"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/top_ten_relativeLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/top_ten_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="50dip"
+            android:minHeight="50dip"
+            android:textColor="#FF000000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/top_ten_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/top_ten_title"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dip"
+            android:background="#FFFAED9E"
+            android:textColor="#FF888888"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_ten_relativeLayout2"
+        android:background="#FFFAF8E3"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/top_ten_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:textColor="#FF888888"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/top_ten_boardname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dip"
+            android:textColor="#FF888888"
+            android:textSize="10sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

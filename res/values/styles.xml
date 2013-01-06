@@ -1,0 +1,23 @@
+<resources>
+
+	<style name="AppTheme" parent="android:Theme.Light" />
+	
+	<!-- MoreActivity -->
+	<style name="more_list_font">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_weight">1</item>
+		<item name="android:layout_gravity">center</item>
+		<item name="android:layout_marginLeft">10.0dp</item>
+		<item name="android:textColor">#FF666666</item>
+		<item name="android:textSize">16.0sp</item>
+	</style>
+	<style name="more_list_triangle">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_gravity">center_vertical</item>
+		<item name="android:layout_marginRight">15.0dp</item>
+	</style>
+	<!-- MoreActivity -->
+	
+</resources>

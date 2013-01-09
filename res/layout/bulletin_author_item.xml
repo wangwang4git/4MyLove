@@ -16,7 +16,6 @@
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:contentDescription="@string/bulletin_author_icon_desc"
             android:src="@drawable/ic_launcher" />
 
         <LinearLayout

@@ -11,7 +11,7 @@ import android.view.KeyEvent;
 import android.widget.ExpandableListView;
 
 import com.bbs.whu.R;
-import com.bbs.whu.adapter.BoardListAdapter;
+import com.bbs.whu.adapter.BoardAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.BoardBean;
 import com.bbs.whu.model.board.Board;
@@ -21,7 +21,7 @@ import com.bbs.whu.utils.MyXMLParseUtils;
 
 public class BoardActivity extends Activity {
 	private ExpandableListView mExpandableListView;
-	private BoardListAdapter mAdapter;
+	private BoardAdapter mAdapter;
 	// 一级列表数据
 	private List<BoardBean> groups = new ArrayList<BoardBean>();
 	// 二级列表数据
@@ -65,7 +65,7 @@ public class BoardActivity extends Activity {
 	 */
 	private void initAdapter() {
 		// 创建适配器
-		mAdapter = new BoardListAdapter(this, groups, childs);
+		mAdapter = new BoardAdapter(this, groups, childs);
 		mExpandableListView.setAdapter(mAdapter);
 	}
 

@@ -10,13 +10,13 @@ import android.widget.TextView;
  */
 public class BulletinAuthorViewHolder {
 	// 帖子标题
-	TextView holderBulletinContentTitle;
+	TextView holderBulletinAuthorTitle;
 	// 帖子作者
-	TextView holderBulletinContentAuthor;
+	TextView holderBulletinAuthorAuthor;
 	// 帖子发表时间
-	TextView holderBulletinContentDateTime;
+	TextView holderBulletinAuthorDateTime;
 	// 帖子内容
-	TextView holderBulletinContentText;
+	TextView holderBulletinAuthorText;
 	// 帖子来源
-	TextView holderBulletinContentSource;
+	TextView holderBulletinAuthorSource;
 }

@@ -3,6 +3,7 @@ package com.bbs.whu.adapter;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,10 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bbs.whu.R;
+import com.bbs.whu.activity.TopicActivity;
 import com.bbs.whu.model.BoardBean;
 import com.bbs.whu.model.board.Board;
 
-public class BoardListAdapter extends BaseExpandableListAdapter {
+public class BoardAdapter extends BaseExpandableListAdapter {
 	private Context context;
 	private List<BoardBean> groups;
 	private List<List<Board>> childs;
@@ -28,7 +30,7 @@ public class BoardListAdapter extends BaseExpandableListAdapter {
 	 * @param childs
 	 *            二级列表数据源
 	 */
-	public BoardListAdapter(Context context, List<BoardBean> groups,
+	public BoardAdapter(Context context, List<BoardBean> groups,
 			List<List<Board>> childs) {
 		super();
 		this.context = context;
@@ -51,9 +53,9 @@ public class BoardListAdapter extends BaseExpandableListAdapter {
 	public View getChildView(int groupPosition, int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
 
-		final BoardListChildViewHolder holder;
+		final BoardChildViewHolder holder;
 		if (convertView == null) {
-			holder = new BoardListChildViewHolder();
+			holder = new BoardChildViewHolder();
 			convertView = LayoutInflater.from(context).inflate(
 					R.layout.board_child_item, null);
 			// 获取列表元素中的控件对象
@@ -66,7 +68,7 @@ public class BoardListAdapter extends BaseExpandableListAdapter {
 			// 设置控件集到convertView
 			convertView.setTag(holder);
 		} else {
-			holder = (BoardListChildViewHolder) convertView.getTag();
+			holder = (BoardChildViewHolder) convertView.getTag();
 		}
 
 		String nameStr = ((Board) getChild(groupPosition, childPosition))
@@ -83,16 +85,11 @@ public class BoardListAdapter extends BaseExpandableListAdapter {
 		// 添加点击响应事件
 		convertView.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				// // 跳转到帖子列表界面
-				// Intent mIntent = new Intent(context,
-				// BulletinListActivity.class);
-				// // 添加参数 app=topics&board=PieFriends&page=1
-				// mIntent.putExtra("app", "topics");
-				// // mIntent.putExtra("board",
-				// // holder.holderBoardChildEnglishname.getText().toString());
-				// mIntent.putExtra("board", englishnameStr);
-				// mIntent.putExtra("page", "1");// 首次进入帖子列表显示第一页
-				// context.startActivity(mIntent);
+				// 跳转到帖子列表界面
+				Intent mIntent = new Intent(context, TopicActivity.class);
+				// 添加参数 app=topics&board=PieFriends&page=1
+				mIntent.putExtra("board", englishnameStr);
+				context.startActivity(mIntent);
 			}
 		});
 

@@ -12,7 +12,7 @@ import android.os.Message;
 import android.view.KeyEvent;
 
 import com.bbs.whu.R;
-import com.bbs.whu.adapter.TopTenListAdapter;
+import com.bbs.whu.adapter.TopTenAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.TopTenBean;
 import com.bbs.whu.utils.MyBBSRequest;
@@ -30,7 +30,7 @@ import com.bbs.whu.xlistview.XListView.IXListViewListener;
  */
 public class TopTenActivity extends Activity implements IXListViewListener {
 	private XListView mListView;
-	private TopTenListAdapter mAdapter;
+	private TopTenAdapter mAdapter;
 	private ArrayList<TopTenBean> items = new ArrayList<TopTenBean>();
 	// 接收请求数据的handler
 	Handler mHandler;
@@ -73,7 +73,7 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 	 */
 	private void initAdapter() {
 		// 创建适配器
-		mAdapter = new TopTenListAdapter(this, items, R.layout.top_ten_item);
+		mAdapter = new TopTenAdapter(this, items, R.layout.top_ten_item);
 		mListView.setAdapter(mAdapter);
 	}
 

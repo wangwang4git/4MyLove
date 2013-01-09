@@ -2,7 +2,7 @@ package com.bbs.whu.adapter;
 
 import android.widget.TextView;
 
-public final class BoardListChildViewHolder {
+public final class BoardChildViewHolder {
 	// ÖĞÎÄÃû×Ö
 	public TextView holderBoardChildName;
 	// ±àºÅ

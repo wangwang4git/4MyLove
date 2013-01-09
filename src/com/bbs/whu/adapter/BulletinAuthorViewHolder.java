@@ -8,7 +8,7 @@ import android.widget.TextView;
  * @author double
  * 
  */
-public class BulletinListAuthorViewHolder {
+public class BulletinAuthorViewHolder {
 	// 帖子标题
 	TextView holderBulletinContentTitle;
 	// 帖子作者

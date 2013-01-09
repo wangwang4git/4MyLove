@@ -20,13 +20,13 @@ import com.bbs.whu.model.BulletinBean;
  * 
  */
 
-public class BulletinListAdapter extends MyBaseAdapter {
+public class BulletinAdapter extends MyBaseAdapter {
 
 	// 定义不同Item视图的标志
 	public static final int AUTHOR_ITEM = 0;
 	public static final int COMMENT_ITEM = 1;
 
-	public BulletinListAdapter(Context context, ArrayList<BulletinBean> items,
+	public BulletinAdapter(Context context, ArrayList<BulletinBean> items,
 			int rLayoutList) {
 		super(context, items, rLayoutList);
 	}
@@ -67,7 +67,7 @@ public class BulletinListAdapter extends MyBaseAdapter {
 
 		if (getItemViewType(position) == AUTHOR_ITEM) {
 			// 获取“帖子作者”部分的控件
-			BulletinListAuthorViewHolder holder = new BulletinListAuthorViewHolder();
+			BulletinAuthorViewHolder holder = new BulletinAuthorViewHolder();
 			if (convertView == null) {
 				convertView = LayoutInflater.from(context).inflate(
 						R.layout.bulletin_author_item, null);
@@ -84,7 +84,7 @@ public class BulletinListAdapter extends MyBaseAdapter {
 				// 设置控件集到convertView
 				convertView.setTag(holder);
 			} else {
-				holder = (BulletinListAuthorViewHolder) convertView.getTag();
+				holder = (BulletinAuthorViewHolder) convertView.getTag();
 			}
 			// 填充控件
 			holder.holderBulletinContentTitle.setText(title);
@@ -95,7 +95,7 @@ public class BulletinListAdapter extends MyBaseAdapter {
 
 		} else if (getItemViewType(position) == COMMENT_ITEM) {
 			// 获取“回复”部分的控件
-			BulletinListCommentViewHolder holder = new BulletinListCommentViewHolder();
+			BulletinCommentViewHolder holder = new BulletinCommentViewHolder();
 			if (convertView == null) {
 				convertView = LayoutInflater.from(context).inflate(
 						R.layout.bulletin_comment_item, null);
@@ -112,7 +112,7 @@ public class BulletinListAdapter extends MyBaseAdapter {
 				// 设置控件集到convertView
 				convertView.setTag(holder);
 			} else {
-				holder = (BulletinListCommentViewHolder) convertView.getTag();
+				holder = (BulletinCommentViewHolder) convertView.getTag();
 			}
 			// 填充控件
 			holder.holderCommentAuthor.setText(author);

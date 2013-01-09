@@ -11,7 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.bbs.whu.R;
-import com.bbs.whu.adapter.BulletinListAdapter;
+import com.bbs.whu.adapter.BulletinAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.BulletinBean;
 import com.bbs.whu.model.bulletin.Page;
@@ -44,7 +44,7 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 	// 是否强制从网络获取数据
 	boolean isForcingWebGet = false;
 	// 帖子回复列表适配器
-	private BulletinListAdapter mAdapter;
+	private BulletinAdapter mAdapter;
 	// 帖子回复列表
 	private ArrayList<BulletinBean> items = new ArrayList<BulletinBean>();
 	// 接收请求数据的handler
@@ -83,7 +83,7 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 	 */
 	private void initAdapter() {
 		// 创建适配器
-		mAdapter = new BulletinListAdapter(this, items,
+		mAdapter = new BulletinAdapter(this, items,
 				R.layout.bulletin_comment_item);
 		mListView.setAdapter(mAdapter);
 	}

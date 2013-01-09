@@ -108,7 +108,8 @@ public class MyRegexParseUtils {
 
 	// 获取帖子主体信息
 	static public String getBody(String content) {
-		return getBody(content, false).replaceAll("\\\\n", "\n").replaceAll("\\\\/", "/");
+		return getBody(content, false).replaceAll("\\\\n", "\n").replaceAll(
+				"\\\\/", "/");
 	}
 
 	static public String getBody(String content, boolean flag) {
@@ -123,7 +124,8 @@ public class MyRegexParseUtils {
 
 	// 获取帖子回复部分
 	static public String getReply(String content) {
-		return getReply(content, false).replaceAll("\\\\n", "\n").replaceAll("\\\\/", "/");
+		return getReply(content, false).replaceAll("\\\\n", "\n").replaceAll(
+				"\\\\/", "/");
 	}
 
 	static public String getReply(String content, boolean flag) {
@@ -209,5 +211,13 @@ public class MyRegexParseUtils {
 			contents.add(content);
 		}
 		return contents;
+	}
+
+	// 获取二级版块信息
+	final static private String TWO_LEVEL_BOARD_REGEX_STRING = "<board[^<>]*?hasChildren=true >(.*?)</board>";
+
+	// 去除二级目录信息
+	static public String delTwoLevelBoard(String content) {
+		return content.replaceAll(TWO_LEVEL_BOARD_REGEX_STRING, "$1");
 	}
 }

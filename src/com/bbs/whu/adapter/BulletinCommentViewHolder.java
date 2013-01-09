@@ -9,7 +9,7 @@ import android.widget.TextView;
  * @author double
  * 
  */
-public class BulletinListCommentViewHolder {
+public class BulletinCommentViewHolder {
 	// 评论作者
 	TextView holderCommentAuthor;
 	// 评论内容

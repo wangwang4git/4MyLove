@@ -2,14 +2,19 @@ package com.bbs.whu.adapter;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bbs.whu.R;
+import com.bbs.whu.activity.BulletinReplyActivity;
 import com.bbs.whu.model.BulletinBean;
 
 /**
@@ -51,7 +56,7 @@ public class BulletinAdapter extends MyBaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		// 标题
 		String title = ((BulletinBean) mItems.get(position)).getTitle();
 		// 作者
@@ -123,6 +128,65 @@ public class BulletinAdapter extends MyBaseAdapter {
 			holder.holderBulletinCommentContent.setText(text);
 			holder.holderBulletinCommentSource.setText(source);
 		}
+		// 设置长按动作
+		convertView.setOnLongClickListener(new OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				final String[] choice = { "回复本楼", "回复楼主" };
+				// 弹出回复对话框
+				new AlertDialog.Builder(context)
+						.setTitle("列表框")
+						.setItems(choice,
+								new DialogInterface.OnClickListener() {
+									// 响应列表的点击事件
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// 处理
+										processLongClick(which, position);
+									}
+								}).show();
+				return false;
+			}
+		});
 		return convertView;
+	}
+
+	/**
+	 * 处理长按的响应事件
+	 * 
+	 * @param which
+	 *            对话框中按下的选项序号
+	 * @param position
+	 *            长按的数据在列表中的序号
+	 */
+
+	private void processLongClick(int which, int position) {
+		switch (which) {
+		case 0:
+			String itemBoard = ((BulletinBean) mItems.get(position)).getBoard();
+			String itemId = ((BulletinBean) mItems.get(position)).getId();
+			String itemTitle = ((BulletinBean) mItems.get(position)).getTitle();
+			String itemAuthor = ((BulletinBean) mItems.get(position))
+					.getAuthor();
+			String itemBody = ((BulletinBean) mItems.get(position)).getBody();
+			String itemSign = ((BulletinBean) mItems.get(position)).getSign();
+
+			// 跳转到帖子回复界面
+			Intent intent = new Intent(context, BulletinReplyActivity.class);
+
+			// 添加参数
+			intent.putExtra("board", itemBoard);
+			intent.putExtra("id", itemId);
+			intent.putExtra("title", itemTitle);
+			intent.putExtra("author", itemAuthor);
+			intent.putExtra("content", itemBody);
+			intent.putExtra("signature", itemSign);
+
+			// 启动Activity。并传递一个intend对象
+			context.startActivity(intent);
+			break;
+		case 1:
+			break;
+		}
 	}
 }

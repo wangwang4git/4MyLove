@@ -178,6 +178,13 @@ public class MyBBSRequest {
 		// 添加post请求参数
 		RequestParams params = new RequestParams();
 		for (int i = 0; i < keys.size(); ++i) {
+			// try {
+			// params.put(new String(keys.get(i).getBytes("GBK"), "utf-8"),
+			// new String(values.get(i).getBytes("GBK"), "utf-8"));
+			//
+			// } catch (UnsupportedEncodingException e) {
+			// e.printStackTrace();
+			// }
 			params.put(keys.get(i), values.get(i));
 		}
 		// post请求

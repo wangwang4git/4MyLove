@@ -1,6 +1,9 @@
 package com.bbs.whu.utils;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.cookie.Cookie;
 
 import android.content.Context;
 
@@ -29,6 +32,7 @@ public class MyBBSRequest {
 		MyHttpClient.get(url, new AsyncHttpResponseHandler() {
 			@Override
 			public void onSuccess(String response) {
+				System.out.println("logout success");
 				// 发送成功内容
 				MessageHandlerManager.getInstance().sendMessage(
 						MyConstants.REQUEST_SUCCESS, (Object) response,
@@ -37,6 +41,9 @@ public class MyBBSRequest {
 
 			@Override
 			public void onFailure(Throwable error, String content) {
+				System.out.println("logout failed");
+				System.out.println(error);
+				System.out.println(content);
 				// 发送失败消息
 				MessageHandlerManager.getInstance().sendMessage(
 						MyConstants.REQUEST_FAIL, activityName);
@@ -108,6 +115,12 @@ public class MyBBSRequest {
 		final String cacheFileName = getCacheFileName(url, keys, values);
 		// 获取Cookie
 		PersistentCookieStore cookieStore = getCookieStore(context);
+
+		List<Cookie> cookies = cookieStore.getCookies();
+		for (int i = 0; i < cookies.size(); i++)
+			System.out.println("name: " + cookies.get(i).getName()
+					+ ", value: " + cookies.get(i).getValue());
+
 		MyHttpClient.setCookieStore(cookieStore);
 		// 添加get请求参数
 		RequestParams params = new RequestParams();

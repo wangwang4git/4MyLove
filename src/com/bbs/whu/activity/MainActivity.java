@@ -6,6 +6,8 @@ import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.bbs.whu.R;
+import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 
@@ -27,6 +30,8 @@ import com.bbs.whu.utils.MyConstants;
  */
 public class MainActivity extends TabActivity {
 	TabHost tabHost;
+	// 接收请求数据的handler
+	Handler mHandler;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -36,13 +41,14 @@ public class MainActivity extends TabActivity {
 		tabHost = getTabHost();
 		// 添加tab
 		setTabs();
+		// 初始化handler
+		initHandler();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		// 退出登陆
-		MyBBSRequest.mGet(MyConstants.LOG_OUT_URL, "MainActivity");
+
 	}
 
 	@Override
@@ -101,18 +107,40 @@ public class MainActivity extends TabActivity {
 		builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				// 退出登陆
+				MyBBSRequest.mGet(MyConstants.LOG_OUT_URL, "MainActivity");
+				// 对话框退出
 				dialog.dismiss();
-				// 结束程序
-				android.os.Process.killProcess(android.os.Process.myPid());
 			}
 		});
 		builder.setNegativeButton("取消",
 				new android.content.DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						// 对话框退出
 						dialog.dismiss();
 					}
 				});
 		builder.create().show();
+	}
+
+	/**
+	 * 初始化handler
+	 */
+	private void initHandler() {
+		// 初始化handler
+		mHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				// 结束程序
+				android.os.Process.killProcess(android.os.Process.myPid());
+				return;
+			}
+		};
+		// 注册handler
+		MessageHandlerManager.getInstance().register(mHandler,
+				MyConstants.REQUEST_SUCCESS, "MainActivity");
+		MessageHandlerManager.getInstance().register(mHandler,
+				MyConstants.REQUEST_FAIL, "MainActivity");
 	}
 }

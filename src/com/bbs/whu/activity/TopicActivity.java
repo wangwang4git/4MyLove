@@ -11,70 +11,61 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.bbs.whu.R;
-import com.bbs.whu.adapter.BulletinAdapter;
+import com.bbs.whu.adapter.TopicAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
-import com.bbs.whu.model.BulletinBean;
-import com.bbs.whu.model.bulletin.Page;
+import com.bbs.whu.model.TopicBean;
+import com.bbs.whu.model.topic.Topics;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
-import com.bbs.whu.utils.MyRegexParseUtils;
 import com.bbs.whu.utils.MyXMLParseUtils;
 import com.bbs.whu.xlistview.XListView;
 import com.bbs.whu.xlistview.XListView.IXListViewListener;
 
 /**
- * 帖子详情界面，
- * 可通过点击“刷新”，刷新帖子，
- * 可通过点击“显示更多”加载更多，按页加载
+ * 分类中的版块帖子列表界面
  * 
- * @author double
+ * @author ljp
  * 
  */
-public class BulletinActivity extends Activity implements IXListViewListener {
-	/* 帖子版块英文名与帖子ID由上一级Activity传入，用于请求帖子数据 */
-	// 帖子版块英文名
-	String board;
-	// 帖子ID
-	String groupid;
+
+public class TopicActivity extends Activity implements IXListViewListener {
+	/* 帖子版块英文名由上一级Activity传入，用于请求列表数据 */
+	private String board;// 版块英文名字
 	/* 帖子的页数用于加载内容，web端数据分页传入 */
-	// 帖子当前页数
-	int currentPage = 1;
-	// 帖子总页数
-	int totalPage;
+	int currentPage = 1;// 当前页号
 	// 是否强制从网络获取数据
 	boolean isForcingWebGet = false;
-	// 帖子回复列表适配器
-	private BulletinAdapter mAdapter;
-	// 帖子回复列表
-	private ArrayList<BulletinBean> items = new ArrayList<BulletinBean>();
+	// 帖子列表
+	private XListView mListView;
+	// 帖子列表适配器
+	private TopicAdapter mAdapter;
+	// 帖子列表数据
+	private ArrayList<TopicBean> items = new ArrayList<TopicBean>();
 	// 接收请求数据的handler
 	Handler mHandler;
-	// 回复列表
-	private XListView mListView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_bulletin);
+		setContentView(R.layout.activity_top_ten);
 		// 获取传入的参数
 		board = getIntent().getStringExtra("board");
-		groupid = getIntent().getStringExtra("groupid");
 		// 初始化控件
 		initView();
 		// 初始化适配器
 		initAdapter();
 		// 初始化handler
 		initHandler();
-		// 请求数据
-		getBulletin();
+		// 请求帖子列表数据
+		getTopic();
 	}
 
 	/**
 	 * 初始化控件
 	 */
 	private void initView() {
-		// 回复列表
-		mListView = (XListView) findViewById(R.id.bulletin_listview);
+		// 帖子列表
+		mListView = (XListView) findViewById(R.id.topten_listview);
 		mListView.setXListViewListener(this);
 	}
 
@@ -83,8 +74,7 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 	 */
 	private void initAdapter() {
 		// 创建适配器
-		mAdapter = new BulletinAdapter(this, items,
-				R.layout.bulletin_comment_item);
+		mAdapter = new TopicAdapter(this, items, R.layout.topic_item, board);
 		mListView.setAdapter(mAdapter);
 	}
 
@@ -105,8 +95,8 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 					// 获取数据后停止刷新
 					mListView.stopRefresh();
 					mListView.stopLoadMore();
-					// 刷新帖子界面
-					refreshBulletin(res);
+					// 刷新列表
+					refreshBulletinList(res);
 					break;
 				case MyConstants.REQUEST_FAIL:
 					break;
@@ -116,51 +106,50 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 		};
 		// 注册handler
 		MessageHandlerManager.getInstance().register(mHandler,
-				MyConstants.REQUEST_SUCCESS, "BulletinActivity");
+				MyConstants.REQUEST_SUCCESS, "TopicActivity");
 		MessageHandlerManager.getInstance().register(mHandler,
-				MyConstants.REQUEST_FAIL, "BulletinActivity");
+				MyConstants.REQUEST_FAIL, "TopicActivity");
 	}
 
 	/**
-	 * 请求帖子详情数据
+	 * 请求帖子列表数据
+	 * 
 	 */
-	private void getBulletin() {
+
+	private void getTopic() {
 		// 添加get参数
 		ArrayList<String> keys = new ArrayList<String>();
 		ArrayList<String> values = new ArrayList<String>();
 		keys.add("app");
-		values.add("read");
+		values.add("topics");
 		keys.add("board");
 		values.add(board);
-		keys.add("GID");
-		values.add(groupid);
 		keys.add("page");
 		values.add(Integer.toString(currentPage));
+
 		// 请求数据
-		MyBBSRequest.mGet(MyConstants.GET_URL, keys, values,
-				"BulletinActivity", isForcingWebGet, this);
+		MyBBSRequest.mGet(MyConstants.GET_URL, keys, values, "TopicActivity",
+				isForcingWebGet, this);
 	}
 
 	/**
-	 * 刷新帖子界面
+	 * 刷新列表
 	 * 
 	 * @param res
 	 *            数据
 	 */
-	private void refreshBulletin(String res) {
+	private void refreshBulletinList(String res) {
 		// XML反序列化
-		Page page = MyXMLParseUtils.readXml2Page(res);
+		Topics topics = MyXMLParseUtils.readXml2Topics(res);
 		// 获得当前页号
-		currentPage = Integer.parseInt(page.getNum().getAttributeValue());
-		// 获得页总数
-		totalPage = Integer.parseInt(page.getTotal().getAttributeValue());
-
-		// 如果是最后一页，则禁用“显示更多”
-		if (currentPage == totalPage)
+		currentPage = Integer.parseInt(topics.getPage().toString());
+		// 最多加载10页
+		if (currentPage == 10) {
+			// 禁用“显示更多”
 			mListView.setPullLoadEnable(false);
-
-		// 获取帖子内容并添加
-		items.addAll(MyRegexParseUtils.getContentList(page));
+		}
+		// 获取帖子列表并添加
+		items.addAll(topics.getTopics());
 		// 刷新ListView
 		mAdapter.notifyDataSetChanged();
 		// 当前页增加一页，便于下次申请
@@ -171,14 +160,14 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 	public void onRefresh() {
 		// 将当前页设为首页
 		currentPage = 1;
-		// 清空数据
+		// 清空原有数据
 		items.clear();
-		// 启用强制从网络请求帖子详情数据
+		// 强制从网络请求帖子列表的数据
 		isForcingWebGet = true;
 		// 禁用“显示更多”
 		mListView.setPullLoadEnable(false);
 		// 请求数据
-		getBulletin();
+		getTopic();
 		// 显示刷新时间
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm",
 				Locale.SIMPLIFIED_CHINESE);
@@ -189,6 +178,6 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 	@Override
 	public void onLoadMore() {
 		// 请求数据
-		getBulletin();
+		getTopic();
 	}
 }

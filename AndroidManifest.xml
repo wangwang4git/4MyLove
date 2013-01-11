@@ -35,7 +35,9 @@
         <activity android:name="com.bbs.whu.activity.MessageActivity" />
         <activity android:name="com.bbs.whu.activity.MoreActivity" />
         <activity android:name="com.bbs.whu.activity.TopTenActivity" />
+        <activity android:name="com.bbs.whu.activity.TopicActivity" />
         <activity android:name="com.bbs.whu.activity.BulletinActivity" />
+        <activity android:name="com.bbs.whu.activity.BulletinReplyActivity" />
     </application>
 
 </manifest>

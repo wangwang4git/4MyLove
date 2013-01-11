@@ -132,6 +132,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 		values.add(passwordEditText.getText().toString());
 		keys.add("webtype");
 		values.add("wforum");
+		// 此参数可以让用户多次登录
+		keys.add("kick_multi");
+		values.add("1");
 		// post请求
 		MyBBSRequest.mPost(MyConstants.LOGIN_URL, keys, values,
 				"LoginActivity", this);

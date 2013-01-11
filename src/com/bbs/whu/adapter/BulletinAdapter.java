@@ -157,36 +157,47 @@ public class BulletinAdapter extends MyBaseAdapter {
 	 * @param which
 	 *            对话框中按下的选项序号
 	 * @param position
-	 *            长按的数据在列表中的序号
+	 *            长按的item在列表中的序号
 	 */
 
 	private void processLongClick(int which, int position) {
 		switch (which) {
 		case 0:
-			String itemBoard = ((BulletinBean) mItems.get(position)).getBoard();
-			String itemId = ((BulletinBean) mItems.get(position)).getId();
-			String itemTitle = ((BulletinBean) mItems.get(position)).getTitle();
-			String itemAuthor = ((BulletinBean) mItems.get(position))
-					.getAuthor();
-			String itemBody = ((BulletinBean) mItems.get(position)).getBody();
-			String itemSign = ((BulletinBean) mItems.get(position)).getSign();
-
-			// 跳转到帖子回复界面
-			Intent intent = new Intent(context, BulletinReplyActivity.class);
-
-			// 添加参数
-			intent.putExtra("board", itemBoard);
-			intent.putExtra("id", itemId);
-			intent.putExtra("title", itemTitle);
-			intent.putExtra("author", itemAuthor);
-			intent.putExtra("content", itemBody);
-			intent.putExtra("signature", itemSign);
-
-			// 启动Activity。并传递一个intend对象
-			context.startActivity(intent);
+			goToBulletinReply(position);
 			break;
 		case 1:
+			// 回复楼主即回复第一个item
+			goToBulletinReply(0);
 			break;
 		}
+	}
+
+	/**
+	 * 跳转到评论界面
+	 * 
+	 * @param position
+	 *            长按的数据在列表中的序号
+	 */
+	private void goToBulletinReply(int position) {
+		String itemBoard = ((BulletinBean) mItems.get(position)).getBoard();
+		String itemId = ((BulletinBean) mItems.get(position)).getId();
+		String itemTitle = ((BulletinBean) mItems.get(position)).getTitle();
+		String itemAuthor = ((BulletinBean) mItems.get(position)).getAuthor();
+		String itemBody = ((BulletinBean) mItems.get(position)).getBody();
+		String itemSign = ((BulletinBean) mItems.get(position)).getSign();
+
+		// 跳转到帖子回复界面
+		Intent intent = new Intent(context, BulletinReplyActivity.class);
+
+		// 添加参数
+		intent.putExtra("board", itemBoard);
+		intent.putExtra("id", itemId);
+		intent.putExtra("title", itemTitle);
+		intent.putExtra("author", itemAuthor);
+		intent.putExtra("content", itemBody);
+		intent.putExtra("signature", itemSign);
+
+		// 启动Activity。并传递一个intend对象
+		context.startActivity(intent);
 	}
 }

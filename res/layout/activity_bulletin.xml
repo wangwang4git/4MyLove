@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     <com.bbs.whu.xlistview.XListView
-        android:id="@+id/bulletin_comment_listview"
+        android:id="@+id/bulletin_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:cacheColorHint="#00000000" >

@@ -1,6 +1,13 @@
 package com.bbs.whu.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.content.Context;
 
@@ -176,26 +183,35 @@ public class MyBBSRequest {
 	private static void post(String url, ArrayList<String> keys,
 			ArrayList<String> values, final String activityName, Context context) {
 		// 添加post请求参数
-		RequestParams params = new RequestParams();
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		for (int i = 0; i < keys.size(); ++i) {
-			params.put(keys.get(i), values.get(i));
+			params.add(new BasicNameValuePair(keys.get(i), values.get(i)));
 		}
-		// post请求
-		MyHttpClient.post(url, params, new AsyncHttpResponseHandler() {
-			@Override
-			public void onSuccess(String response) {
-				// 发送成功内容
-				MessageHandlerManager.getInstance().sendMessage(
-						MyConstants.REQUEST_SUCCESS, activityName);
-			}
+		try {
+			// 必须通过HttpEntity进行转码，否则post过去的数据是“UTF-8”编码
+			HttpEntity mHttpEntity = new UrlEncodedFormEntity(params, "GBK");
+			// 从web请求中捕获
+			String contentType = "application/x-www-form-urlencoded";
+			// post请求
+			MyHttpClient.post(context, url, mHttpEntity, contentType,
+					new AsyncHttpResponseHandler() {
+						@Override
+						public void onSuccess(String response) {
+							// 发送成功内容
+							MessageHandlerManager.getInstance().sendMessage(
+									MyConstants.REQUEST_SUCCESS, activityName);
+						}
 
-			@Override
-			public void onFailure(Throwable error, String content) {
-				// 发送失败消息
-				MessageHandlerManager.getInstance().sendMessage(
-						MyConstants.REQUEST_FAIL, activityName);
-			}
-		});
+						@Override
+						public void onFailure(Throwable error, String content) {
+							// 发送失败消息
+							MessageHandlerManager.getInstance().sendMessage(
+									MyConstants.REQUEST_FAIL, activityName);
+						}
+					});
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

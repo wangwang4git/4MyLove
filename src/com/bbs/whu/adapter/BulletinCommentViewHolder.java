@@ -9,15 +9,15 @@ import android.widget.TextView;
  * @author double
  * 
  */
-public class BulletinListCommentViewHolder {
+public class BulletinCommentViewHolder {
 	// 评论作者
-	TextView holderCommentAuthor;
+	TextView holderBulletinCommentAuthor;
 	// 评论内容
-	TextView holderCommentContent;
+	TextView holderBulletinCommentContent;
 	// 评论的“评论自”部分的框架
-	LinearLayout holderCommentReplyLinearLayout;
+	LinearLayout holderBulletinCommentReplyLinearLayout;
 	// 评论的“评论自”部分
-	TextView holderCommentReply;
+	TextView holderBulletinCommentReply;
 	// 评论来源
-	TextView holderCommentSource;
+	TextView holderBulletinCommentSource;
 }

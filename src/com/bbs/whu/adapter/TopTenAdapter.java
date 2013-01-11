@@ -20,18 +20,18 @@ import com.bbs.whu.model.TopTenBean;
  * @author wwang
  * 
  */
-public class TopTenListAdapter extends MyBaseAdapter {
+public class TopTenAdapter extends MyBaseAdapter {
 
-	public TopTenListAdapter(Context context, ArrayList<TopTenBean> items,
+	public TopTenAdapter(Context context, ArrayList<TopTenBean> items,
 			int rLayoutList) {
 		super(context, items, rLayoutList);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		TopTenListViewHolder holder;
+		TopTenViewHolder holder;
 		if (convertView == null) {
-			holder = new TopTenListViewHolder();
+			holder = new TopTenViewHolder();
 			convertView = LayoutInflater.from(context).inflate(
 					this.mRLayoutList, null);
 			// 获取列表元素中的控件对象
@@ -46,7 +46,7 @@ public class TopTenListAdapter extends MyBaseAdapter {
 			// 设置控件集到convertView
 			convertView.setTag(holder);
 		} else {
-			holder = (TopTenListViewHolder) convertView.getTag();
+			holder = (TopTenViewHolder) convertView.getTag();
 		}
 		// 帖子标题
 		String title = ((TopTenBean) mItems.get(position)).getTilte();

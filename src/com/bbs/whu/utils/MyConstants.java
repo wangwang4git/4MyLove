@@ -21,4 +21,6 @@ public class MyConstants {
 	public static final String LOG_OUT_URL = "http://bbs.whu.edu.cn/bbslogout.php";
 	// get请求URL
 	public static final String GET_URL = "http://bbs.whu.edu.cn/mobile.php";
+	// post提交回复帖子的数据
+	public static final String POST_BULLETIN_REPLY_URL = "http://bbs.whu.edu.cn/wForum/dopostarticle.php";
 }

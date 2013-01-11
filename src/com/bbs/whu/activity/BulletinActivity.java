@@ -23,9 +23,7 @@ import com.bbs.whu.xlistview.XListView;
 import com.bbs.whu.xlistview.XListView.IXListViewListener;
 
 /**
- * 帖子详情界面，
- * 可通过点击“刷新”，刷新帖子，
- * 可通过点击“显示更多”加载更多，按页加载
+ * 帖子详情界面， 可通过点击“刷新”，刷新帖子， 可通过点击“显示更多”加载更多，按页加载
  * 
  * @author double
  * 
@@ -67,6 +65,22 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 		initHandler();
 		// 请求数据
 		getBulletin();
+		
+		// 利用反射机制修改ListView FastScroller默认滑块
+		// 参见http://www.eoeandroid.com/forum.php?mod=viewthread&tid=176342原文
+		// try {
+		// Field field = AbsListView.class.getDeclaredField("mFastScroller");
+		// field.setAccessible(true);
+		// Object obj = field.get(mListView);
+		// field = field.getType().getDeclaredField("mThumbDrawable");
+		// field.setAccessible(true);
+		// Drawable drawable = (Drawable) field.get(obj);
+		// drawable = getResources().getDrawable(R.drawable.ic_launcher);
+		// field.set(obj, drawable);
+		// // Toast.makeText(this, field.getType().getName(), 1000).show();
+		// } catch (Exception e) {
+		// throw new RuntimeException(e);
+		// }
 	}
 
 	/**

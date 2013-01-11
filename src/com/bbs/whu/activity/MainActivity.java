@@ -43,6 +43,7 @@ public class MainActivity extends TabActivity {
 		super.onDestroy();
 		// ÍË³öµÇÂ½
 		MyBBSRequest.mGet(MyConstants.LOG_OUT_URL, "MainActivity");
+		System.out.println("LOG_OUT_URL");
 	}
 
 	@Override

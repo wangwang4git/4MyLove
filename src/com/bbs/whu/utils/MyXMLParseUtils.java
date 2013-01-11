@@ -2,7 +2,10 @@ package com.bbs.whu.utils;
 
 import java.util.List;
 
+import com.bbs.whu.model.PlaybillBean;
+import com.bbs.whu.model.RecommendBean;
 import com.bbs.whu.model.TopTenBean;
+import com.bbs.whu.model.UserInfoBean;
 import com.bbs.whu.model.bulletin.Page;
 import com.bbs.whu.model.bulletin.numConverter;
 import com.bbs.whu.model.bulletin.totalConverter;
@@ -47,7 +50,7 @@ public class MyXMLParseUtils {
 	 * @param XMLStream
 	 * @return Page
 	 */
-	public static Page readXml2Page(String XMLStream) {
+	public static Page readXml2Page(String XMLStream) {		
 		if (null == XMLStream) {
 			return null;
 		}
@@ -65,5 +68,72 @@ public class MyXMLParseUtils {
 		xstream.registerConverter(new numConverter());
 		xstream.registerConverter(new totalConverter());
 		return (Page) xstream.fromXML(XMLStream);
+	}
+	
+	/**
+	 * 反序列化推荐文章列表
+	 * 
+	 * @param XMLStream
+	 * @return List<RecommendBean>
+	 */
+	public static List<RecommendBean> readXml2RecommendList(String XMLStream) {
+		if (null == XMLStream) {
+			return null;
+		}
+		XMLStream = XMLStream.trim();
+		XMLStream = XMLStream.replaceAll("&", "&amp;");
+		// 替换<recomms>标签为<list>标签
+		XMLStream = XMLStream.replace("<recomms>", "<list>");
+		XMLStream = XMLStream.replace("</recomms>", "</list>");
+		XStream xstream = new XStream();
+		// 类重命名
+		xstream.alias("recomm", RecommendBean.class);
+		// 反序列化
+		@SuppressWarnings("unchecked")
+		List<RecommendBean> recommendList = (List<RecommendBean>) xstream
+				.fromXML(XMLStream);
+		return recommendList;
+	}
+	
+	/**
+	 * 反序列化校园海报列表
+	 * 
+	 * @param XMLStream
+	 * @return List<PlaybillBean>
+	 */
+	public static List<PlaybillBean> readXml2PlaybillList(String XMLStream) {
+		if (null == XMLStream) {
+			return null;
+		}
+		XMLStream = XMLStream.trim();
+		XMLStream = XMLStream.replaceAll("&", "&amp;");
+		// 替换<posters>标签为<list>标签
+		XMLStream = XMLStream.replace("<posters>", "<list>");
+		XMLStream = XMLStream.replace("</posters>", "</list>");
+		XStream xstream = new XStream();
+		// 类重命名
+		xstream.alias("poster", PlaybillBean.class);
+		// 反序列化
+		@SuppressWarnings("unchecked")
+		List<PlaybillBean> playbillList = (List<PlaybillBean>) xstream
+				.fromXML(XMLStream);
+		return playbillList;
+	}
+	
+	/**
+	 * 反序列化个人信息
+	 * 
+	 * @param XMLStream
+	 * @return UserInfoBean
+	 */
+	public static UserInfoBean readXml2UserInfo(String XMLStream) {
+		if (null == XMLStream) {
+			return null;
+		}
+		XMLStream = XMLStream.trim();
+		XMLStream = XMLStream.replaceAll("&", "&amp;");
+		XStream xstream = new XStream();
+		xstream.alias("user", UserInfoBean.class);
+		return (UserInfoBean) xstream.fromXML(XMLStream);
 	}
 }

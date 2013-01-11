@@ -1,63 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="#FFFAFAFA"
-    android:minHeight="60dip"
-    android:orientation="vertical" >
+	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:background="#FFFAFAF7" android:minHeight="60dip"
+	android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/top_ten_relativeLayout2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal" >
+	<RelativeLayout android:id="@+id/top_ten_relativeLayout2"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_alignParentTop="true" android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/top_ten_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="50dip"
-            android:minHeight="50dip"
-            android:textColor="#FF000000"
-            android:textSize="20sp" />
+		<TextView android:id="@+id/top_ten_title"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_marginLeft="10dip" android:layout_marginRight="50dip"
+			android:minHeight="50dip" android:gravity="center_vertical" android:textColor="#FF000000"
+			android:textSize="20sp" android:text="马上离校，转锅碗瓢盆书架鞋架台灯护肤品等各种生活用品。" />
 
-        <TextView
-            android:id="@+id/top_ten_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/top_ten_title"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dip"
-            android:background="#FFFAED9E"
-            android:textColor="#FF888888"
-            android:textSize="15sp" />
-    </RelativeLayout>
+		<LinearLayout android:layout_width="25dip"
+			android:layout_height="25dip" android:layout_centerVertical="true"
+			android:layout_alignBottom="@id/top_ten_title"
+			android:layout_alignParentRight="true" android:layout_marginRight="5dip"
+			android:gravity="center_horizontal" android:background="@drawable/top_ten_reply_number">
+			<TextView android:id="@+id/top_ten_number"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:layout_marginTop="1dip" android:textColor="#FF808080"
+				android:textSize="15sp" android:gravity="center" android:text="43" />
+		</LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/top_ten_relativeLayout2"
-        android:background="#FFFAF8E3"
-        android:orientation="horizontal" >
+	</RelativeLayout>
 
-        <TextView
-            android:id="@+id/top_ten_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dip"
-            android:textColor="#FF888888"
-            android:textSize="10sp" />
+	<RelativeLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_below="@id/top_ten_relativeLayout2"
+		android:background="#FFFAF7E3" android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/top_ten_boardname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dip"
-            android:textColor="#FF888888"
-            android:textSize="10sp" />
-    </RelativeLayout>
+		<TextView android:id="@+id/top_ten_author"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_marginLeft="10dip" android:textColor="#FF999999"
+			android:textSize="12sp" android:text="scoripio" />
+
+		<TextView android:id="@+id/top_ten_boardname"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_alignParentRight="true" android:layout_marginRight="5dip"
+			android:textColor="#FF999999" android:textSize="12sp" android:text="secondhand" />
+	</RelativeLayout>
 
 </RelativeLayout>

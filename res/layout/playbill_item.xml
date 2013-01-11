@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:gravity="center_horizontal" android:background="#FFFAFAF7">
+
+	<LinearLayout android:layout_width="wrap_content"
+		android:layout_height="70dip" android:layout_centerVertical="true"
+		android:scaleType="centerInside" android:gravity="left"
+		android:layout_marginTop="5dip" android:layout_marginLeft="10dip"
+		android:layout_marginRight="10dip" android:layout_marginBottom="2dip"
+		android:background="@drawable/playbill_listitem_bg"
+		android:orientation="vertical">
+		<TextView android:id="@+id/playbill_title"
+			android:layout_width="wrap_content" android:layout_height="40dip"
+			android:gravity="center_vertical" android:layout_marginTop="5dip"
+			android:layout_marginLeft="20dip" android:layout_marginRight="10dip"
+			android:textColor="#FF000000" android:textSize="15sp"
+			android:textStyle="bold" android:text="武汉大学“弘毅讲堂”系列学术讲座第241期" />
+
+		<LinearLayout android:layout_width="wrap_content"
+			android:layout_height="20dip" android:gravity="center_vertical"
+			android:layout_marginLeft="10dip" android:layout_marginRight="10dip">
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:gravity="center_vertical"
+				android:textColor="#FFFFFFFF" android:textSize="15sp"
+				android:textStyle="bold" android:text="时间：                    " />
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:gravity="center_vertical"
+				android:textColor="#FFFFFFFF" android:textSize="15sp"
+				android:textStyle="bold" android:text="地点：                    " />
+		</LinearLayout>
+	</LinearLayout>
+
+</LinearLayout>

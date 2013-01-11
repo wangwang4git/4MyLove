@@ -2,7 +2,7 @@ package com.bbs.whu.adapter;
 
 import android.widget.TextView;
 
-public final class TopTenListViewHolder {
+public class TopTenListViewHolder {
 	// 帖子标题
 	public TextView holderTopTenTitle;
 	// 帖子回复数

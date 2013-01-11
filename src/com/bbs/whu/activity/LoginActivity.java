@@ -121,6 +121,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 		PersistentCookieStore myCookieStore = new PersistentCookieStore(this);
 		// 将CookieStore设为全局变量
 		((MyApplication) getApplicationContext()).setCookieStore(myCookieStore);
+		// 将用户名密码设为全局变量
+		((MyApplication) getApplicationContext()).setName(userNameEditText.getText().toString());
+		((MyApplication) getApplicationContext()).setPassword(passwordEditText.getText().toString());
 		// 添加CookieStore
 		MyHttpClient.setCookieStore(myCookieStore);
 		// 添加post请求参数
@@ -132,6 +135,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 		values.add(passwordEditText.getText().toString());
 		keys.add("webtype");
 		values.add("wforum");
+		//  添加支持多次登录参数
+		keys.add("kick_multi");
+		values.add("1");
 		// post请求
 		MyBBSRequest.mPost(MyConstants.LOGIN_URL, keys, values,
 				"LoginActivity", this);

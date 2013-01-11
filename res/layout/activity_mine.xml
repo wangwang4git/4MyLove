@@ -1,15 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent" android:layout_height="match_parent"
+	android:orientation="vertical" android:gravity="center_horizontal"
+	android:background="#FFFAFAFA">
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/activity_mine"
-        android:textColor="#000"
-        android:textSize="20sp" />
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:gravity="center"
+		android:background="@drawable/mine_titlebar_bg">
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_gravity="center"
+			android:text="@string/activity_mine" android:textSize="18sp"
+			android:textColor="#FF7B7B7B" />
+	</LinearLayout>
 
-</RelativeLayout>
+
+	<RelativeLayout android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:gravity="center_horizontal">
+
+		<LinearLayout android:id="@+id/mine_person"
+			android:layout_width="250dip" android:layout_height="60dip"
+			android:orientation="horizontal" android:gravity="center"
+			android:layout_alignParentTop="true" android:layout_marginTop="30dip"
+			android:background="@drawable/mine_button_bg">
+			<ImageView android:layout_width="40dip"
+				android:layout_height="40dip" android:layout_centerVertical="true"
+				android:scaleType="centerInside" android:src="@drawable/mine_personal_information" />
+			<ImageView android:layout_width="40dip"
+				android:layout_height="40dip" android:layout_centerVertical="true"
+				android:scaleType="centerInside" android:src="@drawable/mine_segment" />
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/mine_person_text"
+				android:textSize="20sp" />
+		</LinearLayout>
+
+		<LinearLayout android:id="@+id/mine_mail"
+			android:layout_width="250dip" android:layout_height="60dip"
+			android:orientation="horizontal" android:gravity="center"
+			android:layout_below="@id/mine_person" android:layout_marginTop="20dip"
+			android:background="@drawable/mine_button_bg">
+			<ImageView android:layout_width="40dip"
+				android:layout_height="40dip" android:layout_centerVertical="true"
+				android:scaleType="centerInside" android:src="@drawable/mine_station_mail" />
+			<ImageView android:layout_width="40dip"
+				android:layout_height="40dip" android:layout_centerVertical="true"
+				android:scaleType="centerInside" android:src="@drawable/mine_segment" />
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/mine_mail_text"
+				android:textSize="20sp" />
+		</LinearLayout>
+
+		<LinearLayout android:id="@+id/mine_board"
+			android:layout_width="250dip" android:layout_height="60dip"
+			android:orientation="horizontal" android:gravity="center"
+			android:layout_below="@id/mine_mail" android:layout_marginTop="20dip"
+			android:background="@drawable/mine_button_bg">
+			<ImageView android:layout_width="40dip"
+				android:layout_height="40dip" android:layout_centerVertical="true"
+				android:scaleType="centerInside" android:src="@drawable/mine_collect_board" />
+			<ImageView android:layout_width="40dip"
+				android:layout_height="40dip" android:layout_centerVertical="true"
+				android:scaleType="centerInside" android:src="@drawable/mine_segment" />
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/mine_board_text"
+				android:textSize="20sp" />
+		</LinearLayout>
+
+		<LinearLayout android:id="@+id/mine_friend"
+			android:layout_width="250dip" android:layout_height="60dip"
+			android:orientation="horizontal" android:gravity="center"
+			android:layout_below="@id/mine_board" android:layout_marginTop="20dip"
+			android:background="@drawable/mine_button_bg">
+			<ImageView android:layout_width="40dip"
+				android:layout_height="40dip" android:layout_centerVertical="true"
+				android:scaleType="centerInside" android:src="@drawable/mine_online_friend" />
+			<ImageView android:layout_width="40dip"
+				android:layout_height="40dip" android:layout_centerVertical="true"
+				android:scaleType="centerInside" android:src="@drawable/mine_segment" />
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/mine_friend_text"
+				android:textSize="20sp" />
+		</LinearLayout>
+
+		<LinearLayout android:layout_width="250dip"
+			android:layout_height="30dip" android:orientation="horizontal"
+			android:gravity="center" android:layout_below="@id/mine_friend"
+			android:layout_alignParentBottom="true">
+			<ImageView android:layout_width="wrap_content"
+				android:layout_height="30dip" android:scaleType="centerInside"
+				android:src="@drawable/mine_text" />
+		</LinearLayout>
+
+	</RelativeLayout>
+
+</LinearLayout>

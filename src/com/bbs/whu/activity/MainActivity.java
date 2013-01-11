@@ -39,14 +39,6 @@ public class MainActivity extends TabActivity {
 	}
 
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		// 退出登陆
-		MyBBSRequest.mGet(MyConstants.LOG_OUT_URL, "MainActivity");
-		System.out.println("LOG_OUT_URL");
-	}
-
-	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// 捕获返回键
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
@@ -102,15 +94,19 @@ public class MainActivity extends TabActivity {
 		builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
+				// 退出登陆
+				MyBBSRequest.mGet(MyConstants.LOG_OUT_URL, "MainActivity");
 				// 结束程序
 				android.os.Process.killProcess(android.os.Process.myPid());
+				// 对话框退出
+				dialog.dismiss();
 			}
 		});
 		builder.setNegativeButton("取消",
 				new android.content.DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						// 对话框退出
 						dialog.dismiss();
 					}
 				});

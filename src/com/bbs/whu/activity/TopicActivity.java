@@ -9,12 +9,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.KeyEvent;
 
 import com.bbs.whu.R;
-import com.bbs.whu.adapter.TopTenAdapter;
+import com.bbs.whu.adapter.TopicAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
-import com.bbs.whu.model.TopTenBean;
+import com.bbs.whu.model.TopicBean;
+import com.bbs.whu.model.topic.Topics;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyXMLParseUtils;
@@ -22,16 +22,25 @@ import com.bbs.whu.xlistview.XListView;
 import com.bbs.whu.xlistview.XListView.IXListViewListener;
 
 /**
- * “十大热帖”界面
- * 列出“十大热帖”基本情况
+ * 分类中的版块帖子列表界面
  * 
- * @author wwang
+ * @author ljp
  * 
  */
-public class TopTenActivity extends Activity implements IXListViewListener {
+
+public class TopicActivity extends Activity implements IXListViewListener {
+	/* 帖子版块英文名由上一级Activity传入，用于请求列表数据 */
+	private String board;// 版块英文名字
+	/* 帖子的页数用于加载内容，web端数据分页传入 */
+	int currentPage = 1;// 当前页号
+	// 是否强制从网络获取数据
+	boolean isForcingWebGet = false;
+	// 帖子列表
 	private XListView mListView;
-	private TopTenAdapter mAdapter;
-	private ArrayList<TopTenBean> items = new ArrayList<TopTenBean>();
+	// 帖子列表适配器
+	private TopicAdapter mAdapter;
+	// 帖子列表数据
+	private ArrayList<TopicBean> items = new ArrayList<TopicBean>();
 	// 接收请求数据的handler
 	Handler mHandler;
 
@@ -39,32 +48,24 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_top_ten);
+		// 获取传入的参数
+		board = getIntent().getStringExtra("board");
 		// 初始化控件
 		initView();
 		// 初始化适配器
 		initAdapter();
 		// 初始化handler
 		initHandler();
-		// 请求“十大”数据
-		getTopTen(false);
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// 只有捕获返回键，并返回false，才能在MainActivity中捕获返回键
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			return false;
-		}
-		return false;
+		// 请求帖子列表数据
+		getTopic();
 	}
 
 	/**
 	 * 初始化控件
 	 */
 	private void initView() {
+		// 帖子列表
 		mListView = (XListView) findViewById(R.id.topten_listview);
-		// 禁用“显示更多”
-		mListView.setPullLoadEnable(false);
 		mListView.setXListViewListener(this);
 	}
 
@@ -73,7 +74,7 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 	 */
 	private void initAdapter() {
 		// 创建适配器
-		mAdapter = new TopTenAdapter(this, items, R.layout.top_ten_item);
+		mAdapter = new TopicAdapter(this, items, R.layout.topic_item, board);
 		mListView.setAdapter(mAdapter);
 	}
 
@@ -88,10 +89,14 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 				switch (msg.what) {
 				case MyConstants.REQUEST_SUCCESS:
 					String res = (String) msg.obj;
+					// 启用“显示更多”
+					// 注意，默认的“显示更多”功能屏蔽了点击事件，所以要启用
+					mListView.setPullLoadEnable(true);
 					// 获取数据后停止刷新
 					mListView.stopRefresh();
+					mListView.stopLoadMore();
 					// 刷新列表
-					refreshTopTenList(res);
+					refreshBulletinList(res);
 					break;
 				case MyConstants.REQUEST_FAIL:
 					break;
@@ -101,30 +106,30 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 		};
 		// 注册handler
 		MessageHandlerManager.getInstance().register(mHandler,
-				MyConstants.REQUEST_SUCCESS, "TopTenActivity");
+				MyConstants.REQUEST_SUCCESS, "TopicActivity");
 		MessageHandlerManager.getInstance().register(mHandler,
-				MyConstants.REQUEST_FAIL, "TopTenActivity");
+				MyConstants.REQUEST_FAIL, "TopicActivity");
 	}
 
 	/**
-	 * 请求“十大”数据
+	 * 请求帖子列表数据
 	 * 
-	 * @param isForcingWebGet
-	 *            是否强制从网络获取数据
 	 */
 
-	private void getTopTen(boolean isForcingWebGet) {
+	private void getTopic() {
 		// 添加get参数
 		ArrayList<String> keys = new ArrayList<String>();
 		ArrayList<String> values = new ArrayList<String>();
 		keys.add("app");
-		values.add("hot");
+		values.add("topics");
+		keys.add("board");
+		values.add(board);
+		keys.add("page");
+		values.add(Integer.toString(currentPage));
+
 		// 请求数据
-		// 注意，因为涉及到tab的嵌套，所以直接传本Activity的context，构造对话框时会出错，
-		// 需要传入父Activity的context，即使用this.getParent()而不是this
-		// 参考链接：http://iandroiddev.com/post/2011-07-11/2817890
-		MyBBSRequest.mGet(MyConstants.GET_URL, keys, values, "TopTenActivity",
-				isForcingWebGet, this.getParent());
+		MyBBSRequest.mGet(MyConstants.GET_URL, keys, values, "TopicActivity",
+				isForcingWebGet, this);
 	}
 
 	/**
@@ -133,19 +138,36 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 	 * @param res
 	 *            数据
 	 */
-	private void refreshTopTenList(String res) {
-		// 清空原有数据
-		items.clear();
+	private void refreshBulletinList(String res) {
 		// XML反序列化
-		items.addAll(MyXMLParseUtils.readXml2TopTenList(res));
+		Topics topics = MyXMLParseUtils.readXml2Topics(res);
+		// 获得当前页号
+		currentPage = Integer.parseInt(topics.getPage().toString());
+		// 最多加载10页
+		if (currentPage == 10) {
+			// 禁用“显示更多”
+			mListView.setPullLoadEnable(false);
+		}
+		// 获取帖子列表并添加
+		items.addAll(topics.getTopics());
 		// 刷新ListView
 		mAdapter.notifyDataSetChanged();
+		// 当前页增加一页，便于下次申请
+		currentPage++;
 	}
 
 	@Override
 	public void onRefresh() {
-		// 强制从网络请求“十大”数据
-		getTopTen(true);
+		// 将当前页设为首页
+		currentPage = 1;
+		// 清空原有数据
+		items.clear();
+		// 强制从网络请求帖子列表的数据
+		isForcingWebGet = true;
+		// 禁用“显示更多”
+		mListView.setPullLoadEnable(false);
+		// 请求数据
+		getTopic();
 		// 显示刷新时间
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm",
 				Locale.SIMPLIFIED_CHINESE);
@@ -155,5 +177,7 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 
 	@Override
 	public void onLoadMore() {
+		// 请求数据
+		getTopic();
 	}
 }

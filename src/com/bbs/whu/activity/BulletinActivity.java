@@ -11,7 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.bbs.whu.R;
-import com.bbs.whu.adapter.BulletinListAdapter;
+import com.bbs.whu.adapter.BulletinAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.BulletinBean;
 import com.bbs.whu.model.bulletin.Page;
@@ -36,13 +36,13 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 	String groupid;
 	/* 帖子的页数用于加载内容，web端数据分页传入 */
 	// 帖子当前页数
-	int currentNum = 1;
+	int currentPage = 1;
 	// 帖子总页数
-	int totalNum;
+	int totalPage;
 	// 是否强制从网络获取数据
 	boolean isForcingWebGet = false;
 	// 帖子回复列表适配器
-	private BulletinListAdapter mAdapter;
+	private BulletinAdapter mAdapter;
 	// 帖子回复列表
 	private ArrayList<BulletinBean> items = new ArrayList<BulletinBean>();
 	// 接收请求数据的handler
@@ -88,7 +88,7 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 	 */
 	private void initView() {
 		// 回复列表
-		mListView = (XListView) findViewById(R.id.bulletin_comment_listview);
+		mListView = (XListView) findViewById(R.id.bulletin_listview);
 		mListView.setXListViewListener(this);
 	}
 
@@ -97,7 +97,7 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 	 */
 	private void initAdapter() {
 		// 创建适配器
-		mAdapter = new BulletinListAdapter(this, items,
+		mAdapter = new BulletinAdapter(this, items,
 				R.layout.bulletin_comment_item);
 		mListView.setAdapter(mAdapter);
 	}
@@ -149,7 +149,7 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 		keys.add("GID");
 		values.add(groupid);
 		keys.add("page");
-		values.add(Integer.toString(currentNum));
+		values.add(Integer.toString(currentPage));
 		// 请求数据
 		MyBBSRequest.mGet(MyConstants.GET_URL, keys, values,
 				"BulletinActivity", isForcingWebGet, this);
@@ -165,12 +165,12 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 		// XML反序列化
 		Page page = MyXMLParseUtils.readXml2Page(res);
 		// 获得当前页号
-		currentNum = Integer.parseInt(page.getNum().getAttributeValue());
+		currentPage = Integer.parseInt(page.getNum().getAttributeValue());
 		// 获得页总数
-		totalNum = Integer.parseInt(page.getTotal().getAttributeValue());
+		totalPage = Integer.parseInt(page.getTotal().getAttributeValue());
 
 		// 如果是最后一页，则禁用“显示更多”
-		if (currentNum == totalNum)
+		if (currentPage == totalPage)
 			mListView.setPullLoadEnable(false);
 
 		// 获取帖子内容并添加
@@ -178,19 +178,19 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 		// 刷新ListView
 		mAdapter.notifyDataSetChanged();
 		// 当前页增加一页，便于下次申请
-		currentNum++;
+		currentPage++;
 	}
 
 	@Override
 	public void onRefresh() {
 		// 将当前页设为首页
-		currentNum = 1;
+		currentPage = 1;
 		// 清空数据
 		items.clear();
 		// 启用强制从网络请求帖子详情数据
 		isForcingWebGet = true;
-		// 启用显示更多
-		mListView.setPullLoadEnable(true);
+		// 禁用“显示更多”
+		mListView.setPullLoadEnable(false);
 		// 请求数据
 		getBulletin();
 		// 显示刷新时间

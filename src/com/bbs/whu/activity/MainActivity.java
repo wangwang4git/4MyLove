@@ -20,7 +20,7 @@ import com.bbs.whu.utils.MyConstants;
 
 /**
  * 主界面Activity，
- * 包含5个tab，分别是“首页”，“分类”，“我的山水”，“消息”，“更多”
+ * 包含4个tab，分别是“首页”，“分类”，“我的山水”，“更多”
  * 
  * @author double
  * 
@@ -55,7 +55,6 @@ public class MainActivity extends TabActivity {
 		addTab("首页", R.drawable.tab_home, HomeActivity.class);
 		addTab("分类", R.drawable.tab_search, BoardActivity.class);
 		addTab("我的山水", R.drawable.tab_home, MineActivity.class);
-		addTab("消息", R.drawable.tab_search, MessageActivity.class);
 		addTab("更多", R.drawable.tab_home, MoreActivity.class);
 	}
 

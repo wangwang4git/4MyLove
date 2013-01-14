@@ -14,6 +14,7 @@
     <string name="top_ten_text">十大热点</string>
     <string name="playbill_text">校园海报</string>
     <string name="recommend_text">推荐文章</string>
+    <string name="bulletin_title">帖子详情</string>
     <string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>
     <string name="xlistview_header_hint_loading">正在加载</string>

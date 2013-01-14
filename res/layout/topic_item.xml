@@ -43,7 +43,7 @@
             android:id="@+id/topic_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dip"
+            android:layout_marginLeft="10dip"
             android:textColor="#FF888888"
             android:textSize="10sp" />
 
@@ -52,6 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="5dip"
             android:textColor="#FF888888"
             android:textSize="10sp" />
     </RelativeLayout>

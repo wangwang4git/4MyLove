@@ -9,7 +9,7 @@ import android.widget.TextView;
  * @author wwang
  * 
  */
-public class OnlineFriendListViewHolder {
+public class OnlineFriendViewHolder {
 	// ∫√”—±‡∫≈
 	public TextView holderOnlineFriendNumber;
 	// ∫√”—Õ∑œÒ

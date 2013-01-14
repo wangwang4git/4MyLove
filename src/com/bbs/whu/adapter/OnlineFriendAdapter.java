@@ -17,18 +17,18 @@ import com.bbs.whu.R;
  * @author wwang
  * 
  */
-public class OnlineFriendListAdapter extends MyBaseAdapter {
+public class OnlineFriendAdapter extends MyBaseAdapter {
 
-	public OnlineFriendListAdapter(Context context, ArrayList<String> items,
+	public OnlineFriendAdapter(Context context, ArrayList<String> items,
 			int rLayoutList) {
 		super(context, items, rLayoutList);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		OnlineFriendListViewHolder holder;
+		OnlineFriendViewHolder holder;
 		if (convertView == null) {
-			holder = new OnlineFriendListViewHolder();
+			holder = new OnlineFriendViewHolder();
 			convertView = LayoutInflater.from(context).inflate(
 					this.mRLayoutList, null);
 			// 获取列表元素中的控件对象
@@ -41,7 +41,7 @@ public class OnlineFriendListAdapter extends MyBaseAdapter {
 			// 设置控件集到convertView
 			convertView.setTag(holder);
 		} else {
-			holder = (OnlineFriendListViewHolder) convertView.getTag();
+			holder = (OnlineFriendViewHolder) convertView.getTag();
 		}
 		// 从数据源获取在线好友名称
 		String name = (String) mItems.get(position);

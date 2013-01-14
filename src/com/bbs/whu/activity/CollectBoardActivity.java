@@ -11,7 +11,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
 import com.bbs.whu.R;
-import com.bbs.whu.adapter.CollectBoardListAdapter;
+import com.bbs.whu.adapter.CollectBoardAdapter;
 import com.bbs.whu.xlistview.XListView;
 
 /**
@@ -24,7 +24,7 @@ public class CollectBoardActivity extends Activity {
 	// 收藏版块列表
 	private XListView mListView;
 	// 收藏版块列表适配器
-	private CollectBoardListAdapter mAdapter;
+	private CollectBoardAdapter mAdapter;
 	// 收藏版块列表数据源
 	final private ArrayList<String> items = new ArrayList<String>();
 
@@ -74,7 +74,7 @@ public class CollectBoardActivity extends Activity {
 	 */
 	private void initAdapter() {
 		// 创建适配器
-		mAdapter = new CollectBoardListAdapter(this, items,
+		mAdapter = new CollectBoardAdapter(this, items,
 				R.layout.collect_board_item);
 		mListView.setAdapter(mAdapter);
 	}

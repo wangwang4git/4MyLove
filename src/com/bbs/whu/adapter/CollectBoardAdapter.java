@@ -16,18 +16,18 @@ import com.bbs.whu.R;
  * @author wwang
  * 
  */
-public class CollectBoardListAdapter extends MyBaseAdapter {
+public class CollectBoardAdapter extends MyBaseAdapter {
 
-	public CollectBoardListAdapter(Context context, ArrayList<String> items,
+	public CollectBoardAdapter(Context context, ArrayList<String> items,
 			int rLayoutList) {
 		super(context, items, rLayoutList);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		CollectBoardListViewHolder holder;
+		CollectBoardViewHolder holder;
 		if (convertView == null) {
-			holder = new CollectBoardListViewHolder();
+			holder = new CollectBoardViewHolder();
 			convertView = LayoutInflater.from(context).inflate(
 					this.mRLayoutList, null);
 			// 获取列表元素中的控件对象
@@ -38,7 +38,7 @@ public class CollectBoardListAdapter extends MyBaseAdapter {
 			// 设置控件集到convertView
 			convertView.setTag(holder);
 		} else {
-			holder = (CollectBoardListViewHolder) convertView.getTag();
+			holder = (CollectBoardViewHolder) convertView.getTag();
 		}
 		// 从数据源获取收藏版块标题
 		String name = (String) mItems.get(position);

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,6 +44,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//取出Activity的title
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
 		// 初始化控件
 		init();
@@ -72,7 +75,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private void init() {
 		// 用户名、密码输入框
 		userNameEditText = (EditText) findViewById(R.id.user_name_editText);
-		passwordEditText = (EditText) findViewById(R.id.password_EditText);
+		passwordEditText = (EditText) findViewById(R.id.password_editText);
 		// 设置用户名、密码初始值
 		userNameEditText.setText(MyConstants.MY_USER_NAME);
 		passwordEditText.setText(MyConstants.MY_PASSWORD);

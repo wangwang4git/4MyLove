@@ -8,7 +8,7 @@ import android.widget.TextView;
  * @author wwang
  * 
  */
-public class CollectBoardListViewHolder {
+public class CollectBoardViewHolder {
 	// 收藏版块标题
 	public TextView holderCollectBoardName;
 	// 收藏版块新帖数目

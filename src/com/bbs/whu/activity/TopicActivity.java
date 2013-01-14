@@ -9,6 +9,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Window;
+import android.widget.TextView;
 
 import com.bbs.whu.R;
 import com.bbs.whu.adapter.TopicAdapter;
@@ -31,10 +33,13 @@ import com.bbs.whu.xlistview.XListView.IXListViewListener;
 public class TopicActivity extends Activity implements IXListViewListener {
 	/* 帖子版块英文名由上一级Activity传入，用于请求列表数据 */
 	private String board;// 版块英文名字
+	private String name;// 版块名称
 	/* 帖子的页数用于加载内容，web端数据分页传入 */
 	int currentPage = 1;// 当前页号
 	// 是否强制从网络获取数据
 	boolean isForcingWebGet = false;
+	// 标题
+	TextView title;
 	// 帖子列表
 	private XListView mListView;
 	// 帖子列表适配器
@@ -47,9 +52,11 @@ public class TopicActivity extends Activity implements IXListViewListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_top_ten);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.activity_topic);
 		// 获取传入的参数
 		board = getIntent().getStringExtra("board");
+		name = getIntent().getStringExtra("name");
 		// 初始化控件
 		initView();
 		// 初始化适配器
@@ -64,8 +71,11 @@ public class TopicActivity extends Activity implements IXListViewListener {
 	 * 初始化控件
 	 */
 	private void initView() {
+		// 标题
+		title = (TextView) findViewById(R.id.topic_title);
+		title.setText(name);
 		// 帖子列表
-		mListView = (XListView) findViewById(R.id.topten_listview);
+		mListView = (XListView) findViewById(R.id.topic_listview);
 		mListView.setXListViewListener(this);
 	}
 

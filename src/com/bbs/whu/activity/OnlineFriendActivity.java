@@ -11,7 +11,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
 import com.bbs.whu.R;
-import com.bbs.whu.adapter.OnlineFriendListAdapter;
+import com.bbs.whu.adapter.OnlineFriendAdapter;
 import com.bbs.whu.xlistview.XListView;
 
 /**
@@ -24,7 +24,7 @@ public class OnlineFriendActivity extends Activity {
 	// 我的好友列表
 	private XListView mListView;
 	// 我的好友列表适配器
-	private OnlineFriendListAdapter mAdapter;
+	private OnlineFriendAdapter mAdapter;
 	// 我的好友列表数据源
 	final private ArrayList<String> items = new ArrayList<String>();
 
@@ -74,7 +74,7 @@ public class OnlineFriendActivity extends Activity {
 	 */
 	private void initAdapter() {
 		// 创建适配器
-		mAdapter = new OnlineFriendListAdapter(this, items,
+		mAdapter = new OnlineFriendAdapter(this, items,
 				R.layout.online_friend_item);
 		mListView.setAdapter(mAdapter);
 	}

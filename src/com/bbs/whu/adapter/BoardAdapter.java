@@ -71,7 +71,7 @@ public class BoardAdapter extends BaseExpandableListAdapter {
 			holder = (BoardChildViewHolder) convertView.getTag();
 		}
 
-		String nameStr = ((Board) getChild(groupPosition, childPosition))
+		final String nameStr = ((Board) getChild(groupPosition, childPosition))
 				.getName().toString();
 		String numberStr = ((Board) getChild(groupPosition, childPosition))
 				.getNum().toString();
@@ -89,6 +89,7 @@ public class BoardAdapter extends BaseExpandableListAdapter {
 				Intent mIntent = new Intent(context, TopicActivity.class);
 				// Ìí¼Ó²ÎÊý app=topics&board=PieFriends&page=1
 				mIntent.putExtra("board", englishnameStr);
+				mIntent.putExtra("name", nameStr);
 				context.startActivity(mIntent);
 			}
 		});

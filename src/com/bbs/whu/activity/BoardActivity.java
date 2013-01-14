@@ -245,6 +245,8 @@ public class BoardActivity extends Activity {
 					// Ìí¼Ó²ÎÊý app=topics&board=PieFriends&page=1
 					mIntent.putExtra("board", childs.get(i).get(j).getId()
 							.getAttributeValue());
+					mIntent.putExtra("name", childs.get(i).get(j).getName()
+							.getAttributeValue());
 					this.startActivity(mIntent);
 					return;
 				}

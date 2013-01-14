@@ -152,7 +152,6 @@ public class BulletinAdapter extends MyBaseAdapter {
 			// if (reply.equals("null"))
 			// holder.holderCommentReplyLinearLayout.setVisibility(View.GONE);
 			// else
-
 			holder.holderBulletinCommentReply.setText(reply);
 			
 			// holder.holderBulletinCommentContent.setText(text);

@@ -220,4 +220,18 @@ public class MyRegexParseUtils {
 	static public String delTwoLevelBoard(String content) {
 		return content.replaceAll(TWO_LEVEL_BOARD_REGEX_STRING, "$1");
 	}
+	
+	// 在文本中提取表情的正则表达式
+	final static private String EXPRESSION_REGEX_STRING = "\\[(em[0,1,2,3,4,5,6][0,1,2,3,4,5,6,7,8,9])\\]";
+	// 在文本中提取URL的正则表达式，出自《精通正则表达式》
+	final static private String URL_REGEX_STRING = "(\\b((ftp|https?)://[-\\w]+(\\.\\w[-\\w]*)+|(?i:[a-z0-9](?:[-a-z0-9]*[a-z0-9])?\\.)+(?-i:com\\b|edu\\b|biz\\b|gov\\b|in(?:t|fo)\\b|mil\\b|net\\b|org\\b|[a-z][a-z]\\b))(:\\d+)?(/[^.!,?;\"'<>()\\[\\]{}\\s\\x7F-\\xFF]*(?:[.!,?]+[^.!,?;\"'<>()\\[\\]{}\\s\\x7F-\\xFF]+)*)?)";
+
+	// TextView富文本（表情、URL等）显示替换操作
+	// 替换规则，参见http://blog.csdn.net/a_mean/article/details/6930968
+	static public String getRichTextString(String source) {
+		source = source.replaceAll(EXPRESSION_REGEX_STRING, "<img src='$1' />");
+		source = source.replaceAll(URL_REGEX_STRING,
+				"<img src='url' /><a href='$1'>$1</a>");
+		return source;
+	}
 }

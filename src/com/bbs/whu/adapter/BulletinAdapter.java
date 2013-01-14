@@ -1,11 +1,16 @@
 package com.bbs.whu.adapter;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.text.Html;
+import android.text.Html.ImageGetter;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -16,6 +21,7 @@ import android.widget.TextView;
 import com.bbs.whu.R;
 import com.bbs.whu.activity.BulletinReplyActivity;
 import com.bbs.whu.model.BulletinBean;
+import com.bbs.whu.utils.MyRegexParseUtils;
 
 /**
  * 帖子详情列表数据适配器，
@@ -63,8 +69,24 @@ public class BulletinAdapter extends MyBaseAdapter {
 		String author = ((BulletinBean) mItems.get(position)).getAuthor();
 		// 时间
 		String datetime = ((BulletinBean) mItems.get(position)).getTime();
+		
 		// 内容
 		String text = ((BulletinBean) mItems.get(position)).getText();
+		// 富文本显示
+		String newText = MyRegexParseUtils.getRichTextString(text);
+		CharSequence textCharSequence = Html.fromHtml(newText,
+				new ImageGetter() {
+					@Override
+					public Drawable getDrawable(String source) {
+						Drawable drawable = context.getResources().getDrawable(
+								getResourceId(source));
+						// 这句话必写，不然图片是有了 不过显示的面积为0.
+						drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
+								drawable.getIntrinsicHeight());
+						return drawable;
+					}
+				}, null);
+		
 		// 来源
 		String source = ((BulletinBean) mItems.get(position)).getFrom();
 		// 回复
@@ -95,7 +117,13 @@ public class BulletinAdapter extends MyBaseAdapter {
 			holder.holderBulletinAuthorTitle.setText(title);
 			holder.holderBulletinAuthorAuthor.setText(author);
 			holder.holderBulletinAuthorDateTime.setText(datetime);
-			holder.holderBulletinAuthorText.setText(text);
+			
+			// holder.holderBulletinAuthorText.setText(text);
+			holder.holderBulletinAuthorText.setText(textCharSequence);
+			// 该语句在设置后必加，不然没有任何效果
+			holder.holderBulletinAuthorText
+					.setMovementMethod(LinkMovementMethod.getInstance());
+			
 			holder.holderBulletinAuthorSource.setText(source);
 
 		} else if (getItemViewType(position) == COMMENT_ITEM) {
@@ -124,8 +152,15 @@ public class BulletinAdapter extends MyBaseAdapter {
 			// if (reply.equals("null"))
 			// holder.holderCommentReplyLinearLayout.setVisibility(View.GONE);
 			// else
+
 			holder.holderBulletinCommentReply.setText(reply);
-			holder.holderBulletinCommentContent.setText(text);
+			
+			// holder.holderBulletinCommentContent.setText(text);
+			holder.holderBulletinCommentContent.setText(textCharSequence);
+			// 该语句在设置后必加，不然没有任何效果
+			holder.holderBulletinCommentContent
+					.setMovementMethod(LinkMovementMethod.getInstance());
+			
 			holder.holderBulletinCommentSource.setText(source);
 		}
 		// 设置长按动作
@@ -199,5 +234,20 @@ public class BulletinAdapter extends MyBaseAdapter {
 
 		// 启动Activity。并传递一个intend对象
 		context.startActivity(intent);
+	}
+	
+	/**
+	 * 由于无法直接使用文件名来引用res/drawable中的图像资源， 我们利用反射技术 从R.drawable类中通过图像资源文件名，
+	 * 去获得相应的图像资源ID，实现代码如下：
+	 */
+	public static int getResourceId(String name) {
+		int id = 0;
+		try {
+			Field field = R.drawable.class.getField(name);
+			id = Integer.parseInt(field.get(null).toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return id;
 	}
 }

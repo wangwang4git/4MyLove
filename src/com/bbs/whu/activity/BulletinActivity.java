@@ -174,7 +174,7 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 		// 如果是最后一页，则禁用“显示更多”
 		if (currentPage == totalPage)
 			mListView.setPullLoadEnable(false);
-
+		
 		// 获取帖子内容并添加
 		items.addAll(MyRegexParseUtils.getContentList(page));
 		// 刷新ListView

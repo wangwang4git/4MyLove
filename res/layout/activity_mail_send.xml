@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical" android:background="#FFFAFAF7"
+	android:focusable="true" android:focusableInTouchMode="true">
+
+	<RelativeLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:background="@drawable/mine_titlebar_bg">
+		<TextView android:layout_width="fill_parent"
+			android:layout_height="43dip" android:layout_gravity="center"
+			android:gravity="center" android:text="@string/mail_send_text"
+			android:textSize="20sp" android:textColor="#FF7B7B7B" />
+		<TextView android:id="@+id/mail_send_submit"
+			android:background="@drawable/mail_send_submit_selector"
+			android:layout_alignParentRight="true" android:layout_width="60dip"
+			android:layout_height="35dip" android:text="@string/mail_send_submit_text"
+			android:gravity="center" android:textColor="#FFFFFF"
+			android:layout_marginRight="8dip" android:layout_centerVertical="true"
+			android:clickable="true" />
+	</RelativeLayout>
+
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal"
+		android:gravity="center_vertical" android:layout_marginLeft="9dip"
+		android:layout_marginRight="9dip" android:layout_marginTop="5dip">
+
+		<EditText android:id="@+id/mail_send_addressee"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:paddingLeft="9dip" android:hint="请输入：收件人" android:textColor="#737373"
+			android:singleLine="true" android:layout_weight="1" />
+
+		<LinearLayout android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_gravity="center">
+			<ImageButton android:id="@+id/mail_send_face"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:src="@drawable/btn_insert_face" />
+			<ImageButton android:id="@+id/mail_send_keyboard"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:src="@drawable/btn_insert_keyboard" android:visibility="gone" />
+		</LinearLayout>
+
+	</LinearLayout>
+
+	<EditText android:id="@+id/mail_send_title"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_marginLeft="9dip" android:layout_marginRight="9dip"
+		android:paddingLeft="9dip" android:hint="请输入：标题" android:textColor="#737373"
+		android:singleLine="true" />
+
+	<EditText android:id="@+id/mail_send_content"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_marginLeft="9dip" android:layout_marginRight="9dip"
+		android:paddingLeft="9dip" android:paddingTop="10dip" android:maxEms="10"
+		android:minEms="10" android:hint="请输入：邮件正文" android:gravity="top"
+		android:textColor="#737373" android:scrollbars="vertical"
+		android:layout_weight="1" />
+
+	<GridView android:id="@+id/mail_send_grid_face"
+		android:layout_width="fill_parent" android:layout_height="50dip"
+		android:numColumns="auto_fit" android:verticalSpacing="10dip"
+		android:columnWidth="35dip" android:stretchMode="columnWidth"
+		android:layout_weight="1" android:visibility="gone" />
+
+</LinearLayout>
+

@@ -8,7 +8,7 @@
     <string name="login">登录</string>
     <string name="anonymous">匿名</string>
     <string name="activity_board">版块列表</string>
-    <string name="activity_mine">我 的 山 水</string>
+    <string name="activity_mine">我的山水</string>
     <string name="activity_message">MESSAGE</string>
     <string name="activity_more">MORE</string>
     <string name="top_ten_text">十大热点</string>
@@ -28,10 +28,10 @@
     <string name="bulletin_reply_attachment">附件</string>
     <string name="bulletin_reply_signature">签名档</string>
     <string name="bulletin_reply_publish">发表</string>
-    <string name="mine_person_text">个 人 资 料</string>
-    <string name="mine_mail_text">站 内 信 件</string>
-    <string name="mine_board_text">收 藏 版 面</string>
-    <string name="mine_friend_text">在 线 好 友</string>
+    <string name="mine_person_text">个人资料</string>
+    <string name="mine_mail_text">站内信件</string>
+    <string name="mine_board_text">收藏版面</string>
+    <string name="mine_friend_text">在线好友</string>
     <string name="person_post_text">论坛职务：</string>
     <string name="person_sect_text">所属门派：</string>
     <string name="person_life_text">生命力 ：</string>
@@ -48,5 +48,6 @@
     <string name="recommend_recommend_people_text">推荐者：</string>
     <string name="recommend_board_text">版块：</string>
     <string name="recommend_time_text">时间：</string>
-
+    <string name="mail_send_text">发送信件</string>
+	<string name="mail_send_submit_text">发 送</string>
 </resources>

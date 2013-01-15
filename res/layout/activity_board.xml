@@ -44,8 +44,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/activity_board"
-                android:textColor="#FF000000"
-                android:textSize="18sp" />
+                android:textColor="#FF7B7B7B"
+                android:textSize="20sp" />
 
             <LinearLayout
                 android:id="@+id/board_search_linearlayout"

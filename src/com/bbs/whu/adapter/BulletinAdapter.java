@@ -217,7 +217,7 @@ public class BulletinAdapter extends MyBaseAdapter {
 		String itemId = ((BulletinBean) mItems.get(position)).getId();
 		String itemTitle = ((BulletinBean) mItems.get(position)).getTitle();
 		String itemAuthor = ((BulletinBean) mItems.get(position)).getAuthor();
-		String itemBody = ((BulletinBean) mItems.get(position)).getBody();
+		String itemBody = ((BulletinBean) mItems.get(position)).getText();
 		String itemSign = ((BulletinBean) mItems.get(position)).getSign();
 
 		// 跳转到帖子回复界面

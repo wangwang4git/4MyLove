@@ -145,7 +145,7 @@ public class BulletinReplyActivity extends Activity implements OnClickListener {
 		String content = originContent.length() > 100 ? originContent
 				.substring(0, 100) + "......" : originContent;
 		// 内容
-		return "\n【在" + originAuthor + "的大作中提到: 】 : " + content;
+		return "\n【 在" + originAuthor + "的大作中提到： 】 : " + content;
 	}
 
 	/**

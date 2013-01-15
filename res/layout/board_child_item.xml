@@ -2,45 +2,55 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ffffffff"
+    android:background="#00ffffff"
     android:orientation="vertical" >
 
     <TextView
         android:id="@+id/board_child_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
         android:textColor="#ffff0000"
         android:textSize="20sp" />
 
-    <TableLayout
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:stretchColumns="0,1,2,3" >
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="10dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
 
-        <TableRow>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:gravity="right"
                 android:text="@string/board_child_number"
                 android:textColor="#ff7f7f7f"
                 android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/board_child_number"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:layout_column="0"
                 android:textColor="#ff7f7f7f"
                 android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:gravity="right"
                 android:text="@string/board_child_englishname"
                 android:textColor="#ff7f7f7f"
                 android:textSize="15sp" />
@@ -49,10 +59,9 @@
                 android:id="@+id/board_child_englishname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="0"
                 android:textColor="#ff7f7f7f"
                 android:textSize="15sp" />
-        </TableRow>
-    </TableLayout>
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

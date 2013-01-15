@@ -232,6 +232,7 @@ public class MyRegexParseUtils {
 		source = source.replaceAll(EXPRESSION_REGEX_STRING, "<img src='$1' />");
 		source = source.replaceAll(URL_REGEX_STRING,
 				"<img src='url' /><a href='$1'>$1</a>");
+		source = source.replaceAll("\n", "<br>");
 		return source;
 	}
 }

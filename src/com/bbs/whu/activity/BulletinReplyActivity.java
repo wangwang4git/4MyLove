@@ -19,12 +19,15 @@ import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 
 public class BulletinReplyActivity extends Activity implements OnClickListener {
+	private String head;// 界面显示“帖子回复”还是“帖子发表”
 	private String originBoard;// 原帖版块
 	private String originId;// 原帖id号
 	private String originTitle;// 原帖标题
 	private String originAuthor;// 原帖作者
 	private String originContent;// 原帖内容
 
+	// 界面标题
+	TextView headTextView;
 	// 回复标题
 	TextView replyTitle;
 	// 回复内容
@@ -41,6 +44,7 @@ public class BulletinReplyActivity extends Activity implements OnClickListener {
 
 		// 获取传过来的数据，加载到界面上
 		Intent postInfoIntent = getIntent();
+		head = postInfoIntent.getStringExtra("head");
 		originBoard = postInfoIntent.getStringExtra("board");// 版块
 		originId = postInfoIntent.getStringExtra("id");// id号
 		originTitle = postInfoIntent.getStringExtra("title");// 标题
@@ -67,6 +71,9 @@ public class BulletinReplyActivity extends Activity implements OnClickListener {
 	 * 初始化控件
 	 */
 	private void initView() {
+		// 设子界面标题
+		headTextView = (TextView) findViewById(R.id.bulletin_reply_head);
+		headTextView.setText(head);
 		// 初始化标题并设置初始值
 		replyTitle = (TextView) findViewById(R.id.bulletin_reply_title);
 		replyTitle.setText(titleFormat(originTitle));
@@ -134,8 +141,11 @@ public class BulletinReplyActivity extends Activity implements OnClickListener {
 	 * @return
 	 */
 	private String contentFormat(String originAuthor, String originContent) {
+		// 如果原文内容太长，进行删减
+		String content = originContent.length() > 100 ? originContent
+				.substring(0, 100) + "......" : originContent;
 		// 内容
-		return "\n【在" + originAuthor + "的大作中提到: 】 : " + originContent;
+		return "\n【在" + originAuthor + "的大作中提到: 】 : " + content;
 	}
 
 	/**

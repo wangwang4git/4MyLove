@@ -69,7 +69,7 @@ public class BulletinAdapter extends MyBaseAdapter {
 		String author = ((BulletinBean) mItems.get(position)).getAuthor();
 		// 时间
 		String datetime = ((BulletinBean) mItems.get(position)).getTime();
-		
+
 		// 内容
 		String text = ((BulletinBean) mItems.get(position)).getText();
 		// 富文本显示
@@ -86,7 +86,7 @@ public class BulletinAdapter extends MyBaseAdapter {
 						return drawable;
 					}
 				}, null);
-		
+
 		// 来源
 		String source = ((BulletinBean) mItems.get(position)).getFrom();
 		// 回复
@@ -117,13 +117,13 @@ public class BulletinAdapter extends MyBaseAdapter {
 			holder.holderBulletinAuthorTitle.setText(title);
 			holder.holderBulletinAuthorAuthor.setText(author);
 			holder.holderBulletinAuthorDateTime.setText(datetime);
-			
+
 			// holder.holderBulletinAuthorText.setText(text);
 			holder.holderBulletinAuthorText.setText(textCharSequence);
 			// 该语句在设置后必加，不然没有任何效果
 			holder.holderBulletinAuthorText
 					.setMovementMethod(LinkMovementMethod.getInstance());
-			
+
 			holder.holderBulletinAuthorSource.setText(source);
 
 		} else if (getItemViewType(position) == COMMENT_ITEM) {
@@ -153,13 +153,13 @@ public class BulletinAdapter extends MyBaseAdapter {
 			// holder.holderCommentReplyLinearLayout.setVisibility(View.GONE);
 			// else
 			holder.holderBulletinCommentReply.setText(reply);
-			
+
 			// holder.holderBulletinCommentContent.setText(text);
 			holder.holderBulletinCommentContent.setText(textCharSequence);
 			// 该语句在设置后必加，不然没有任何效果
 			holder.holderBulletinCommentContent
 					.setMovementMethod(LinkMovementMethod.getInstance());
-			
+
 			holder.holderBulletinCommentSource.setText(source);
 		}
 		// 设置长按动作
@@ -224,6 +224,7 @@ public class BulletinAdapter extends MyBaseAdapter {
 		Intent intent = new Intent(context, BulletinReplyActivity.class);
 
 		// 添加参数
+		intent.putExtra("head", "帖子回复");
 		intent.putExtra("board", itemBoard);
 		intent.putExtra("id", itemId);
 		intent.putExtra("title", itemTitle);
@@ -234,7 +235,7 @@ public class BulletinAdapter extends MyBaseAdapter {
 		// 启动Activity。并传递一个intend对象
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 由于无法直接使用文件名来引用res/drawable中的图像资源， 我们利用反射技术 从R.drawable类中通过图像资源文件名，
 	 * 去获得相应的图像资源ID，实现代码如下：

@@ -23,7 +23,7 @@
     <string name="xlistview_footer_hint_ready">松开载入更多</string>
     <string name="board_child_number">编号：</string>
     <string name="board_child_englishname">名称：</string>
-    <string name="bulletin_reply_title">标题</string>
+    <string name="bulletin_reply_title_hint">标题在25个中文字符以内</string>
     <string name="bulletin_reply_content">正文</string>
     <string name="bulletin_reply_attachment">附件</string>
     <string name="bulletin_reply_signature">签名档</string>

@@ -37,7 +37,8 @@
         <activity android:name="com.bbs.whu.activity.TopTenActivity" />
         <activity android:name="com.bbs.whu.activity.TopicActivity" />
         <activity android:name="com.bbs.whu.activity.BulletinActivity" />
- 		<activity android:name="com.bbs.whu.activity.BulletinReplyActivity" />
+ 		<activity android:name="com.bbs.whu.activity.BulletinReplyActivity"
+ 			 android:windowSoftInputMode="adjustResize" />
  		<activity android:name="com.bbs.whu.activity.PersonActivity" />
         <activity android:name="com.bbs.whu.activity.CollectBoardActivity" />
         <activity android:name="com.bbs.whu.activity.OnlineFriendActivity" />

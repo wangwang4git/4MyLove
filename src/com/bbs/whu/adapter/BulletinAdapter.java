@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.bbs.whu.R;
 import com.bbs.whu.activity.BulletinReplyActivity;
+import com.bbs.whu.activity.PersonActivity;
 import com.bbs.whu.model.BulletinBean;
 import com.bbs.whu.utils.MyRegexParseUtils;
 
@@ -166,7 +167,7 @@ public class BulletinAdapter extends MyBaseAdapter {
 		convertView.setOnLongClickListener(new OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				final String[] choice = { "回复本楼", "回复楼主" };
+				final String[] choice = { "回复本楼", "回复楼主", "查看作者资料" };
 				// 弹出回复对话框
 				new AlertDialog.Builder(context)
 						.setTitle("列表框")
@@ -202,6 +203,12 @@ public class BulletinAdapter extends MyBaseAdapter {
 		case 1:
 			// 回复楼主即回复第一个item
 			goToBulletinReply(0);
+			break;
+		case 2:
+			// 跳转到个人资料界面
+			goToPersonActivity(position);
+			break;
+		default:
 			break;
 		}
 	}
@@ -249,5 +256,24 @@ public class BulletinAdapter extends MyBaseAdapter {
 			e.printStackTrace();
 		}
 		return id;
+	}
+	
+	/**
+	 * 跳转到个人资料界面
+	 * 
+	 * @param position
+	 *            长按的数据在列表中的序号
+	 */
+	private void goToPersonActivity(int position) {
+		String itemAuthor = ((BulletinBean) mItems.get(position)).getAuthor();
+
+		// 跳转到个人资料界面
+		Intent intent = new Intent(context, PersonActivity.class);
+
+		// 添加参数
+		intent.putExtra("author", itemAuthor);
+
+		// 启动Activity，并传递一个intend对象
+		context.startActivity(intent);
 	}
 }

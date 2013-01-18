@@ -33,7 +33,8 @@
             android:id="@+id/bulletin_comment_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:autoLink="phone" />
 
         <LinearLayout
             android:id="@+id/bulletin_comment_reply_linearLayout"

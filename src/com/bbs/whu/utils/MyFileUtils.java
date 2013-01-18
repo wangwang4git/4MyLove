@@ -18,9 +18,13 @@ import android.os.Environment;
 
 public class MyFileUtils {
 	private static final int BUFFER = 8192;
-
-	// 缓存SD卡路径
+	// 用户名、密码json文件名
+	public static final String USERPASSWORDNAME = "4MyLove";
+	
+	// 缓存文件SD卡路径
 	public static String mSdcardDataCacheDir;
+	// 用户名、密码json文件SD卡路径
+	public static String mSdcardDataUserPasswordDir;
 
 	public static String getSdcardDataCacheDir(String userName) {
 		if (Environment.getExternalStorageState().equals(
@@ -36,6 +40,22 @@ public class MyFileUtils {
 			}
 		}
 		return mSdcardDataCacheDir;
+	}
+	
+	public static String getSdcardDataUserPasswordDir() {
+		if (Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED)) {
+			File file = new File(Environment.getExternalStorageDirectory()
+					.getPath() + "/whubbs/data/cache");
+			if (!file.exists()) {
+				if (file.mkdirs()) {
+					mSdcardDataUserPasswordDir = file.getAbsolutePath();
+				}
+			} else {
+				mSdcardDataUserPasswordDir = file.getAbsolutePath();
+			}
+		}
+		return mSdcardDataUserPasswordDir;
 	}
 
 	// 读取文件
@@ -55,7 +75,7 @@ public class MyFileUtils {
 	}
 
 	// 从流中读取文件
-	public static String readTextInputStream(InputStream is) throws IOException {
+	private static String readTextInputStream(InputStream is) throws IOException {
 		StringBuffer strbuffer = new StringBuffer();
 		String line;
 		BufferedReader reader = null;
@@ -172,5 +192,5 @@ public class MyFileUtils {
 				delFolder(path + "/" + tempList[i]);
 			}
 		}
-	}
+	}	
 }

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bbs.whu.R;
+import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyFileUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -51,8 +52,10 @@ public class MoreActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				// 清空本地文件缓存
-				// 删除/whubbs/data/cache根文件夹/whubbs，需要删除返回路径中的/data/cache
-				MyFileUtils.delFolder(MyFileUtils.getSdcardDataCacheDir().replace("/data/cache", ""));
+				// 删除/whubbs/data/cache/username/文件夹
+				MyFileUtils.delFolder(MyFileUtils
+						.getSdcardDataCacheDir(((MyApplication) getApplication())
+								.getName()));
 				// 清空图片下载器内存缓存
 				imageLoader.clearMemoryCache();
 				// 清空图片下载器文件缓存

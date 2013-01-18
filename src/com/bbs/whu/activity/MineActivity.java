@@ -69,7 +69,9 @@ public class MineActivity extends Activity implements View.OnClickListener {
 			Intent intent = new Intent(this, PersonActivity.class);
 			// Ìí¼Ó²ÎÊý
 			intent.putExtra("author",
-					((MyApplication) getApplication()).getName());
+					(Boolean) ((MyApplication) getApplication()).getName()
+							.equals("4MyLove") ? "wwang"
+							: ((MyApplication) getApplication()).getName());
 			this.startActivity(intent);
 			break;
 		case 2:

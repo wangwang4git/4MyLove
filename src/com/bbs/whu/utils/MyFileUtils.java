@@ -22,11 +22,11 @@ public class MyFileUtils {
 	// »º´æSD¿¨Â·¾¶
 	public static String mSdcardDataCacheDir;
 
-	public static String getSdcardDataCacheDir() {
+	public static String getSdcardDataCacheDir(String userName) {
 		if (Environment.getExternalStorageState().equals(
 				android.os.Environment.MEDIA_MOUNTED)) {
 			File file = new File(Environment.getExternalStorageDirectory()
-					.getPath() + "/whubbs/data/cache");
+					.getPath() + "/whubbs/data/cache/" + userName);
 			if (!file.exists()) {
 				if (file.mkdirs()) {
 					mSdcardDataCacheDir = file.getAbsolutePath();

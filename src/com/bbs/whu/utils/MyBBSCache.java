@@ -11,8 +11,8 @@ public class MyBBSCache {
 		}
 
 		String result = null;
-		File file = new File(MyFileUtils.getSdcardDataCacheDir() + "/"
-				+ getCacheDecodeString(url));
+		File file = new File(MyFileUtils.getSdcardDataCacheDir(MyApplication
+				.getInstance().getName()) + "/" + getCacheDecodeString(url));
 		if (file.exists() && file.isFile()) {
 			try {
 				result = MyFileUtils.readTextFile(file);
@@ -25,8 +25,8 @@ public class MyBBSCache {
 
 	// 写缓存
 	public static void setUrlCache(String data, String url) {
-		File file = new File(MyFileUtils.getSdcardDataCacheDir() + "/"
-				+ getCacheDecodeString(url));
+		File file = new File(MyFileUtils.getSdcardDataCacheDir(MyApplication
+				.getInstance().getName()) + "/" + getCacheDecodeString(url));
 		try {
 			// 创建缓存数据到磁盘，就是创建文件
 			MyFileUtils.writeTextFile(file, data);

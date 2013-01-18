@@ -24,7 +24,23 @@
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:layout_marginTop="10.0dp" android:clickable="true"
 				android:background="@drawable/more_list_above">
-				<TextView style="@style/more_list_font" android:text="其他功能..." />
+				<TextView style="@style/more_list_font" android:text="版本信息" />
+				<ImageView style="@style/more_list_triangle"
+					android:background="@drawable/more_list_triangle" />
+			</LinearLayout>
+
+			<LinearLayout android:orientation="horizontal"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:clickable="true" android:background="@drawable/more_list_mid">
+				<TextView style="@style/more_list_font" android:text="检查更新" />
+				<ImageView style="@style/more_list_triangle"
+					android:background="@drawable/more_list_triangle" />
+			</LinearLayout>
+
+			<LinearLayout android:orientation="horizontal"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:clickable="true" android:background="@drawable/more_list_mid">
+				<TextView style="@style/more_list_font" android:text="白天/夜间模式" />
 				<ImageView style="@style/more_list_triangle"
 					android:background="@drawable/more_list_triangle" />
 			</LinearLayout>
@@ -42,7 +58,7 @@
 			<LinearLayout android:orientation="horizontal"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:clickable="true" android:background="@drawable/more_list_below">
-				<TextView style="@style/more_list_font" android:text="其他功能..." />
+				<TextView style="@style/more_list_font" android:text="退出" />
 				<ImageView style="@style/more_list_triangle"
 					android:background="@drawable/more_list_triangle" />
 			</LinearLayout>

@@ -16,6 +16,9 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
  * 
  */
 public class MyApplication extends Application {
+	// 在任意位置获取Application Context，包括工具类
+	private static MyApplication instance;
+
 	PersistentCookieStore myCookieStore;
 
 	public PersistentCookieStore getCookieStore() {
@@ -27,9 +30,9 @@ public class MyApplication extends Application {
 	}
 
 	// 用户名
-	private String name;
+	private String name = "4MyLove";
 	// 密码
-	private String password;
+	private String password = "4MyLove";
 
 	public String getName() {
 		return name;
@@ -51,6 +54,7 @@ public class MyApplication extends Application {
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
+		instance = this;
 
 		// This configuration tuning is custom. You can tune every option, you
 		// may tune some of them,
@@ -73,5 +77,10 @@ public class MyApplication extends Application {
 				.build();
 		// Initialize ImageLoader with configuration.
 		ImageLoader.getInstance().init(config);
+	}
+	
+	// 在任意位置获取Application Context，包括工具类
+	public static MyApplication getInstance() {
+		return instance;
 	}
 }

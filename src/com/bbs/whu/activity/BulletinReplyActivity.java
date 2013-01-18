@@ -4,9 +4,13 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -19,6 +23,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.TextView.BufferType;
 import android.widget.Toast;
 
 import com.bbs.whu.R;
@@ -99,7 +104,14 @@ public class BulletinReplyActivity extends Activity {
 		
 		// 初始化内容并设置初始值
 		replyContent = (EditText) findViewById(R.id.bulletin_reply_content);
-		replyContent.setText(contentFormat(originAuthor, originContent));
+
+		//对执行添加的文本使用指定颜色
+		SpannableStringBuilder builder = new SpannableStringBuilder();
+		builder.append(contentFormat(originAuthor, originContent));
+		builder.setSpan(new ForegroundColorSpan(Color.BLUE), 0,
+				contentFormat(originAuthor, originContent).length(),
+				Spanned.SPAN_COMPOSING);
+		replyContent.setText(builder, BufferType.EDITABLE);
 		// 设置输入框焦点变更统一监听器
 		replyContent.setOnFocusChangeListener(bulletinReplyEditFocusListener);
 		

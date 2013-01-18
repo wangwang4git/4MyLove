@@ -33,10 +33,10 @@
             <Button
                 android:id="@+id/board_search_show_linearlayout_button"
                 android:layout_width="wrap_content"
-                android:layout_height="30dip"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dip"
-                android:background="@drawable/board_search_icon"
+                android:background="@drawable/search_normal"
                 android:gravity="center" />
 
             <TextView

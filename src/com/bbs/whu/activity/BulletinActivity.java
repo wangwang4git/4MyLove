@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Window;
 
 import com.bbs.whu.R;
 import com.bbs.whu.adapter.BulletinAdapter;
@@ -53,6 +54,7 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_bulletin);
 		// 获取传入的参数
 		board = getIntent().getStringExtra("board");
@@ -65,7 +67,7 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 		initHandler();
 		// 请求数据
 		getBulletin();
-		
+
 		// 利用反射机制修改ListView FastScroller默认滑块
 		// 参见http://www.eoeandroid.com/forum.php?mod=viewthread&tid=176342原文
 		// try {
@@ -172,7 +174,7 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 		// 如果是最后一页，则禁用“显示更多”
 		if (currentPage == totalPage)
 			mListView.setPullLoadEnable(false);
-
+		
 		// 获取帖子内容并添加
 		items.addAll(MyRegexParseUtils.getContentList(page));
 		// 刷新ListView

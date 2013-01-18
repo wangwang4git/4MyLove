@@ -158,6 +158,7 @@ public class TopicActivity extends Activity implements IXListViewListener {
 			// 禁用“显示更多”
 			mListView.setPullLoadEnable(false);
 		}
+		
 		// 获取帖子列表并添加
 		items.addAll(topics.getTopics());
 		// 刷新ListView

@@ -38,7 +38,7 @@ public class BoardActivity extends Activity {
 	private List<List<Board>> childs = new ArrayList<List<Board>>();
 	// 接收请求数据的handler
 	Handler mHandler;
-	
+
 	// 搜索匹配数据源
 	private List<String> mSearchBoardsList = new ArrayList<String>();
 	// 搜索匹配适配器
@@ -70,6 +70,11 @@ public class BoardActivity extends Activity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// 只有捕获返回键，并返回false，才能在MainActivity中捕获返回键
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+			// 如果版块搜索正在显示，则隐藏
+			if (mSearchLinearLayout.getVisibility() == View.VISIBLE) {
+				searchLayoutShow(false);
+				return true;
+			}
 			return false;
 		}
 		return false;
@@ -81,7 +86,7 @@ public class BoardActivity extends Activity {
 	private void initView() {
 		mExpandableListView = (ExpandableListView) findViewById(R.id.board_elist);
 		mExpandableListView.setGroupIndicator(null);
-		
+
 		// 获取AutoCompleteTextView对象，输入框
 		mSearchEditText = (AutoCompleteTextView) findViewById(R.id.board_search_autocompletetextview);
 		// 绑定搜索匹配数据源
@@ -89,7 +94,7 @@ public class BoardActivity extends Activity {
 				R.layout.board_search_match_item, mSearchBoardsList);
 		// 给AutoCompleteTextView对象指定ArrayAdapter对象
 		mSearchEditText.setAdapter(mSearchAdapter);
-		
+
 		// 获取确定按钮
 		mSearchConfirmButton = (ImageView) findViewById(R.id.board_search_confirm);
 		// 获取搜索布局
@@ -188,7 +193,7 @@ public class BoardActivity extends Activity {
 		}
 		// 刷新ListView
 		mAdapter.notifyDataSetChanged();
-		
+
 		mSearchBoardsList.clear();
 		// 构造搜索匹配数据源
 		for (int i = 0; i < boardBeanList.size(); ++i) {
@@ -201,7 +206,7 @@ public class BoardActivity extends Activity {
 		}
 		mSearchAdapter.notifyDataSetChanged();
 	}
-	
+
 	/**
 	 * 搜索布局显示与隐藏切换
 	 * 
@@ -223,7 +228,7 @@ public class BoardActivity extends Activity {
 			mShowSearch.setVisibility(View.VISIBLE);
 		}
 	}
-	
+
 	/**
 	 * 搜索输入的版块名，并进行界面跳转
 	 * 

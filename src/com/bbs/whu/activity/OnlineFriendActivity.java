@@ -3,6 +3,7 @@ package com.bbs.whu.activity;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -65,10 +66,13 @@ public class OnlineFriendActivity extends Activity {
 				Toast.makeText(arg0.getContext(),
 						"点击的是 " + items.get((int) arg3), Toast.LENGTH_SHORT)
 						.show();
+				// 跳转到邮件发送界面
+				arg0.getContext().startActivity(
+						new Intent(arg0.getContext(), MailSendActivity.class));
 			}
 		});
 	}
-
+	
 	/**
 	 * 初始化适配器
 	 */

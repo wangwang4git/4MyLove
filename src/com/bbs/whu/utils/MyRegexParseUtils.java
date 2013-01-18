@@ -38,7 +38,7 @@ public class MyRegexParseUtils {
 	// 获取签名档信息
 	final static private String SIGN_REGEX_STRING = "(?<=\\\\n)--.*?(?=\\\\n\\\\n\\\\r)";
 	// 获取来源信息
-	final static private String FROM_REGEX_STRING = "(※ 来源:).*?(?=\\\\r\\[m\\\\n)";
+	final static private String FROM_REGEX_STRING = "((?<=m)※ 来源:).*?(?=\\\\r\\[m\\\\n)";
 
 	// 获取发信人名称
 	static public String getAuthor(String content) {
@@ -194,6 +194,8 @@ public class MyRegexParseUtils {
 		for (int i = 0; i < articles.size(); ++i) {
 			BulletinBean content = new BulletinBean();
 			String temp = articles.get(i).getContent();
+			// 在content中插入图片URL
+			temp = insertImageURL(temp, articles.get(i).getId());
 			content.setFloor(articles.get(i).getFloor());
 			content.setContent(temp);
 			content.setId(articles.get(i).getId());
@@ -213,9 +215,30 @@ public class MyRegexParseUtils {
 		return contents;
 	}
 
+	// 在content中提取图片的正则表达式
+	final static private String IMAGE_REGEX_STRING = "\\[upload=\\d+\\]\\[\\\\/upload\\](.*?)attach\\('.*?', .*?, (.*?)\\);";
+
+	// 在content中插入图片URL
+	static private String insertImageURL(String content, String id) {
+		Pattern pattern = Pattern.compile(IMAGE_REGEX_STRING);
+		while (true) {
+			Matcher matcher = pattern.matcher(content);
+			if (matcher.find()) {
+				// 插入图片URL
+				content = content.replaceAll(IMAGE_REGEX_STRING,
+						"<img src='img' />" + MyConstants.IMAGE_URL
+								+ "?bid=80&id=" + id + "&ap=$2$1");
+			} else {
+				break;
+			}
+		}
+		return content;
+	}
+	
+	
 	// 获取二级版块信息
 	final static private String TWO_LEVEL_BOARD_REGEX_STRING = "<board[^<>]*?hasChildren=true >(.*?)</board>";
-
+	
 	// 去除二级目录信息
 	static public String delTwoLevelBoard(String content) {
 		return content.replaceAll(TWO_LEVEL_BOARD_REGEX_STRING, "$1");
@@ -224,7 +247,19 @@ public class MyRegexParseUtils {
 	// 在文本中提取表情的正则表达式
 	final static private String EXPRESSION_REGEX_STRING = "\\[(em[0,1,2,3,4,5,6][0,1,2,3,4,5,6,7,8,9])\\]";
 	// 在文本中提取URL的正则表达式，出自《精通正则表达式》
-	final static private String URL_REGEX_STRING = "(\\b((ftp|https?)://[-\\w]+(\\.\\w[-\\w]*)+|(?i:[a-z0-9](?:[-a-z0-9]*[a-z0-9])?\\.)+(?-i:com\\b|edu\\b|biz\\b|gov\\b|in(?:t|fo)\\b|mil\\b|net\\b|org\\b|[a-z][a-z]\\b))(:\\d+)?(/[^.!,?;\"'<>()\\[\\]{}\\s\\x7F-\\xFF]*(?:[.!,?]+[^.!,?;\"'<>()\\[\\]{}\\s\\x7F-\\xFF]+)*)?)";
+	final static private String URL_REGEX_STRING = "([http|https]+[://]+[0-9A-Za-z:/[-]_#[?][=][.][&]]*)";
+	// 在文本中提取字体颜色的正则表达式
+	final static private String COLOR_REGEX_STRING = "(\\[color=(#[0-9A-Z]{6})\\])([\\s\\S]*?)(\\[/color\\])";
+	// 在文本中提取字体大小的正则表达式
+	final static private String SIZE_REGEX_STRING = "(\\[size=(\\d)\\])([\\s\\S]*?)(\\[/size\\])";
+	// 在文本中提取字体类型的正则表达式
+	final static private String FACE__REGEX_STRING = "(\\[face=(.*?)\\])([\\s\\S]*?)(\\[/face\\])";
+	// 在文本中提取粗体字的正则表达式
+	final static private String BOLD_REGEX_STRING = "\\[B\\]([\\s\\S]*?)\\[/B\\]";
+	// 在文本中提取斜体字的正则表达式
+	final static private String ITALIC_REGEX_STRING = "\\[I\\]([\\s\\S]*?)\\[/I\\]";
+	// 在文本中提取下划线的正则表达式
+	final static private String UNDERLINE_REGEX_STRING = "\\[U\\]([\\s\\S]*?)\\[/U\\]";
 
 	// TextView富文本（表情、URL等）显示替换操作
 	// 替换规则，参见http://blog.csdn.net/a_mean/article/details/6930968
@@ -232,6 +267,16 @@ public class MyRegexParseUtils {
 		source = source.replaceAll(EXPRESSION_REGEX_STRING, "<img src='$1' />");
 		source = source.replaceAll(URL_REGEX_STRING,
 				"<img src='url' /><a href='$1'>$1</a>");
+		source = source.replaceAll(COLOR_REGEX_STRING,
+				"<font color=\"$2\">$3</font>");
+		source = source.replaceAll(SIZE_REGEX_STRING,
+				"<big><font size=\"$2\">$3</font></big>");
+		source = source.replaceAll(FACE__REGEX_STRING,
+				"<font face=\"$2\">$3</font>");
+		source = source.replaceAll(BOLD_REGEX_STRING, "<big><b>$1</b></big>");
+		source = source.replaceAll(ITALIC_REGEX_STRING, "<i>$1</i>");
+		source = source.replaceAll(UNDERLINE_REGEX_STRING, "<u>$1</u>");
+		source = source.replaceAll("\n", "<br>");
 		return source;
 	}
 }

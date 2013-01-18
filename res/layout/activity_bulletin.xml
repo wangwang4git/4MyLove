@@ -1,13 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <com.bbs.whu.xlistview.XListView
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/background_left_bottom_flower" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/background_right_top_flower" />
+
+    <LinearLayout
+        android:id="@+id/bulletin_title_linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/mine_titlebar_bg"
+        android:gravity="center" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/bulletin_title"
+            android:textColor="#FF7B7B7B"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <com.bbs.whu.xlistview.XListView
         android:id="@+id/bulletin_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:cacheColorHint="#00000000" >
+        android:layout_below="@+id/bulletin_title_linearLayout"
+        android:cacheColorHint="#00000000" 
+        android:fastScrollEnabled="true" >
     </com.bbs.whu.xlistview.XListView>
 
-</LinearLayout>
+</RelativeLayout>

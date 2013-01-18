@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.bbs.whu.R;
 import com.bbs.whu.activity.BulletinReplyActivity;
+import com.bbs.whu.activity.PersonActivity;
 import com.bbs.whu.model.BulletinBean;
 import com.bbs.whu.utils.MyRegexParseUtils;
 
@@ -69,7 +70,7 @@ public class BulletinAdapter extends MyBaseAdapter {
 		String author = ((BulletinBean) mItems.get(position)).getAuthor();
 		// 时间
 		String datetime = ((BulletinBean) mItems.get(position)).getTime();
-		
+
 		// 内容
 		String text = ((BulletinBean) mItems.get(position)).getText();
 		// 富文本显示
@@ -86,7 +87,7 @@ public class BulletinAdapter extends MyBaseAdapter {
 						return drawable;
 					}
 				}, null);
-		
+
 		// 来源
 		String source = ((BulletinBean) mItems.get(position)).getFrom();
 		// 回复
@@ -117,13 +118,13 @@ public class BulletinAdapter extends MyBaseAdapter {
 			holder.holderBulletinAuthorTitle.setText(title);
 			holder.holderBulletinAuthorAuthor.setText(author);
 			holder.holderBulletinAuthorDateTime.setText(datetime);
-			
+
 			// holder.holderBulletinAuthorText.setText(text);
 			holder.holderBulletinAuthorText.setText(textCharSequence);
 			// 该语句在设置后必加，不然没有任何效果
 			holder.holderBulletinAuthorText
 					.setMovementMethod(LinkMovementMethod.getInstance());
-			
+
 			holder.holderBulletinAuthorSource.setText(source);
 
 		} else if (getItemViewType(position) == COMMENT_ITEM) {
@@ -153,20 +154,20 @@ public class BulletinAdapter extends MyBaseAdapter {
 			// holder.holderCommentReplyLinearLayout.setVisibility(View.GONE);
 			// else
 			holder.holderBulletinCommentReply.setText(reply);
-			
+
 			// holder.holderBulletinCommentContent.setText(text);
 			holder.holderBulletinCommentContent.setText(textCharSequence);
 			// 该语句在设置后必加，不然没有任何效果
 			holder.holderBulletinCommentContent
 					.setMovementMethod(LinkMovementMethod.getInstance());
-			
+
 			holder.holderBulletinCommentSource.setText(source);
 		}
 		// 设置长按动作
 		convertView.setOnLongClickListener(new OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				final String[] choice = { "回复本楼", "回复楼主" };
+				final String[] choice = { "回复本楼", "回复楼主", "查看作者资料" };
 				// 弹出回复对话框
 				new AlertDialog.Builder(context)
 						.setTitle("列表框")
@@ -203,6 +204,12 @@ public class BulletinAdapter extends MyBaseAdapter {
 			// 回复楼主即回复第一个item
 			goToBulletinReply(0);
 			break;
+		case 2:
+			// 跳转到个人资料界面
+			goToPersonActivity(position);
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -217,13 +224,14 @@ public class BulletinAdapter extends MyBaseAdapter {
 		String itemId = ((BulletinBean) mItems.get(position)).getId();
 		String itemTitle = ((BulletinBean) mItems.get(position)).getTitle();
 		String itemAuthor = ((BulletinBean) mItems.get(position)).getAuthor();
-		String itemBody = ((BulletinBean) mItems.get(position)).getBody();
+		String itemBody = ((BulletinBean) mItems.get(position)).getText();
 		String itemSign = ((BulletinBean) mItems.get(position)).getSign();
 
 		// 跳转到帖子回复界面
 		Intent intent = new Intent(context, BulletinReplyActivity.class);
 
 		// 添加参数
+		intent.putExtra("head", "帖子回复");
 		intent.putExtra("board", itemBoard);
 		intent.putExtra("id", itemId);
 		intent.putExtra("title", itemTitle);
@@ -234,7 +242,7 @@ public class BulletinAdapter extends MyBaseAdapter {
 		// 启动Activity。并传递一个intend对象
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 由于无法直接使用文件名来引用res/drawable中的图像资源， 我们利用反射技术 从R.drawable类中通过图像资源文件名，
 	 * 去获得相应的图像资源ID，实现代码如下：
@@ -248,5 +256,24 @@ public class BulletinAdapter extends MyBaseAdapter {
 			e.printStackTrace();
 		}
 		return id;
+	}
+	
+	/**
+	 * 跳转到个人资料界面
+	 * 
+	 * @param position
+	 *            长按的数据在列表中的序号
+	 */
+	private void goToPersonActivity(int position) {
+		String itemAuthor = ((BulletinBean) mItems.get(position)).getAuthor();
+
+		// 跳转到个人资料界面
+		Intent intent = new Intent(context, PersonActivity.class);
+
+		// 添加参数
+		intent.putExtra("author", itemAuthor);
+
+		// 启动Activity，并传递一个intend对象
+		context.startActivity(intent);
 	}
 }

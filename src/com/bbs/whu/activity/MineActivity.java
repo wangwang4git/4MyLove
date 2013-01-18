@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.bbs.whu.R;
+import com.bbs.whu.utils.MyApplication;
 
 /**
  * 我的山水界面， 可通过点击“个人资料”进入个人资料界面， 可通过点击“站内信息”进入站内信息界面， 可通过点击“收藏版面”进入收藏版面界面，
@@ -65,7 +66,13 @@ public class MineActivity extends Activity implements View.OnClickListener {
 		switch (tag) {
 		case 1:
 			// 跳转到个人资料页面
-			this.startActivity(new Intent(this, PersonActivity.class));
+			Intent intent = new Intent(this, PersonActivity.class);
+			// 添加参数
+			intent.putExtra("author",
+					(Boolean) ((MyApplication) getApplication()).getName()
+							.equals("4MyLove") ? "wwang"
+							: ((MyApplication) getApplication()).getName());
+			this.startActivity(intent);
 			break;
 		case 2:
 			// 跳转到站内信件页面

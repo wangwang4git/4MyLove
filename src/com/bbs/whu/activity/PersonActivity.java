@@ -3,18 +3,17 @@ package com.bbs.whu.activity;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bbs.whu.R;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.UserInfoBean;
-import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyXMLParseUtils;
@@ -64,6 +63,9 @@ public class PersonActivity extends Activity {
 	private DisplayImageOptions options;
 	//
 	private boolean instanceStateSaved;
+	
+	// 原帖作者
+	private String originAuthor;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,11 @@ public class PersonActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_person);
 
+		// 获取传过来的数据，加载到界面上
+		Intent postInfoIntent = getIntent();
+		// 作者
+		originAuthor = postInfoIntent.getStringExtra("author");
+		
 		options = new DisplayImageOptions.Builder()
 				.showStubImage(R.drawable.person_head_portrait)
 				.showImageForEmptyUri(R.drawable.person_head_portrait)
@@ -82,15 +89,8 @@ public class PersonActivity extends Activity {
 		initView();
 		// 初始化handler
 		initHandler();
-
-		if (null == ((MyApplication) getApplicationContext()).getName()) {
-			Toast.makeText(this,
-					"亲，你是匿名用户登录，看毛线的个人资料啊！\n这些是测试资料，退出切换你滴账号登录再回来吧~~~",
-					Toast.LENGTH_LONG).show();
-		} else {
-			// 请求个人信息数据
-			getUserInfo(false);
-		}
+		// 请求个人信息数据
+		getUserInfo(false);
 	}
 
 	@Override
@@ -168,7 +168,7 @@ public class PersonActivity extends Activity {
 		keys.add("app");
 		values.add("userInfo");
 		keys.add("userId");
-		values.add(((MyApplication) getApplicationContext()).getName());
+		values.add(originAuthor);
 		// 请求数据
 		MyBBSRequest.mGet(MyConstants.GET_URL, keys, values, "PersonActivity",
 				isForcingWebGet, this);
@@ -179,9 +179,8 @@ public class PersonActivity extends Activity {
 	 */
 	private void refreshUserInfo(String res) {
 		UserInfoBean userInfo = MyXMLParseUtils.readXml2UserInfo(res);
-		//
 		imageLoader.displayImage(
-				MyConstants.WHU_BBS + userInfo.getUserface_img(),
+				MyConstants.HEAD_URL + userInfo.getUserface_img(),
 				mPersonHeadPortrait, options);
 		mPersonName.setText(userInfo.getNickname());
 		mPersonPost.setText(userInfo.getUserlevel());
@@ -192,6 +191,6 @@ public class PersonActivity extends Activity {
 		mPersonArticleNumber.setText(userInfo.getNumposts());
 		mPersonLoginNumber.setText(userInfo.getNumlogins());
 		mPersonLoginTime.setText(userInfo.getLastlogin());
-		mPersonSign.setText("null");
+		mPersonSign.setText("");
 	}
 }

@@ -22,6 +22,7 @@ import com.bbs.whu.R;
 import com.bbs.whu.activity.BulletinReplyActivity;
 import com.bbs.whu.activity.PersonActivity;
 import com.bbs.whu.model.BulletinBean;
+import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyRegexParseUtils;
 
 /**
@@ -167,6 +168,9 @@ public class BulletinAdapter extends MyBaseAdapter {
 		convertView.setOnLongClickListener(new OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
+				// 如果是匿名用户，不能回复
+				if (MyApplication.getInstance().getName().equals("4MyLove"))
+					return false;
 				final String[] choice = { "回复本楼", "回复楼主", "查看作者资料" };
 				// 弹出回复对话框
 				new AlertDialog.Builder(context)
@@ -257,7 +261,7 @@ public class BulletinAdapter extends MyBaseAdapter {
 		}
 		return id;
 	}
-	
+
 	/**
 	 * 跳转到个人资料界面
 	 * 

@@ -27,6 +27,8 @@ public class MyConstants {
 	public static final String GET_URL = "http://bbs.whu.edu.cn/mobile.php";
 	// post提交回复帖子的数据
 	public static final String POST_BULLETIN_REPLY_URL = "http://bbs.whu.edu.cn/wForum/dopostarticle.php";
-	// 武大BBS URL，用于图片url前缀
-	public static final String WHU_BBS = "http://bbs.whu.edu.cn/";
+	// 用户头像URL前缀
+	public static final String HEAD_URL = "http://bbs.whu.edu.cn/";
+	// 帖子内容中图片URL前缀
+	public static final String IMAGE_URL = "http://bbs.whu.edu.cn/wForum/bbscon.php";
 }

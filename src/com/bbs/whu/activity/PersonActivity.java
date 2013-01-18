@@ -179,9 +179,8 @@ public class PersonActivity extends Activity {
 	 */
 	private void refreshUserInfo(String res) {
 		UserInfoBean userInfo = MyXMLParseUtils.readXml2UserInfo(res);
-		//
 		imageLoader.displayImage(
-				MyConstants.WHU_BBS + userInfo.getUserface_img(),
+				MyConstants.HEAD_URL + userInfo.getUserface_img(),
 				mPersonHeadPortrait, options);
 		mPersonName.setText(userInfo.getNickname());
 		mPersonPost.setText(userInfo.getUserlevel());

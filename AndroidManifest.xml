@@ -28,7 +28,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.bbs.whu.activity.MainActivity" />
+       <activity
+            android:name="com.bbs.whu.activity.MainActivity"
+            android:launchMode="singleTask" />
         <activity android:name="com.bbs.whu.activity.HomeActivity" />
         <activity android:name="com.bbs.whu.activity.BoardActivity" />
         <activity android:name="com.bbs.whu.activity.MineActivity" />

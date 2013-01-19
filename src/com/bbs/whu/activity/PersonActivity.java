@@ -10,10 +10,12 @@ import android.os.Message;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bbs.whu.R;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.UserInfoBean;
+import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyXMLParseUtils;
@@ -66,6 +68,10 @@ public class PersonActivity extends Activity {
 	
 	// 原帖作者
 	private String originAuthor;
+	
+	// get参数
+	ArrayList<String> keys = new ArrayList<String>();
+	ArrayList<String> values = new ArrayList<String>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -162,9 +168,9 @@ public class PersonActivity extends Activity {
 	 */
 
 	private void getUserInfo(boolean isForcingWebGet) {
+		keys.clear();
+		values.clear();
 		// 添加get参数
-		ArrayList<String> keys = new ArrayList<String>();
-		ArrayList<String> values = new ArrayList<String>();
 		keys.add("app");
 		values.add("userInfo");
 		keys.add("userId");
@@ -179,6 +185,17 @@ public class PersonActivity extends Activity {
 	 */
 	private void refreshUserInfo(String res) {
 		UserInfoBean userInfo = MyXMLParseUtils.readXml2UserInfo(res);
+		// 论坛错误，无正确数据返回，显示错误提示
+		if (null == userInfo) {
+			// 删除指定Cache文件
+			MyBBSCache.delCacheFile(MyBBSCache.getCacheFileName(
+					MyConstants.GET_URL, keys, values));
+			// toast提醒
+			Toast.makeText(this, R.string.bbs_exception_text,
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
+		
 		imageLoader.displayImage(
 				MyConstants.HEAD_URL + userInfo.getUserface_img(),
 				mPersonHeadPortrait, options);

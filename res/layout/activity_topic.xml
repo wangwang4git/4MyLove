@@ -38,10 +38,17 @@
     <com.bbs.whu.xlistview.XListView
         android:id="@+id/topic_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/topic_title_linearLayout"
         android:cacheColorHint="#00000000"
         android:fastScrollEnabled="true"  >
     </com.bbs.whu.xlistview.XListView>
+    
+	<LinearLayout android:layout_width="match_parent"
+		android:layout_height="wrap_content" android:layout_below="@id/topic_listview"
+		android:gravity="center">
+		<ImageView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:src="@drawable/listview_tail" />
+	</LinearLayout>
 
 </RelativeLayout>

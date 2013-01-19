@@ -56,8 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:textSize="15sp"
-        android:autoLink="phone" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/bulletin_author_source"

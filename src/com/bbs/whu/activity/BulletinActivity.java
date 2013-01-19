@@ -10,12 +10,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.bbs.whu.R;
 import com.bbs.whu.adapter.BulletinAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.BulletinBean;
 import com.bbs.whu.model.bulletin.Page;
+import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyRegexParseUtils;
@@ -50,6 +52,9 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 	Handler mHandler;
 	// 回复列表
 	private XListView mListView;
+	// get参数
+	ArrayList<String> keys = new ArrayList<String>();
+	ArrayList<String> values = new ArrayList<String>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -141,9 +146,9 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 	 * 请求帖子详情数据
 	 */
 	private void getBulletin() {
+		keys.clear();
+		values.clear();
 		// 添加get参数
-		ArrayList<String> keys = new ArrayList<String>();
-		ArrayList<String> values = new ArrayList<String>();
 		keys.add("app");
 		values.add("read");
 		keys.add("board");
@@ -166,6 +171,21 @@ public class BulletinActivity extends Activity implements IXListViewListener {
 	private void refreshBulletin(String res) {
 		// XML反序列化
 		Page page = MyXMLParseUtils.readXml2Page(res);
+		// 论坛错误，无正确数据返回，显示错误提示
+		if (null == page) {
+			// 禁用“下拉刷新”
+			mListView.setPullRefreshEnable(false);
+			// 禁用“显示更多”
+			mListView.setPullLoadEnable(false);
+			// 删除指定Cache文件
+			MyBBSCache.delCacheFile(MyBBSCache.getCacheFileName(
+					MyConstants.GET_URL, keys, values));
+			// toast提醒
+			Toast.makeText(this, R.string.bbs_exception_text,
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
+		
 		// 获得当前页号
 		currentPage = Integer.parseInt(page.getNum().getAttributeValue());
 		// 获得页总数

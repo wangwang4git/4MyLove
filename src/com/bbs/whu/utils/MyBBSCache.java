@@ -2,6 +2,7 @@ package com.bbs.whu.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.bbs.whu.model.UserPasswordBean;
@@ -165,5 +166,41 @@ public class MyBBSCache {
 		Gson gson = new Gson();
 		String content = gson.toJson(userPasswords);
 		setUserPasswordCache(content, name);
+	}
+	
+	// 删除指定Cache文件
+	public static void delCacheFile(String fileName) {
+		File file = new File(MyFileUtils.getSdcardDataCacheDir(MyApplication
+				.getInstance().getName())
+				+ "/"
+				+ getCacheDecodeString(fileName));
+		if (file.isFile()) {
+			file.delete();
+		}
+	}
+	
+	/**
+	 * 构造缓存文件名
+	 * 
+	 * @param url
+	 *            请求的URL地址
+	 * @param keys
+	 *            get请求时键（key）
+	 * @param values
+	 *            get请求时值（value）
+	 * @return 缓存文件名，格式为：URL+get参数+Cookie+用户名
+	 */
+	public static String getCacheFileName(String url, ArrayList<String> keys,
+			ArrayList<String> values) {
+		// 缓存文件名中的参数部分
+		StringBuilder paramsString = new StringBuilder();
+		/* 构造 get请求的参数String */
+		for (int i = 0; i < keys.size(); ++i) {
+			paramsString.append(keys.get(i));
+			paramsString.append(values.get(i));
+		}
+		// 返回构造的缓存文件名
+		return url + paramsString.toString()
+				+ MyApplication.getInstance().getName();
 	}
 }

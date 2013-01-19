@@ -50,4 +50,5 @@
     <string name="recommend_time_text">时间：</string>
     <string name="mail_send_text">发送信件</string>
 	<string name="mail_send_submit_text">发 送</string>
+	<string name="bbs_exception_text">论坛错误:\t\t\t\t\t\n\t\t1.无登录权限\n\t\t2.原文不存在</string>
 </resources>

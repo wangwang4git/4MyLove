@@ -46,11 +46,20 @@ public class MyXMLParseUtils {
 		XStream xstream = new XStream();
 		// 类重命名
 		xstream.alias("hot", TopTenBean.class);
-		// 反序列化
-		@SuppressWarnings("unchecked")
-		List<TopTenBean> topTenList = (List<TopTenBean>) xstream
-				.fromXML(XMLStream);
-		return topTenList;
+		// 加入异常处理
+		try
+		{
+			// 反序列化
+			@SuppressWarnings("unchecked")
+			List<TopTenBean> topTenList = (List<TopTenBean>) xstream
+					.fromXML(XMLStream);
+			return topTenList;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println(XMLStream);
+			return null;
+		}
 	}
 
 	/**
@@ -76,7 +85,15 @@ public class MyXMLParseUtils {
 		xstream.useAttributeFor(Page.class, "total");
 		xstream.registerConverter(new numConverter());
 		xstream.registerConverter(new totalConverter());
-		return (Page) xstream.fromXML(XMLStream);
+		// 加入异常处理
+		try {
+			return (Page) xstream.fromXML(XMLStream);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println(XMLStream);
+			return null;
+		}
 	}
 	
 	/**
@@ -97,11 +114,19 @@ public class MyXMLParseUtils {
 		XStream xstream = new XStream();
 		// 类重命名
 		xstream.alias("recomm", RecommendBean.class);
-		// 反序列化
-		@SuppressWarnings("unchecked")
-		List<RecommendBean> recommendList = (List<RecommendBean>) xstream
-				.fromXML(XMLStream);
-		return recommendList;
+		// 加入异常处理
+		try {
+			// 反序列化
+			@SuppressWarnings("unchecked")
+			List<RecommendBean> recommendList = (List<RecommendBean>) xstream
+					.fromXML(XMLStream);
+			return recommendList;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println(XMLStream);
+			return null;
+		}
 	}
 	
 	/**
@@ -122,11 +147,19 @@ public class MyXMLParseUtils {
 		XStream xstream = new XStream();
 		// 类重命名
 		xstream.alias("poster", PlaybillBean.class);
-		// 反序列化
-		@SuppressWarnings("unchecked")
-		List<PlaybillBean> playbillList = (List<PlaybillBean>) xstream
-				.fromXML(XMLStream);
-		return playbillList;
+		// 加入异常处理
+		try {
+			// 反序列化
+			@SuppressWarnings("unchecked")
+			List<PlaybillBean> playbillList = (List<PlaybillBean>) xstream
+					.fromXML(XMLStream);
+			return playbillList;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println(XMLStream);
+			return null;
+		}
 	}
 	
 	/**
@@ -143,7 +176,15 @@ public class MyXMLParseUtils {
 		XMLStream = XMLStream.replaceAll("&", "&amp;");
 		XStream xstream = new XStream();
 		xstream.alias("user", UserInfoBean.class);
-		return (UserInfoBean) xstream.fromXML(XMLStream);
+		// 加入异常处理
+		try {
+			return (UserInfoBean) xstream.fromXML(XMLStream);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println(XMLStream);
+			return null;
+		}
 	}
 	
 	/**
@@ -179,11 +220,19 @@ public class MyXMLParseUtils {
 		xstream.registerConverter(new nameConverter());
 		xstream.useAttributeFor(Board.class, "id");
 		xstream.registerConverter(new idConverter());
-		// 反序列化
-		@SuppressWarnings("unchecked")
-		List<BoardBean> boardList = (List<BoardBean>) xstream
-				.fromXML(XMLStream);
-		return boardList;
+		// 加入异常处理
+		try {
+			// 反序列化
+			@SuppressWarnings("unchecked")
+			List<BoardBean> boardList = (List<BoardBean>) xstream
+					.fromXML(XMLStream);
+			return boardList;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println(XMLStream);
+			return null;
+		}
 	}
 	
 	/**
@@ -213,6 +262,15 @@ public class MyXMLParseUtils {
 		xstream.registerConverter(new boardConverter());
 		xstream.registerConverter(new pageConverter());
 		xstream.registerConverter(new totalPagesConverter());
-		return (Topics) xstream.fromXML(XMLStream);
+		// 加入异常处理
+		try {
+			// 反序列化
+			return (Topics) xstream.fromXML(XMLStream);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println(XMLStream);
+			return null;
+		}
 	}
 }

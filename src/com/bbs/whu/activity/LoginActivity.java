@@ -26,7 +26,6 @@ import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
-import com.bbs.whu.utils.MyEncryptionDecryptionUtils;
 import com.bbs.whu.utils.MyFileUtils;
 import com.bbs.whu.utils.MyHttpClient;
 import com.loopj.android.http.PersistentCookieStore;
@@ -146,6 +145,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 						// 跳转的主页
 						startActivity(new Intent(LoginActivity.this,
 								MainActivity.class));
+						// 登陆后操作
+						loginAfter();
 						// 关闭等待对话框
 						mProgressDialog.dismiss();
 						// 关闭登陆页面
@@ -207,39 +208,29 @@ public class LoginActivity extends Activity implements OnClickListener {
 	 */
 	private void loginAfter() {
 		// 遍历当前用户名、密码是否存在于列表中
+		// 但是如果是匿名，不遍历也不加入
 		String loginName = ((MyApplication) getApplicationContext()).getName();
 		String loginPassword = ((MyApplication) getApplicationContext())
 				.getPassword();
-		Boolean isExist = false;
-		for (int i = 0; i < userPasswords.size(); ++i) {
-			if (userPasswords.get(i).getName().equals(loginName)
-					&& userPasswords.get(i).getPassword().equals(loginPassword)) {
-				isExist = true;
-				break;
-			}
-		}
-		// 不存在，就添加
-		if (!isExist) {
-			UserPasswordBean bean = new UserPasswordBean();
-			bean.setName(loginName);
-			bean.setPassword(loginPassword);
-			userPasswords.add(bean);
-		}
-		// 用户名，密码加密
-		try {
-			// 采用默认密钥
-			MyEncryptionDecryptionUtils des = new MyEncryptionDecryptionUtils();
+		if (!loginName.equals(MyFileUtils.USERPASSWORDNAME)) {
+			Boolean isExist = false;
 			for (int i = 0; i < userPasswords.size(); ++i) {
-				String name = des.encrypt(userPasswords.get(i).getName());
-				userPasswords.get(i).setName(name);
-				String password = des.encrypt(userPasswords.get(i)
-						.getPassword());
-				userPasswords.get(i).setPassword(password);
+				if (userPasswords.get(i).getName().equals(loginName)
+						&& userPasswords.get(i).getPassword()
+								.equals(loginPassword)) {
+					isExist = true;
+					break;
+				}
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// 不存在，就添加
+			if (!isExist) {
+				UserPasswordBean bean = new UserPasswordBean();
+				bean.setName(loginName);
+				bean.setPassword(loginPassword);
+				userPasswords.add(bean);
+			}
 		}
+
 		// 序列化到用户名、密码json文件
 		MyBBSCache.setUserPasswordList(userPasswords,
 				MyFileUtils.USERPASSWORDNAME);
@@ -255,22 +246,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 如果userPasswords为空，当前还不存在用户名、密码json文件
 		if (null == userPasswords) {
 			userPasswords = new ArrayList<UserPasswordBean>();
-		} else {
-			// 用户名，密码解密
-			try {
-				// 采用默认密钥
-				MyEncryptionDecryptionUtils des = new MyEncryptionDecryptionUtils();
-				for (int i = 0; i < userPasswords.size(); ++i) {
-					String name = des.decrypt(userPasswords.get(i).getName());
-					userPasswords.get(i).setName(name);
-					String password = des.decrypt(userPasswords.get(i)
-							.getPassword());
-					userPasswords.get(i).setPassword(password);
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 

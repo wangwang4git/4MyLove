@@ -109,8 +109,27 @@ public class MyBBSCache {
 		}
 
 		Gson gson = new Gson();
-		return gson.fromJson(content, new TypeToken<List<UserPasswordBean>>() {
-		}.getType());
+		List<UserPasswordBean> userPasswords = gson.fromJson(content,
+				new TypeToken<List<UserPasswordBean>>() {
+				}.getType());
+
+		// 用户名，密码解密
+		try {
+			// 采用默认密钥
+			MyEncryptionDecryptionUtils des = new MyEncryptionDecryptionUtils();
+			for (int i = 0; i < userPasswords.size(); ++i) {
+				String user = des.decrypt(userPasswords.get(i).getName());
+				userPasswords.get(i).setName(user);
+				String password = des.decrypt(userPasswords.get(i)
+						.getPassword());
+				userPasswords.get(i).setPassword(password);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return userPasswords;
 	}
 	
 	/**
@@ -126,7 +145,23 @@ public class MyBBSCache {
 		if (userPasswords == null) {
 			return;
 		}
-
+		
+		// 用户名，密码加密
+		try {
+			// 采用默认密钥
+			MyEncryptionDecryptionUtils des = new MyEncryptionDecryptionUtils();
+			for (int i = 0; i < userPasswords.size(); ++i) {
+				String user = des.encrypt(userPasswords.get(i).getName());
+				userPasswords.get(i).setName(user);
+				String password = des.encrypt(userPasswords.get(i)
+						.getPassword());
+				userPasswords.get(i).setPassword(password);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		Gson gson = new Gson();
 		String content = gson.toJson(userPasswords);
 		setUserPasswordCache(content, name);

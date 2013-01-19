@@ -168,20 +168,31 @@ public class BulletinAdapter extends MyBaseAdapter {
 		convertView.setOnLongClickListener(new OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
+				// 是否是匿名用户
+				final boolean isAnonymous = MyApplication.getInstance()
+						.getName().equals("4MyLove");
 				// 如果是匿名用户，不能回复
-				if (MyApplication.getInstance().getName().equals("4MyLove"))
-					return false;
-				final String[] choice = { "回复本楼", "回复楼主", "查看作者资料" };
+				String[] choices;
+				if (isAnonymous) {
+					choices = new String[1];
+					choices[0] = "查看作者资料";
+				} else {
+					choices = new String[3];
+					choices[0] = "回复本楼";
+					choices[1] = "回复楼主";
+					choices[2] = "查看作者资料";
+				}
 				// 弹出回复对话框
 				new AlertDialog.Builder(context)
 						.setTitle("列表框")
-						.setItems(choice,
+						.setItems(choices,
 								new DialogInterface.OnClickListener() {
 									// 响应列表的点击事件
 									public void onClick(DialogInterface dialog,
 											int which) {
 										// 处理
-										processLongClick(which, position);
+										processLongClick(which, position,
+												isAnonymous);
 									}
 								}).show();
 				return false;
@@ -197,12 +208,19 @@ public class BulletinAdapter extends MyBaseAdapter {
 	 *            对话框中按下的选项序号
 	 * @param position
 	 *            长按的item在列表中的序号
+	 * @param isAnonymous
+	 *            是否匿名登陆
 	 */
 
-	private void processLongClick(int which, int position) {
+	private void processLongClick(int which, int position, boolean isAnonymous) {
 		switch (which) {
 		case 0:
-			goToBulletinReply(position);
+			if (isAnonymous)
+				// 跳转到个人资料界面
+				goToPersonActivity(position);
+			else
+				// 跳转到回复界面
+				goToBulletinReply(position);
 			break;
 		case 1:
 			// 回复楼主即回复第一个item

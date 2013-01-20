@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#235654" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="40dp" >
+
+        <ImageView
+            android:id="@+id/image_delete_user"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/login_delete"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/text_user_item"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/image_delete_user"
+            android:paddingLeft="5dp"
+            android:textSize="25dp" >
+        </TextView>
+    </RelativeLayout>
+
+</LinearLayout>

@@ -15,6 +15,7 @@
     <string name="playbill_text">校园海报</string>
     <string name="recommend_text">推荐文章</string>
     <string name="bulletin_title">帖子详情</string>
+    <string name="bulletin_reply">回复</string>
     <string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>
     <string name="xlistview_header_hint_loading">正在加载</string>
@@ -49,6 +50,7 @@
     <string name="recommend_board_text">版块：</string>
     <string name="recommend_time_text">时间：</string>
     <string name="mail_send_text">发送信件</string>
-	<string name="mail_send_submit_text">发 送</string>
-	<string name="bbs_exception_text">论坛错误:\t\t\t\t\t\n\t\t1.无登录权限\n\t\t2.原文不存在</string>
+    <string name="mail_send_submit_text">发 送</string>
+    <string name="bbs_exception_text">论坛错误:\t\t\t\t\t\n\t\t1.无登录权限\n\t\t2.原文不存在</string>
+
 </resources>

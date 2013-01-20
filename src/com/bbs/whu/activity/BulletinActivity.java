@@ -97,7 +97,7 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		// throw new RuntimeException(e);
 		// }
 	}
-	
+
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
@@ -228,7 +228,7 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		// 当前页增加一页，便于下次申请
 		currentPage++;
 	}
-	
+
 	/**
 	 * 回复本帖
 	 */
@@ -245,7 +245,7 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		Intent intent = new Intent(this, BulletinReplyActivity.class);
 
 		// 添加参数
-		intent.putExtra("head", "帖子回复");
+		intent.putExtra("head", MyConstants.BULLETIN_REPLY);
 		intent.putExtra("board", itemBoard);
 		intent.putExtra("id", itemId);
 		intent.putExtra("title", itemTitle);

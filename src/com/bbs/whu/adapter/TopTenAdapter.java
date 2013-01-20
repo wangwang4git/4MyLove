@@ -48,25 +48,26 @@ public class TopTenAdapter extends MyBaseAdapter {
 		} else {
 			holder = (TopTenViewHolder) convertView.getTag();
 		}
+		TopTenBean mItem = (TopTenBean) mItems.get(position);
 		// 帖子标题
-		String title = ((TopTenBean) mItems.get(position)).getTilte();
+		String title = mItem.getTilte();
 		// 帖子回复数
-		Long number = ((TopTenBean) mItems.get(position)).getNumber();
+		Long number = mItem.getNumber();
 		// 帖子作者
-		String author = ((TopTenBean) mItems.get(position)).getAuthor();
+		String author = mItem.getAuthor();
 		// 帖子版面中文名
-		String boardName = ((TopTenBean) mItems.get(position)).getBoardname();
+		String boardName = mItem.getBoardname();
 		// 帖子版面英文名
-		final String board = ((TopTenBean) mItems.get(position)).getBoard();
+		final String board = mItem.getBoard();
 		// 帖子ID
-		final Long groupid = ((TopTenBean) mItems.get(position)).getGroupid();
-		
+		final Long groupid = mItem.getGroupid();
+
 		// 填充控件
 		holder.holderTopTenTitle.setText(title);
 		holder.holderTopTenNumber.setText(number.toString());
 		holder.holderTopTenAuthor.setText(author);
 		holder.holderTopTenBoardName.setText(boardName);
-		
+
 		// 添加点击响应事件
 		convertView.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

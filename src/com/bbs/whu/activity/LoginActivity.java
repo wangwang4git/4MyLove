@@ -30,6 +30,7 @@ import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
+import com.bbs.whu.utils.MyEncryptionDecryptionUtils;
 import com.bbs.whu.utils.MyFileUtils;
 import com.bbs.whu.utils.MyHttpClient;
 import com.bbs.whu.utils.MyWaitDialog;
@@ -277,15 +278,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 					break;
 				}
 			}
-			// 不存在，就添加
-			if (!isExist) {
-				UserPasswordBean bean = new UserPasswordBean();
-				bean.setName(loginName);
-				bean.setPassword(loginPassword);
-				userPasswords.add(bean);
-			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
 		// 序列化到用户名、密码json文件
 		MyBBSCache.setUserPasswordList(userPasswords,
 				MyFileUtils.USERPASSWORDNAME);

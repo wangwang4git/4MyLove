@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,16 +16,24 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 
 import com.bbs.whu.R;
+import com.bbs.whu.adapter.LoginOptionsAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.UserPasswordBean;
 import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
+import com.bbs.whu.utils.MyEncryptionDecryptionUtils;
 import com.bbs.whu.utils.MyFileUtils;
 import com.bbs.whu.utils.MyHttpClient;
+import com.bbs.whu.utils.MyWaitDialog;
 import com.loopj.android.http.PersistentCookieStore;
 
 /**
@@ -45,12 +51,26 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private Button loginButton;
 	// 匿名按钮
 	private Button anonymousButton;
-	// 接收请求数据的handler
+	// 接收请求数据的handler和用来处理选中或者删除下拉项消息
 	Handler mHandler;
 	// 等待对话框
-	private ProgressDialog mProgressDialog;
-	// 取消等待对话框时标识是否登录
-	private boolean isLogin;
+	private MyWaitDialog waitDialog;
+	// PopupWindow对象
+	private PopupWindow selectPopupWindow = null;
+	// 自定义Adapter
+	private LoginOptionsAdapter optionsAdapter = null;
+	// 下拉框选项数据源
+	private ArrayList<String> datas = new ArrayList<String>();;
+	// 下拉框依附组件
+	private LinearLayout parent;
+	// 下拉框依附组件宽度，也将作为下拉框的宽度
+	private int pwidth;
+	// 下拉箭头图片组件
+	private ImageView selectImg;
+	// 展示所有下拉选项的ListView
+	private ListView listView = null;
+	// 是否初始化完成标志
+	private boolean flag = false;
 	// 用户名、密码对列表
 	private List<UserPasswordBean> userPasswords;
 
@@ -72,33 +92,17 @@ public class LoginActivity extends Activity implements OnClickListener {
 		loginBefore();
 
 		// 设定mProgressDialog的属性
-		mProgressDialog = new ProgressDialog(this);
-		mProgressDialog.setTitle("提示");
-		mProgressDialog.setMessage("正在登录...");
-		mProgressDialog.setOnKeyListener(new OnKeyListener() {
-			@Override
-			public boolean onKey(DialogInterface dialog, int keyCode,
-					KeyEvent event) {
-				if (keyCode == KeyEvent.KEYCODE_BACK) {
-					Log.d("Login", "ProgressDialog OnKeyDown called");
-					if (mProgressDialog != null) {
-						isLogin = false;
-						mProgressDialog.dismiss();
-						return true;
-					}
-				}
-				return false;
-			}
-		});
+		// waitDialog = new WaitDialog(LoginActivity.this, "提示",
+		// "正在登录...");
+		waitDialog = new MyWaitDialog(LoginActivity.this);
 	}
 
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.login_button:
-			isLogin = true;
 			// 登录时的等待对话框
-			mProgressDialog.show();
+			waitDialog.show();
 			// 登陆
 			login();
 			break;
@@ -139,26 +143,46 @@ public class LoginActivity extends Activity implements OnClickListener {
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
+				Bundle data = msg.getData();
 				switch (msg.what) {
+				case MyConstants.LOGIN_SELECT_USER:
+					// 选中下拉项，下拉框消失
+					int selIndex = data.getInt("selIndex");
+					userNameEditText.setText(datas.get(selIndex));
+					passwordEditText.setText(userPasswords.get(selIndex)
+							.getPassword());
+					dismiss();
+					break;
+				case MyConstants.LOGIN_DELETE_USER:
+					// 移除下拉项数据
+					int delIndex = data.getInt("delIndex");
+					datas.remove(delIndex);
+					// 刷新下拉列表
+					optionsAdapter.notifyDataSetChanged();
+					break;
 				case MyConstants.REQUEST_SUCCESS:
-					if (isLogin) {
+					if (waitDialog.mStatus == MyWaitDialog.SHOWING) {
+						// 登录成功后立马记下用户名和密码
+						loginAfter();
+
 						// 跳转的主页
 						startActivity(new Intent(LoginActivity.this,
 								MainActivity.class));
 						// 登陆后操作
 						loginAfter();
 						// 关闭等待对话框
-						mProgressDialog.dismiss();
+						waitDialog.cancel();
 						// 关闭登陆页面
 						finish();
-					} else {
-						// 登录成功但是取消了等待对话框则发送登出请求 
-						MyBBSRequest.mGet(MyConstants.LOG_OUT_URL, "LoginActivity");
+					} else if (waitDialog.mStatus == MyWaitDialog.CANCELLED) {
+						// 登录成功但是取消了等待对话框则发送登出请求
+						// MyBBSRequest.mGet(MyConstants.LOG_OUT_URL,
+						// "MainActivity");//设置为MainActivity是为了不接收退出的响应事件
 					}
 					break;
 				case MyConstants.REQUEST_FAIL:
 					// 关闭等待对话框
-					mProgressDialog.dismiss();
+					waitDialog.cancel();
 					// 提示失败
 					break;
 				}
@@ -212,8 +236,35 @@ public class LoginActivity extends Activity implements OnClickListener {
 		String loginName = ((MyApplication) getApplicationContext()).getName();
 		String loginPassword = ((MyApplication) getApplicationContext())
 				.getPassword();
-		if (!loginName.equals(MyFileUtils.USERPASSWORDNAME)) {
-			Boolean isExist = false;
+		Boolean isExist = false;
+		for (int i = 0; i < userPasswords.size(); ++i) {
+			// 用户名相同
+			if (userPasswords.get(i).getName().equals(loginName)) {
+				// 密码相同则存在
+				if (userPasswords.get(i).getPassword().equals(loginPassword)) {
+					isExist = true;
+				}
+				// 密码不同则更新密码
+				else {
+					userPasswords.get(i).setPassword(loginPassword);
+				}
+				break;
+
+			}
+		}
+
+		// 用户不存在则添加用户信息
+		if (!isExist) {
+			UserPasswordBean bean = new UserPasswordBean();
+			bean.setName(loginName);
+			bean.setPassword(loginPassword);
+			userPasswords.add(bean);
+		}
+
+		// 用户名，密码加密
+		try {
+			// 采用默认密钥
+			MyEncryptionDecryptionUtils des = new MyEncryptionDecryptionUtils();
 			for (int i = 0; i < userPasswords.size(); ++i) {
 				// 如果用户名不同，则添加
 				// 如果用户名相同，密码不同，则更新密码
@@ -227,15 +278,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 					break;
 				}
 			}
-			// 不存在，就添加
-			if (!isExist) {
-				UserPasswordBean bean = new UserPasswordBean();
-				bean.setName(loginName);
-				bean.setPassword(loginPassword);
-				userPasswords.add(bean);
-			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
 		// 序列化到用户名、密码json文件
 		MyBBSCache.setUserPasswordList(userPasswords,
 				MyFileUtils.USERPASSWORDNAME);
@@ -252,6 +298,108 @@ public class LoginActivity extends Activity implements OnClickListener {
 		if (null == userPasswords) {
 			userPasswords = new ArrayList<UserPasswordBean>();
 		}
+	}
+
+	/**
+	 * 没有在onCreate方法中调用initWedget()，而是在onWindowFocusChanged方法中调用，
+	 * 是因为initWedget()中需要获取PopupWindow浮动下拉框依附的组件宽度，在onCreate方法中是无法获取到该宽度的
+	 */
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		while (!flag) {
+			initWedget();
+			flag = true;
+		}
+
+	}
+
+	/**
+	 * 初始化下拉列表控件
+	 */
+	private void initWedget() {
+		// 初始化界面组件
+		parent = (LinearLayout) findViewById(R.id.login_user_parent);
+		userNameEditText = (EditText) findViewById(R.id.user_name_editText);
+		passwordEditText = (EditText) findViewById(R.id.password_editText);
+		selectImg = (ImageView) findViewById(R.id.btn__multiple_user_select);
+
+		// 获取下拉框依附的组件宽度
+		int width = parent.getWidth();
+		pwidth = width;
+
+		// 设置点击下拉箭头图片事件，点击弹出PopupWindow浮动下拉框
+		selectImg.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (flag) {
+					// 显示PopupWindow窗口
+					popupWindwShowing();
+				}
+			}
+		});
+
+		// 初始化PopupWindow
+		initPopuWindow();
+	}
+
+	/**
+	 * 初始化填充LoginOptionsAdapter所用List数据
+	 */
+	private void initDatas() {
+		// 清空datas
+		datas.clear();
+
+		for (int i = 0; i < userPasswords.size(); i++) {
+			UserPasswordBean temp = userPasswords.get(i);
+			datas.add(temp.getName());
+		}
+	}
+
+	/**
+	 * 初始化PopupWindow
+	 */
+	private void initPopuWindow() {
+
+		initDatas();
+
+		// PopupWindow浮动下拉框布局
+		View loginwindow = (View) this.getLayoutInflater().inflate(
+				R.layout.login_options, null);
+		listView = (ListView) loginwindow.findViewById(R.id.user_list);
+
+		// 设置自定义Adapter
+		optionsAdapter = new LoginOptionsAdapter(this, mHandler, datas);
+		listView.setAdapter(optionsAdapter);
+
+		selectPopupWindow = new PopupWindow(loginwindow, pwidth,
+				LayoutParams.WRAP_CONTENT, true);
+
+		selectPopupWindow.setOutsideTouchable(true);
+
+		// 这一句是为了实现弹出PopupWindow后，当点击屏幕其他部分及Back键时PopupWindow会消失，
+		// 没有这一句则效果不能出来，但并不会影响背景
+		// 本人能力极其有限，不明白其原因，还望高手、知情者指点一下
+		selectPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+	}
+
+	/**
+	 * 显示PopupWindow窗口
+	 * 
+	 * @param popupwindow
+	 */
+	public void popupWindwShowing() {
+		// 将selectPopupWindow作为parent的下拉框显示，并指定selectPopupWindow在Y方向上向上偏移3pix，
+		// 这是为了防止下拉框与文本框之间产生缝隙，影响界面美化
+		// （是否会产生缝隙，及产生缝隙的大小，可能会根据机型、Android系统版本不同而异吧，不太清楚）
+		selectPopupWindow.showAsDropDown(parent, 0, -3);
+	}
+
+	/**
+	 * PopupWindow消失
+	 */
+	public void dismiss() {
+		selectPopupWindow.dismiss();
 	}
 
 	@Override

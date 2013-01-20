@@ -192,5 +192,5 @@ public class MyFileUtils {
 				delFolder(path + "/" + tempList[i]);
 			}
 		}
-	}	
+	}
 }

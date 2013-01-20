@@ -6,17 +6,24 @@ import java.util.Date;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bbs.whu.R;
 import com.bbs.whu.adapter.TopicAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.TopicBean;
 import com.bbs.whu.model.topic.Topics;
+import com.bbs.whu.utils.MyApplication;
+import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyXMLParseUtils;
@@ -30,7 +37,8 @@ import com.bbs.whu.xlistview.XListView.IXListViewListener;
  * 
  */
 
-public class TopicActivity extends Activity implements IXListViewListener {
+public class TopicActivity extends Activity implements IXListViewListener,
+		OnClickListener {
 	/* 帖子版块英文名由上一级Activity传入，用于请求列表数据 */
 	private String board;// 版块英文名字
 	private String name;// 版块名称
@@ -46,8 +54,14 @@ public class TopicActivity extends Activity implements IXListViewListener {
 	private TopicAdapter mAdapter;
 	// 帖子列表数据
 	private ArrayList<TopicBean> items = new ArrayList<TopicBean>();
+	// 帖子发表按钮
+	private Button publishButton;
 	// 接收请求数据的handler
 	Handler mHandler;
+
+	// get参数
+	ArrayList<String> keys = new ArrayList<String>();
+	ArrayList<String> values = new ArrayList<String>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +81,16 @@ public class TopicActivity extends Activity implements IXListViewListener {
 		getTopic();
 	}
 
+	@Override
+	public void onClick(View view) {
+		switch (view.getId()) {
+		case R.id.topic_publish_button:
+			// 发表新帖
+			publishBulletin();
+			break;
+		}
+	}
+
 	/**
 	 * 初始化控件
 	 */
@@ -77,6 +101,14 @@ public class TopicActivity extends Activity implements IXListViewListener {
 		// 帖子列表
 		mListView = (XListView) findViewById(R.id.topic_listview);
 		mListView.setXListViewListener(this);
+		// 发表按钮
+		publishButton = (Button) findViewById(R.id.topic_publish_button);
+		publishButton.setOnClickListener(this);
+		// 如果是匿名用户，不显示发表按钮
+		if (MyApplication.getInstance().getName().equals("4MyLove"))
+			publishButton.setVisibility(View.GONE);
+		else
+			publishButton.setVisibility(View.VISIBLE);
 	}
 
 	/**
@@ -127,9 +159,9 @@ public class TopicActivity extends Activity implements IXListViewListener {
 	 */
 
 	private void getTopic() {
+		keys.clear();
+		values.clear();
 		// 添加get参数
-		ArrayList<String> keys = new ArrayList<String>();
-		ArrayList<String> values = new ArrayList<String>();
 		keys.add("app");
 		values.add("topics");
 		keys.add("board");
@@ -151,6 +183,20 @@ public class TopicActivity extends Activity implements IXListViewListener {
 	private void refreshBulletinList(String res) {
 		// XML反序列化
 		Topics topics = MyXMLParseUtils.readXml2Topics(res);
+		// 论坛错误，无正确数据返回，显示错误提示
+		if (null == topics) {
+			// 禁用“下拉刷新”
+			mListView.setPullRefreshEnable(false);
+			// 禁用“显示更多”
+			mListView.setPullLoadEnable(false);
+			// 删除指定Cache文件
+			MyBBSCache.delCacheFile(MyBBSCache.getCacheFileName(
+					MyConstants.GET_URL, keys, values));
+			// toast提醒
+			Toast.makeText(this, R.string.bbs_exception_text,
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
 		// 获得当前页号
 		currentPage = Integer.parseInt(topics.getPage().toString());
 		// 最多加载10页
@@ -158,13 +204,29 @@ public class TopicActivity extends Activity implements IXListViewListener {
 			// 禁用“显示更多”
 			mListView.setPullLoadEnable(false);
 		}
-		
+
 		// 获取帖子列表并添加
 		items.addAll(topics.getTopics());
 		// 刷新ListView
 		mAdapter.notifyDataSetChanged();
 		// 当前页增加一页，便于下次申请
 		currentPage++;
+	}
+
+	/**
+	 * 发表新帖
+	 */
+	private void publishBulletin() {
+		// 跳转到帖子回复界面
+		Intent intent = new Intent(this, BulletinReplyActivity.class);
+
+		// 添加参数
+		intent.putExtra("head", MyConstants.NEW_BULLETIN);
+		intent.putExtra("board", board);
+		intent.putExtra("id", "0");
+
+		// 启动Activity。并传递一个intend对象
+		this.startActivity(intent);
 	}
 
 	@Override

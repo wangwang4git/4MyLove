@@ -7,8 +7,12 @@ package com.bbs.whu.utils;
  * 
  */
 public class MyConstants {
-	// // 用户名
-	// public static final String MY_USER_NAME = "double0291";
+	// 用户名
+	public static final String MY_USER_NAME = "double0291";
+	// 密码
+	public static final String MY_PASSWORD = "chenshuang";
+	// 用户名
+	// public static final String MY_USER_NAME = "wwang";
 	// // 密码
 	// public static final String MY_PASSWORD = "chenshuang";
 	// 用户名
@@ -35,4 +39,8 @@ public class MyConstants {
 	public static final String HEAD_URL = "http://bbs.whu.edu.cn/";
 	// 帖子内容中图片URL前缀
 	public static final String IMAGE_URL = "http://bbs.whu.edu.cn/wForum/bbscon.php";
+	// 发表新帖
+	public static final int NEW_BULLETIN = 0;
+	// 帖子回复
+	public static final int BULLETIN_REPLY = 1;
 }

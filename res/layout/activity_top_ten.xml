@@ -22,8 +22,15 @@
     <com.bbs.whu.xlistview.XListView
         android:id="@+id/topten_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:cacheColorHint="#00000000" >
     </com.bbs.whu.xlistview.XListView>
+    
+    <LinearLayout android:layout_width="match_parent"
+		android:layout_height="wrap_content" android:layout_below="@id/topten_listview"
+		android:gravity="center">
+		<ImageView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:src="@drawable/listview_tail" />
+	</LinearLayout>
 
 </RelativeLayout>

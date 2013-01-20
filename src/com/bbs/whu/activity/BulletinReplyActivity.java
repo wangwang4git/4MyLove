@@ -35,7 +35,7 @@ import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 
 public class BulletinReplyActivity extends Activity {
-	private String head;// 界面显示“帖子回复”还是“帖子发表”
+	private int head;// “帖子回复”还是“帖子发表”
 	private String originBoard;// 原帖版块
 	private String originId;// 原帖id号
 	private String originTitle;// 原帖标题
@@ -52,7 +52,7 @@ public class BulletinReplyActivity extends Activity {
 	Button publishButton;
 	// 接收请求数据的handler
 	Handler mHandler;
-	
+
 	// 表情选择器切换按钮
 	private ImageButton mBtnFace;
 	// 软键盘切换按钮
@@ -73,7 +73,7 @@ public class BulletinReplyActivity extends Activity {
 
 		// 获取传过来的数据，加载到界面上
 		Intent postInfoIntent = getIntent();
-		head = postInfoIntent.getStringExtra("head");
+		head = postInfoIntent.getIntExtra("head", -1);
 		originBoard = postInfoIntent.getStringExtra("board");// 版块
 		originId = postInfoIntent.getStringExtra("id");// id号
 		originTitle = postInfoIntent.getStringExtra("title");// 标题
@@ -94,18 +94,21 @@ public class BulletinReplyActivity extends Activity {
 	private void initView() {
 		// 设子界面标题
 		headTextView = (TextView) findViewById(R.id.bulletin_reply_head);
-		headTextView.setText(head);
-		
+		if (head == MyConstants.NEW_BULLETIN)
+			headTextView.setText("发表新帖");
+		else if (head == MyConstants.BULLETIN_REPLY)
+			headTextView.setText("帖子回复");
+
 		// 初始化标题并设置初始值
 		replyTitle = (EditText) findViewById(R.id.bulletin_reply_title);
 		replyTitle.setText(titleFormat(originTitle));
 		// 设置输入框焦点变更统一监听器
 		replyTitle.setOnFocusChangeListener(bulletinReplyEditFocusListener);
-		
+
 		// 初始化内容并设置初始值
 		replyContent = (EditText) findViewById(R.id.bulletin_reply_content);
 
-		//对执行添加的文本使用指定颜色
+		// 对执行添加的文本使用指定颜色
 		SpannableStringBuilder builder = new SpannableStringBuilder();
 		builder.append(contentFormat(originAuthor, originContent));
 		builder.setSpan(new ForegroundColorSpan(Color.BLUE), 0,
@@ -114,12 +117,12 @@ public class BulletinReplyActivity extends Activity {
 		replyContent.setText(builder, BufferType.EDITABLE);
 		// 设置输入框焦点变更统一监听器
 		replyContent.setOnFocusChangeListener(bulletinReplyEditFocusListener);
-		
+
 		// 初始化“发表”按钮
 		publishButton = (Button) findViewById(R.id.bulletin_reply_publish_button);
 		// 设置按钮统一监听器
 		publishButton.setOnClickListener(bulletinReplyClickListener);
-		
+
 		mBtnFace = (ImageButton) findViewById(R.id.bulletin_reply_bottom_face);
 		// 设置按钮统一监听器
 		mBtnFace.setOnClickListener(bulletinReplyClickListener);
@@ -150,17 +153,24 @@ public class BulletinReplyActivity extends Activity {
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
+				String toastString;
 				switch (msg.what) {
 				case MyConstants.REQUEST_SUCCESS:
-					// 评论成功
-					Toast.makeText(BulletinReplyActivity.this, "评论成功！",
+					if (head == MyConstants.NEW_BULLETIN)
+						toastString = "发表成功！";
+					else
+						toastString = "评论成功！";
+					Toast.makeText(BulletinReplyActivity.this, toastString,
 							Toast.LENGTH_SHORT).show();
 					// 退出本Activity
 					finish();
 					break;
 				case MyConstants.REQUEST_FAIL:
-					// 评论失败
-					Toast.makeText(BulletinReplyActivity.this, "评论失败！",
+					if (head == MyConstants.NEW_BULLETIN)
+						toastString = "发表失败！";
+					else
+						toastString = "评论失败！";
+					Toast.makeText(BulletinReplyActivity.this, toastString,
 							Toast.LENGTH_SHORT).show();
 					// 退出本Activity
 					finish();
@@ -184,6 +194,10 @@ public class BulletinReplyActivity extends Activity {
 	 * @return
 	 */
 	private String titleFormat(String originTitle) {
+		// 发表新帖
+		if (head == MyConstants.NEW_BULLETIN)
+			return "";
+		// 格式化原帖标题
 		if (!originTitle.startsWith("Re: ")) {
 			originTitle = "Re: " + originTitle;
 		}
@@ -201,9 +215,13 @@ public class BulletinReplyActivity extends Activity {
 	 * @return
 	 */
 	private String contentFormat(String originAuthor, String originContent) {
+		// 发表新帖
+		if (head == MyConstants.NEW_BULLETIN)
+			return "";
+		// 格式化原帖内容
 		// 如果原文内容太长，进行删减
-		String content = originContent.length() > 20 ? originContent
-				.substring(0, 20) + "......" : originContent;
+		String content = originContent.length() > 20 ? originContent.substring(
+				0, 20) + "......" : originContent;
 		content = content.replaceAll("\n\n", "\n");
 		content = content.replaceAll("\n", "\n: ");
 		content += "\n:  来自Android客户端.........";
@@ -238,7 +256,7 @@ public class BulletinReplyActivity extends Activity {
 		MyBBSRequest.mPost(MyConstants.POST_BULLETIN_REPLY_URL, keys, values,
 				"BulletinReplyActivity", this);
 	}
-	
+
 	/**
 	 * 初始化适配器
 	 */
@@ -250,7 +268,7 @@ public class BulletinReplyActivity extends Activity {
 		// 设置适配器
 		mBBSFacesGridView.setAdapter(mAdapter);
 	}
-	
+
 	/**
 	 * 按钮单击统一监听器
 	 */
@@ -275,7 +293,7 @@ public class BulletinReplyActivity extends Activity {
 			}
 		}
 	};
-	
+
 	/**
 	 * 输入框焦点变更统一监听器
 	 */
@@ -307,7 +325,7 @@ public class BulletinReplyActivity extends Activity {
 			}
 		}
 	};
-	
+
 	/**
 	 * 表情选择器显示与隐藏切换
 	 * 
@@ -333,7 +351,7 @@ public class BulletinReplyActivity extends Activity {
 			mBBSFacesGridView.setVisibility(View.GONE);
 		}
 	}
-	
+
 	/**
 	 * 获取EditText光标所在的位置
 	 */

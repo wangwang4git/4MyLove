@@ -19,21 +19,32 @@
         android:layout_alignParentTop="true"
         android:src="@drawable/background_right_top_flower" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/topic_title_linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/mine_titlebar_bg"
-        android:gravity="center" >
+        android:background="@drawable/mine_titlebar_bg" >
 
         <TextView
             android:id="@+id/topic_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:textColor="#FF7B7B7B"
             android:textSize="20sp" />
-    </LinearLayout>
+
+        <Button
+            android:id="@+id/topic_publish_button"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/login_head"
+            android:text="@string/bulletin_reply_publish"
+            android:textSize="15sp" />
+    </RelativeLayout>
 
     <com.bbs.whu.xlistview.XListView
         android:id="@+id/topic_listview"
@@ -41,14 +52,19 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/topic_title_linearLayout"
         android:cacheColorHint="#00000000"
-        android:fastScrollEnabled="true"  >
+        android:fastScrollEnabled="true" >
     </com.bbs.whu.xlistview.XListView>
-    
-	<LinearLayout android:layout_width="match_parent"
-		android:layout_height="wrap_content" android:layout_below="@id/topic_listview"
-		android:gravity="center">
-		<ImageView android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:src="@drawable/listview_tail" />
-	</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topic_listview"
+        android:gravity="center" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/listview_tail" />
+    </LinearLayout>
 
 </RelativeLayout>

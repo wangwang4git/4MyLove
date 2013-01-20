@@ -23,6 +23,7 @@ import com.bbs.whu.activity.BulletinReplyActivity;
 import com.bbs.whu.activity.PersonActivity;
 import com.bbs.whu.model.BulletinBean;
 import com.bbs.whu.utils.MyApplication;
+import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyRegexParseUtils;
 
 /**
@@ -253,7 +254,7 @@ public class BulletinAdapter extends MyBaseAdapter {
 		Intent intent = new Intent(context, BulletinReplyActivity.class);
 
 		// 添加参数
-		intent.putExtra("head", "帖子回复");
+		intent.putExtra("head", MyConstants.BULLETIN_REPLY);
 		intent.putExtra("board", itemBoard);
 		intent.putExtra("id", itemId);
 		intent.putExtra("title", itemTitle);

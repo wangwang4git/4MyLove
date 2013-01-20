@@ -15,6 +15,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.bbs.whu.R;
+import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 
@@ -53,9 +54,11 @@ public class MainActivity extends TabActivity {
 	 */
 	private void setTabs() {
 		addTab("首页", R.drawable.tab_home, HomeActivity.class);
-		addTab("分类", R.drawable.tab_search, BoardActivity.class);
-		addTab("我的山水", R.drawable.tab_home, MineActivity.class);
-		addTab("更多", R.drawable.tab_home, MoreActivity.class);
+		addTab("分类", R.drawable.tab_board, BoardActivity.class);
+		// 非匿名用户添加“我的山水”
+		if (!MyApplication.getInstance().getName().equals("4MyLove"))
+			addTab("我的山水", R.drawable.tab_mine, MineActivity.class);
+		addTab("更多", R.drawable.tab_more, MoreActivity.class);
 	}
 
 	/**

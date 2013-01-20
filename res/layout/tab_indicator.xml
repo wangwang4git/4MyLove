@@ -10,10 +10,11 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/app_name"
+        android:scaleType="centerInside"
         android:src="@drawable/ic_launcher" />
 
     <TextView
@@ -21,8 +22,8 @@
         style="?android:attr/tabWidgetStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="10sp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textSize="10sp" />
 
 </RelativeLayout>

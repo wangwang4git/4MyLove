@@ -215,9 +215,14 @@ public class LoginActivity extends Activity implements OnClickListener {
 		if (!loginName.equals(MyFileUtils.USERPASSWORDNAME)) {
 			Boolean isExist = false;
 			for (int i = 0; i < userPasswords.size(); ++i) {
-				if (userPasswords.get(i).getName().equals(loginName)
-						&& userPasswords.get(i).getPassword()
-								.equals(loginPassword)) {
+				// 如果用户名不同，则添加
+				// 如果用户名相同，密码不同，则更新密码
+				if (userPasswords.get(i).getName().equals(loginName)) {
+					if (!userPasswords.get(i).getPassword()
+							.equals(loginPassword)) {
+						// 更新密码
+						userPasswords.get(i).setPassword(loginPassword);
+					}
 					isExist = true;
 					break;
 				}

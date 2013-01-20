@@ -25,6 +25,7 @@ import com.bbs.whu.adapter.BoardAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.BoardBean;
 import com.bbs.whu.model.board.Board;
+import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyXMLParseUtils;
@@ -39,6 +40,10 @@ public class BoardActivity extends Activity {
 	// 接收请求数据的handler
 	Handler mHandler;
 
+	// get参数
+	ArrayList<String> keys = new ArrayList<String>();
+	ArrayList<String> values = new ArrayList<String>();
+	
 	// 搜索匹配数据源
 	private List<String> mSearchBoardsList = new ArrayList<String>();
 	// 搜索匹配适配器
@@ -163,9 +168,9 @@ public class BoardActivity extends Activity {
 	 *            是否强制从网络获取数据
 	 */
 	private void getBoardList(boolean isForcingWebGet) {
+		keys.clear();
+		values.clear();
 		// 添加get参数
-		ArrayList<String> keys = new ArrayList<String>();
-		ArrayList<String> values = new ArrayList<String>();
 		keys.add("app");
 		values.add("boards");
 		// 请求数据
@@ -184,6 +189,16 @@ public class BoardActivity extends Activity {
 		childs.clear();
 
 		List<BoardBean> boardBeanList = MyXMLParseUtils.readXml2BoardList(res);
+		// 论坛错误，无正确数据返回，显示错误提示
+		if (null == boardBeanList) {
+			// 删除指定Cache文件
+			MyBBSCache.delCacheFile(MyBBSCache.getCacheFileName(
+					MyConstants.GET_URL, keys, values));
+			// toast提醒
+			Toast.makeText(this, R.string.bbs_exception_text,
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
 
 		// 添加一级列表数据
 		groups.addAll(boardBeanList);

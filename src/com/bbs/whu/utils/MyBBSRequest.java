@@ -73,7 +73,8 @@ public class MyBBSRequest {
 		// 如果非强制从网络获取，先尝试读缓存
 		if (!isForcingWebGet) {
 			// 获取缓存文件名
-			String cacheFileName = getCacheFileName(url, keys, values);
+			String cacheFileName = MyBBSCache.getCacheFileName(url, keys,
+					values);
 			// 尝试读取缓存
 			String cacheContentString = MyBBSCache.getUrlCache(cacheFileName);
 			// 文件已缓存，则读缓存
@@ -112,7 +113,8 @@ public class MyBBSRequest {
 	private static void get(String url, ArrayList<String> keys,
 			ArrayList<String> values, final String activityName, Context context) {
 		// 获取缓存文件名
-		final String cacheFileName = getCacheFileName(url, keys, values);
+		final String cacheFileName = MyBBSCache.getCacheFileName(url, keys,
+				values);
 		// 获取Cookie
 		PersistentCookieStore cookieStore = getCookieStore(context);
 		MyHttpClient.setCookieStore(cookieStore);
@@ -212,30 +214,6 @@ public class MyBBSRequest {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * 构造缓存文件名
-	 * 
-	 * @param url
-	 *            请求的URL地址
-	 * @param keys
-	 *            get请求时键（key）
-	 * @param values
-	 *            get请求时值（value）
-	 * @return 缓存文件名，格式为：URL+get参数+Cookie+用户名
-	 */
-	private static String getCacheFileName(String url, ArrayList<String> keys,
-			ArrayList<String> values) {
-		// 缓存文件名中的参数部分
-		StringBuilder paramsString = new StringBuilder();
-		/* 构造 get请求的参数String */
-		for (int i = 0; i < keys.size(); ++i) {
-			paramsString.append(keys.get(i));
-			paramsString.append(values.get(i));
-		}
-		// 返回构造的缓存文件名
-		return url + paramsString.toString() + MyConstants.MY_USER_NAME;
 	}
 
 	/**

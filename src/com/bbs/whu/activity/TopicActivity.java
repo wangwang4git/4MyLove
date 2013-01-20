@@ -11,12 +11,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bbs.whu.R;
 import com.bbs.whu.adapter.TopicAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.TopicBean;
 import com.bbs.whu.model.topic.Topics;
+import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyXMLParseUtils;
@@ -48,6 +50,10 @@ public class TopicActivity extends Activity implements IXListViewListener {
 	private ArrayList<TopicBean> items = new ArrayList<TopicBean>();
 	// 接收请求数据的handler
 	Handler mHandler;
+	
+	// get参数
+	ArrayList<String> keys = new ArrayList<String>();
+	ArrayList<String> values = new ArrayList<String>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -127,9 +133,9 @@ public class TopicActivity extends Activity implements IXListViewListener {
 	 */
 
 	private void getTopic() {
+		keys.clear();
+		values.clear();
 		// 添加get参数
-		ArrayList<String> keys = new ArrayList<String>();
-		ArrayList<String> values = new ArrayList<String>();
 		keys.add("app");
 		values.add("topics");
 		keys.add("board");
@@ -151,6 +157,20 @@ public class TopicActivity extends Activity implements IXListViewListener {
 	private void refreshBulletinList(String res) {
 		// XML反序列化
 		Topics topics = MyXMLParseUtils.readXml2Topics(res);
+		// 论坛错误，无正确数据返回，显示错误提示
+		if (null == topics) {
+			// 禁用“下拉刷新”
+			mListView.setPullRefreshEnable(false);
+			// 禁用“显示更多”
+			mListView.setPullLoadEnable(false);
+			// 删除指定Cache文件
+			MyBBSCache.delCacheFile(MyBBSCache.getCacheFileName(
+					MyConstants.GET_URL, keys, values));
+			// toast提醒
+			Toast.makeText(this, R.string.bbs_exception_text,
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
 		// 获得当前页号
 		currentPage = Integer.parseInt(topics.getPage().toString());
 		// 最多加载10页

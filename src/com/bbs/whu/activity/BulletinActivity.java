@@ -222,7 +222,7 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 			mListView.setPullLoadEnable(false);
 
 		// 获取帖子内容并添加
-		items.addAll(MyRegexParseUtils.getContentList(page));
+		items.addAll(MyRegexParseUtils.getContentList(this, page));
 		// 刷新ListView
 		mAdapter.notifyDataSetChanged();
 		// 当前页增加一页，便于下次申请

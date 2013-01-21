@@ -116,7 +116,7 @@
                         android:scaleType="centerInside"
                         android:src="@drawable/login_input_separator" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/user_name_editText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -125,7 +125,10 @@
                         android:layout_marginRight="5dp"
                         android:layout_marginTop="3dp"
                         android:hint="@string/login_user_name"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:textColor="#FF000000"
+                        android:completionThreshold="1" />
+                        
                 </LinearLayout>
 
                 <LinearLayout

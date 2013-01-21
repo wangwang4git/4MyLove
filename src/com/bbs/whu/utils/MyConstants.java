@@ -8,9 +8,9 @@ package com.bbs.whu.utils;
  */
 public class MyConstants {
 	// 用户名
-	public static final String MY_USER_NAME = "double0291";
-	// 密码
-	public static final String MY_PASSWORD = "chenshuang";
+	// public static final String MY_USER_NAME = "double0291";
+	// // 密码
+	// public static final String MY_PASSWORD = "chenshuang";
 	// 用户名
 	// public static final String MY_USER_NAME = "wwang";
 	// // 密码

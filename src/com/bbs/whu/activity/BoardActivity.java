@@ -251,7 +251,6 @@ public class BoardActivity extends Activity {
 	 *            输入的版块名
 	 */
 	void searchTheBoard(String keyword) {
-		System.out.println(keyword);
 		// 遍历查找
 		for (int i = 0; i < childs.size(); ++i) {
 			for (int j = 0; j < childs.get(i).size(); ++j) {

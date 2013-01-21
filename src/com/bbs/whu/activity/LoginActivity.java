@@ -1,7 +1,6 @@
 package com.bbs.whu.activity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -16,10 +15,14 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.bbs.whu.R;
+import com.bbs.whu.adapter.AdvancedAutoCompleteAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.UserPasswordBean;
 import com.bbs.whu.utils.MyApplication;
@@ -38,7 +41,8 @@ import com.loopj.android.http.PersistentCookieStore;
  */
 public class LoginActivity extends Activity implements OnClickListener {
 	// 用户名输入框
-	private EditText userNameEditText;
+	private AutoCompleteTextView userNameEditText;
+	private AdvancedAutoCompleteAdapter mAdapter;
 	// 密码输入框
 	private EditText passwordEditText;
 	// 确定按钮
@@ -51,9 +55,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private ProgressDialog mProgressDialog;
 	// 取消等待对话框时标识是否登录
 	private boolean isLogin;
+	
 	// 用户名、密码对列表
-	private List<UserPasswordBean> userPasswords;
-
+	private ArrayList<UserPasswordBean> userPasswords;
 	// 如果删除了userPasswords中的第i项，相应的弹出对话框询问是否删除该项对应的缓存文件夹，删除方法如下：
 	// 删除/whubbs/data/cache/username/文件夹
 	// MyFileUtils.delFolder(MyFileUtils.getSdcardDataCacheDir(userPasswords.get(i).getName);
@@ -64,12 +68,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 取出Activity的title
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
+		// 登录前操作
+		loginBefore();
 		// 初始化控件
 		init();
 		// 初始化handler
 		initHandler();
-		// 登录前操作
-		loginBefore();
 
 		// 设定mProgressDialog的属性
 		mProgressDialog = new ProgressDialog(this);
@@ -118,11 +122,26 @@ public class LoginActivity extends Activity implements OnClickListener {
 	 */
 	private void init() {
 		// 用户名、密码输入框
-		userNameEditText = (EditText) findViewById(R.id.user_name_editText);
+		userNameEditText = (AutoCompleteTextView) findViewById(R.id.user_name_editText);
 		passwordEditText = (EditText) findViewById(R.id.password_editText);
 		// 设置用户名、密码初始值
-		userNameEditText.setText(MyConstants.MY_USER_NAME);
-		passwordEditText.setText(MyConstants.MY_PASSWORD);
+		// userNameEditText.setText(MyConstants.MY_USER_NAME);
+		// passwordEditText.setText(MyConstants.MY_PASSWORD);
+		
+		// 设置userNameEditText适配器
+		mAdapter = new AdvancedAutoCompleteAdapter(this, userPasswords, 10);
+		userNameEditText.setAdapter(mAdapter);
+		
+		// 设置userNameEditText监听器
+		userNameEditText.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				// TODO Auto-generated method stub
+				passwordEditText.setText(userPasswords.get(arg2).getPassword());
+			}
+		});
+		
 		// 确定按钮
 		loginButton = (Button) findViewById(R.id.login_button);
 		loginButton.setOnClickListener(this);
@@ -246,7 +265,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	 */
 	private void loginBefore() {
 		// 先读取用户名、密码json文件，再反序列化
-		userPasswords = MyBBSCache
+		userPasswords = (ArrayList<UserPasswordBean>) MyBBSCache
 				.getUserPasswordList(MyFileUtils.USERPASSWORDNAME);
 		// 如果userPasswords为空，当前还不存在用户名、密码json文件
 		if (null == userPasswords) {

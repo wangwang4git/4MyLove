@@ -29,6 +29,10 @@ public class MyApplication extends Application {
 		myCookieStore = pcs;
 	}
 
+	public void clearCookieStore() {
+		myCookieStore.clear();
+	}
+
 	// 用户名
 	private String name = "4MyLove";
 	// 密码
@@ -78,7 +82,7 @@ public class MyApplication extends Application {
 		// Initialize ImageLoader with configuration.
 		ImageLoader.getInstance().init(config);
 	}
-	
+
 	// 在任意位置获取Application Context，包括工具类
 	public static MyApplication getInstance() {
 		return instance;

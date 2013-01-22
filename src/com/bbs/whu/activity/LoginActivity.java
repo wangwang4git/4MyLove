@@ -145,13 +145,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 				switch (msg.what) {
 				case MyConstants.REQUEST_SUCCESS:
 					if (isLogin) {
-						// 关闭等待对话框
-						mProgressDialog.dismiss();
 
 						// 如果Cookie为空，说明用户名密码错误
 						List<Cookie> cookies = MyApplication.getInstance()
 								.getCookieStore().getCookies();
 						if (cookies.size() == 0) {
+							// 关闭等待对话框
+							mProgressDialog.dismiss();
 							// 提醒用户
 							Toast.makeText(LoginActivity.this, "用户名、密码错误！",
 									Toast.LENGTH_SHORT).show();
@@ -161,6 +161,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 						// 跳转的主页
 						startActivity(new Intent(LoginActivity.this,
 								MainActivity.class));
+						// 关闭等待对话框
+						mProgressDialog.dismiss();
 						// 登陆后操作
 						loginAfter();
 						// 关闭登陆页面

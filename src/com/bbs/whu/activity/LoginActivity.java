@@ -3,6 +3,8 @@ package com.bbs.whu.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.cookie.Cookie;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -18,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.bbs.whu.R;
 import com.bbs.whu.handler.MessageHandlerManager;
@@ -142,18 +145,32 @@ public class LoginActivity extends Activity implements OnClickListener {
 				switch (msg.what) {
 				case MyConstants.REQUEST_SUCCESS:
 					if (isLogin) {
+
+						// 如果Cookie为空，说明用户名密码错误
+						List<Cookie> cookies = MyApplication.getInstance()
+								.getCookieStore().getCookies();
+						if (cookies.size() == 0) {
+							// 关闭等待对话框
+							mProgressDialog.dismiss();
+							// 提醒用户
+							Toast.makeText(LoginActivity.this, "用户名、密码错误！",
+									Toast.LENGTH_SHORT).show();
+							return;
+						}
+
 						// 跳转的主页
 						startActivity(new Intent(LoginActivity.this,
 								MainActivity.class));
-						// 登陆后操作
-						loginAfter();
 						// 关闭等待对话框
 						mProgressDialog.dismiss();
+						// 登陆后操作
+						loginAfter();
 						// 关闭登陆页面
 						finish();
 					} else {
-						// 登录成功但是取消了等待对话框则发送登出请求 
-						MyBBSRequest.mGet(MyConstants.LOG_OUT_URL, "LoginActivity");
+						// 登录成功但是取消了等待对话框则发送登出请求
+						MyBBSRequest.mGet(MyConstants.LOG_OUT_URL,
+								"LoginActivity");
 					}
 					break;
 				case MyConstants.REQUEST_FAIL:

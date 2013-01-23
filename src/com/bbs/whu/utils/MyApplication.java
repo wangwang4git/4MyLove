@@ -30,7 +30,9 @@ public class MyApplication extends Application {
 	}
 
 	public void clearCookieStore() {
-		myCookieStore.clear();
+		if (myCookieStore != null) {
+			myCookieStore.clear();
+		}
 	}
 
 	// ÓÃ»§Ãû

@@ -1,6 +1,7 @@
 package com.bbs.whu.activity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.cookie.Cookie;
 
@@ -177,6 +178,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 							return;
 						}
 
+						// 登录成功后，将用户名密码设为全局变量
+						((MyApplication) getApplicationContext())
+								.setName(userNameEditText.getText().toString());
+						((MyApplication) getApplicationContext())
+								.setPassword(passwordEditText.getText()
+										.toString());
+						
 						// 跳转的主页
 						startActivity(new Intent(LoginActivity.this,
 								MainActivity.class));
@@ -215,11 +223,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		PersistentCookieStore myCookieStore = new PersistentCookieStore(this);
 		// 将CookieStore设为全局变量
 		((MyApplication) getApplicationContext()).setCookieStore(myCookieStore);
-		// 将用户名密码设为全局变量
-		((MyApplication) getApplicationContext()).setName(userNameEditText
-				.getText().toString());
-		((MyApplication) getApplicationContext()).setPassword(passwordEditText
-				.getText().toString());
 		// 添加CookieStore
 		MyHttpClient.setCookieStore(myCookieStore);
 		// 添加post请求参数

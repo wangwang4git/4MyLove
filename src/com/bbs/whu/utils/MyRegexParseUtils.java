@@ -264,13 +264,18 @@ public class MyRegexParseUtils {
 	final static private String ITALIC_REGEX_STRING = "\\[I\\]([\\s\\S]*?)\\[/I\\]";
 	// 在文本中提取下划线的正则表达式
 	final static private String UNDERLINE_REGEX_STRING = "\\[U\\]([\\s\\S]*?)\\[/U\\]";
+	// 删除[URL=...](...)[/URL]标签
+	final static private String DEL_URL_REGEX_STRING = "\\[URL=.*?\\](.*?)\\[/URL\\]";
+	// 删除[IMG]...[/IMG]标签
+	final static private String DEL_IMGL_REGEX_STRING = "\\[IMG\\](.*?)\\[/IMG\\]";
 
 	// TextView富文本（表情、URL等）显示替换操作
 	// 替换规则，参见http://blog.csdn.net/a_mean/article/details/6930968
 	static public String getRichTextString(String source) {
 		source = source.replaceAll(EXPRESSION_REGEX_STRING, "<img src='$1' />");
-		// 删除[URL=...](...)[/URL]标签
-		source = source.replaceAll("\\[URL=.*?\\](.*?)\\[/URL\\]", "$1");
+		source = source.replaceAll(DEL_URL_REGEX_STRING, "$1");
+		source = source
+				.replaceAll(DEL_IMGL_REGEX_STRING, "<img src='img' />$1");
 		source = source.replaceAll(URL_REGEX_STRING,
 				"<img src='url' /><a href='$1'>$1</a>");
 		source = source.replaceAll(COLOR_REGEX_STRING,

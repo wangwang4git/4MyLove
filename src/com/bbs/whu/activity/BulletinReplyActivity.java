@@ -30,6 +30,7 @@ import com.bbs.whu.R;
 import com.bbs.whu.adapter.FaceGridAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.FaceBean;
+import com.bbs.whu.progresshud.ProgressHUDTask;
 import com.bbs.whu.utils.MyBBSFacesUtils;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
@@ -63,6 +64,9 @@ public class BulletinReplyActivity extends Activity {
 	private FaceGridAdapter mAdapter;
 	// BBS表情名称、表情资源ID映射集合
 	private ArrayList<FaceBean> BBSFacesList = new ArrayList<FaceBean>();
+	
+	// 等待对话框
+	private ProgressHUDTask mProgress;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -176,6 +180,11 @@ public class BulletinReplyActivity extends Activity {
 					finish();
 					break;
 				}
+				// 取消显示等待对话框
+				if (mProgress != null) {
+					mProgress.dismiss();
+					mProgress = null;
+				}
 				return;
 			}
 		};
@@ -255,6 +264,11 @@ public class BulletinReplyActivity extends Activity {
 		// post请求
 		MyBBSRequest.mPost(MyConstants.POST_BULLETIN_REPLY_URL, keys, values,
 				"BulletinReplyActivity", this);
+		// 显示等待对话框
+		if (null == mProgress) {
+			mProgress = new ProgressHUDTask(this);
+			mProgress.execute();
+		}
 	}
 
 	/**

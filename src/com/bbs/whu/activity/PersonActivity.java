@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.bbs.whu.R;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.UserInfoBean;
+import com.bbs.whu.progresshud.ProgressHUDTask;
 import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
@@ -72,6 +73,9 @@ public class PersonActivity extends Activity {
 	// get参数
 	ArrayList<String> keys = new ArrayList<String>();
 	ArrayList<String> values = new ArrayList<String>();
+	
+	// 等待对话框
+	private ProgressHUDTask mProgress;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -79,7 +83,10 @@ public class PersonActivity extends Activity {
 		// 取消显示title栏
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_person);
-
+		// 显示等待对话框
+		mProgress = new ProgressHUDTask(this);
+		mProgress.execute();
+		
 		// 获取传过来的数据，加载到界面上
 		Intent postInfoIntent = getIntent();
 		// 作者
@@ -149,6 +156,11 @@ public class PersonActivity extends Activity {
 					break;
 				case MyConstants.REQUEST_FAIL:
 					break;
+				}
+				// 取消显示等待对话框
+				if (mProgress != null) {
+					mProgress.dismiss();
+					mProgress = null;
 				}
 				return;
 			}

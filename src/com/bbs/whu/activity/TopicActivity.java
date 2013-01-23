@@ -22,6 +22,7 @@ import com.bbs.whu.adapter.TopicAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.TopicBean;
 import com.bbs.whu.model.topic.Topics;
+import com.bbs.whu.progresshud.ProgressHUDTask;
 import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
@@ -62,12 +63,18 @@ public class TopicActivity extends Activity implements IXListViewListener,
 	// get参数
 	ArrayList<String> keys = new ArrayList<String>();
 	ArrayList<String> values = new ArrayList<String>();
+	
+	// 等待对话框
+	private ProgressHUDTask mProgress;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_topic);
+		// 显示等待对话框
+		mProgress = new ProgressHUDTask(this);
+		mProgress.execute();
 		// 获取传入的参数
 		board = getIntent().getStringExtra("board");
 		name = getIntent().getStringExtra("name");
@@ -143,6 +150,11 @@ public class TopicActivity extends Activity implements IXListViewListener,
 				case MyConstants.REQUEST_FAIL:
 					break;
 				}
+				// 取消显示等待对话框
+				if (mProgress != null) {
+					mProgress.dismiss();
+					mProgress = null;
+				}
 				return;
 			}
 		};
@@ -172,6 +184,11 @@ public class TopicActivity extends Activity implements IXListViewListener,
 		// 请求数据
 		MyBBSRequest.mGet(MyConstants.GET_URL, keys, values, "TopicActivity",
 				isForcingWebGet, this);
+		// 显示等待对话框
+		if (null == mProgress) {
+			mProgress = new ProgressHUDTask(this);
+			mProgress.execute();
+		}
 	}
 
 	/**

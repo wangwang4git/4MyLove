@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -53,8 +56,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private Button anonymousButton;
 	// 接收请求数据的handler和用来处理选中或者删除下拉项消息
 	Handler mHandler;
-	// 等待对话框
-	private MyWaitDialog waitDialog;
+	// 登录时的等待对话框
+	private MyWaitDialog loginWaitDialog;
 	// PopupWindow对象
 	private PopupWindow selectPopupWindow = null;
 	// 自定义Adapter
@@ -73,6 +76,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private boolean flag = false;
 	// 用户名、密码对列表
 	private List<UserPasswordBean> userPasswords;
+	// 删除账号缓存文件的确认对话框
+	private AlertDialog.Builder deleteConfirmDlg;
+	// 选中的要删除的项
+	private int delIndex;
+	// 删除用户缓存文件时的等待对话框
+	private MyWaitDialog deleteWaitDialog;
 
 	// 如果删除了userPasswords中的第i项，相应的弹出对话框询问是否删除该项对应的缓存文件夹，删除方法如下：
 	// 删除/whubbs/data/cache/username/文件夹
@@ -91,10 +100,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 登录前操作
 		loginBefore();
 
-		// 设定mProgressDialog的属性
-		// waitDialog = new WaitDialog(LoginActivity.this, "提示",
+		// 设定loginWaitDialog的属性
+		// loginWaitDialog = new WaitDialog(LoginActivity.this, "提示",
 		// "正在登录...");
-		waitDialog = new MyWaitDialog(LoginActivity.this);
+		loginWaitDialog = new MyWaitDialog(LoginActivity.this);
+
+		// 删除账户缓存文件的等待对话框
+		deleteWaitDialog = new MyWaitDialog(LoginActivity.this);
 	}
 
 	@Override
@@ -102,7 +114,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		switch (view.getId()) {
 		case R.id.login_button:
 			// 登录时的等待对话框
-			waitDialog.show();
+			loginWaitDialog.show();
 			// 登陆
 			login();
 			break;
@@ -133,6 +145,47 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 匿名按钮
 		anonymousButton = (Button) findViewById(R.id.anonymous_button);
 		anonymousButton.setOnClickListener(this);
+
+		// 删除账号缓存文件的确认对话框
+		deleteConfirmDlg = new Builder(LoginActivity.this);
+		deleteConfirmDlg.setMessage("确认删除该账户的缓存文件吗？");
+		deleteConfirmDlg.setTitle("提示");
+		deleteConfirmDlg.setPositiveButton("确认",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// 弹出删除账户缓存文件的等待对话框
+						deleteWaitDialog.show();
+
+						datas.remove(delIndex);
+
+						// 删除缓存文件
+						MyFileUtils.delFolder(MyFileUtils
+								.getSdcardDataCacheDir(userPasswords.get(
+										delIndex).getName()));
+
+						// 删除userPasswords中的账户
+						userPasswords.remove(delIndex);
+						
+						//将userPasswords存入json文件
+
+						// 刷新下拉列表
+						optionsAdapter.notifyDataSetChanged();
+
+						// 关闭弹出删除账户缓存文件的等待对话框
+						deleteWaitDialog.cancel();
+
+						dialog.dismiss();
+					}
+				});
+
+		deleteConfirmDlg.setNegativeButton("取消",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
 	}
 
 	/**
@@ -155,34 +208,33 @@ public class LoginActivity extends Activity implements OnClickListener {
 					break;
 				case MyConstants.LOGIN_DELETE_USER:
 					// 移除下拉项数据
-					int delIndex = data.getInt("delIndex");
-					datas.remove(delIndex);
-					// 刷新下拉列表
-					optionsAdapter.notifyDataSetChanged();
+					delIndex = data.getInt("delIndex");
+
+					// 弹出删除账号缓存文件的确认对话框
+					deleteConfirmDlg.create().show();
 					break;
 				case MyConstants.REQUEST_SUCCESS:
-					if (waitDialog.mStatus == MyWaitDialog.SHOWING) {
+					if (loginWaitDialog.mStatus == MyWaitDialog.SHOWING) {
 						// 登录成功后立马记下用户名和密码
 						loginAfter();
 
 						// 跳转的主页
 						startActivity(new Intent(LoginActivity.this,
 								MainActivity.class));
-						// 登陆后操作
-						loginAfter();
+
 						// 关闭等待对话框
-						waitDialog.cancel();
+						loginWaitDialog.cancel();
 						// 关闭登陆页面
 						finish();
-					} else if (waitDialog.mStatus == MyWaitDialog.CANCELLED) {
+					} else if (loginWaitDialog.mStatus == MyWaitDialog.CANCELLED) {
 						// 登录成功但是取消了等待对话框则发送登出请求
-						// MyBBSRequest.mGet(MyConstants.LOG_OUT_URL,
-						// "MainActivity");//设置为MainActivity是为了不接收退出的响应事件
+						MyBBSRequest.mGet(MyConstants.LOG_OUT_URL,
+								"MainActivity");// 设置为MainActivity是为了不接收退出的响应事件
 					}
 					break;
 				case MyConstants.REQUEST_FAIL:
 					// 关闭等待对话框
-					waitDialog.cancel();
+					loginWaitDialog.cancel();
 					// 提示失败
 					break;
 				}
@@ -225,7 +277,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// post请求
 		MyBBSRequest.mPost(MyConstants.LOGIN_URL, keys, values,
 				"LoginActivity", this);
-	}
+	} 
 
 	/**
 	 * 登录后操作，包括用户名、密码列表序列化

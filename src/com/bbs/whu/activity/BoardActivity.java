@@ -25,6 +25,7 @@ import com.bbs.whu.adapter.BoardAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.BoardBean;
 import com.bbs.whu.model.board.Board;
+import com.bbs.whu.progresshud.ProgressHUDTask;
 import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
@@ -56,11 +57,17 @@ public class BoardActivity extends Activity {
 	private ImageView mSearchConfirmButton;
 	// 触发搜索布局显示按钮
 	private Button mShowSearch;
+	
+	// 等待对话框
+	private ProgressHUDTask mProgress;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_board);
+		// 显示等待对话框
+		mProgress = new ProgressHUDTask(this);
+		mProgress.execute();
 		// 初始化控件
 		initView();
 		// 初始化适配器
@@ -150,6 +157,11 @@ public class BoardActivity extends Activity {
 					break;
 				case MyConstants.REQUEST_FAIL:
 					break;
+				}
+				// 取消显示等待对话框
+				if (mProgress != null) {
+					mProgress.dismiss();
+					mProgress = null;
 				}
 				return;
 			}
@@ -251,7 +263,6 @@ public class BoardActivity extends Activity {
 	 *            输入的版块名
 	 */
 	void searchTheBoard(String keyword) {
-		System.out.println(keyword);
 		// 遍历查找
 		for (int i = 0; i < childs.size(); ++i) {
 			for (int j = 0; j < childs.get(i).size(); ++j) {

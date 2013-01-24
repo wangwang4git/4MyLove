@@ -98,6 +98,8 @@ public class MainActivity extends TabActivity {
 			public void onClick(DialogInterface dialog, int which) {
 				// 退出登陆
 				MyBBSRequest.mGet(MyConstants.LOG_OUT_URL, "MainActivity");
+				// 清理Cookie
+				MyApplication.getInstance().clearCookieStore();
 				// 结束程序
 				android.os.Process.killProcess(android.os.Process.myPid());
 				// 对话框退出

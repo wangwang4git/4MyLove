@@ -22,9 +22,9 @@ public class MyFileUtils {
 	public static final String USERPASSWORDNAME = "4MyLove";
 	
 	// 缓存文件SD卡路径
-	public static String mSdcardDataCacheDir;
+	private static String mSdcardDataCacheDir;
 	// 用户名、密码json文件SD卡路径
-	public static String mSdcardDataUserPasswordDir;
+	private static String mSdcardDataUserPasswordDir;
 
 	public static String getSdcardDataCacheDir(String userName) {
 		if (Environment.getExternalStorageState().equals(

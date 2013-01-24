@@ -3,6 +3,8 @@ package com.bbs.whu.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.cookie.Cookie;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -12,20 +14,25 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.view.ViewPager.LayoutParams;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.bbs.whu.R;
+import com.bbs.whu.adapter.AdvancedAutoCompleteAdapter;
 import com.bbs.whu.adapter.LoginOptionsAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.UserPasswordBean;
@@ -33,7 +40,6 @@ import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
-import com.bbs.whu.utils.MyEncryptionDecryptionUtils;
 import com.bbs.whu.utils.MyFileUtils;
 import com.bbs.whu.utils.MyHttpClient;
 import com.bbs.whu.utils.MyWaitDialog;
@@ -47,14 +53,15 @@ import com.loopj.android.http.PersistentCookieStore;
  */
 public class LoginActivity extends Activity implements OnClickListener {
 	// 用户名输入框
-	private EditText userNameEditText;
+	private AutoCompleteTextView userNameEditText;
+	private AdvancedAutoCompleteAdapter mAdapter;
 	// 密码输入框
 	private EditText passwordEditText;
 	// 确定按钮
 	private Button loginButton;
 	// 匿名按钮
 	private Button anonymousButton;
-	// 接收请求数据的handler和用来处理选中或者删除下拉项消息
+	// 接收请求数据的handler
 	Handler mHandler;
 	// 登录时的等待对话框
 	private MyWaitDialog loginWaitDialog;
@@ -74,14 +81,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private ListView listView = null;
 	// 是否初始化完成标志
 	private boolean flag = false;
+
 	// 用户名、密码对列表
-	private List<UserPasswordBean> userPasswords;
+	private ArrayList<UserPasswordBean> userPasswords;
 	// 删除账号缓存文件的确认对话框
 	private AlertDialog.Builder deleteConfirmDlg;
 	// 选中的要删除的项
 	private int delIndex;
-	// 删除用户缓存文件时的等待对话框
-	private MyWaitDialog deleteWaitDialog;
 
 	// 如果删除了userPasswords中的第i项，相应的弹出对话框询问是否删除该项对应的缓存文件夹，删除方法如下：
 	// 删除/whubbs/data/cache/username/文件夹
@@ -99,14 +105,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 		initHandler();
 		// 登录前操作
 		loginBefore();
-
 		// 设定loginWaitDialog的属性
 		// loginWaitDialog = new WaitDialog(LoginActivity.this, "提示",
 		// "正在登录...");
 		loginWaitDialog = new MyWaitDialog(LoginActivity.this);
-
-		// 删除账户缓存文件的等待对话框
-		deleteWaitDialog = new MyWaitDialog(LoginActivity.this);
 	}
 
 	@Override
@@ -134,11 +136,26 @@ public class LoginActivity extends Activity implements OnClickListener {
 	 */
 	private void init() {
 		// 用户名、密码输入框
-		userNameEditText = (EditText) findViewById(R.id.user_name_editText);
+		userNameEditText = (AutoCompleteTextView) findViewById(R.id.user_name_editText);
 		passwordEditText = (EditText) findViewById(R.id.password_editText);
 		// 设置用户名、密码初始值
-		userNameEditText.setText(MyConstants.MY_USER_NAME);
-		passwordEditText.setText(MyConstants.MY_PASSWORD);
+		// userNameEditText.setText(MyConstants.MY_USER_NAME);
+		// passwordEditText.setText(MyConstants.MY_PASSWORD);
+
+		// 设置userNameEditText适配器
+		mAdapter = new AdvancedAutoCompleteAdapter(this, userPasswords, 10);
+		userNameEditText.setAdapter(mAdapter);
+
+		// 设置userNameEditText监听器
+		userNameEditText.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				// TODO Auto-generated method stub
+				passwordEditText.setText(userPasswords.get(arg2).getPassword());
+			}
+		});
+
 		// 确定按钮
 		loginButton = (Button) findViewById(R.id.login_button);
 		loginButton.setOnClickListener(this);
@@ -154,9 +171,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// 弹出删除账户缓存文件的等待对话框
-						deleteWaitDialog.show();
-
 						datas.remove(delIndex);
 
 						// 删除缓存文件
@@ -166,14 +180,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 						// 删除userPasswords中的账户
 						userPasswords.remove(delIndex);
-						
-						//将userPasswords存入json文件
+
+						// 将userPasswords存入json文件
 
 						// 刷新下拉列表
 						optionsAdapter.notifyDataSetChanged();
-
-						// 关闭弹出删除账户缓存文件的等待对话框
-						deleteWaitDialog.cancel();
 
 						dialog.dismiss();
 					}
@@ -215,15 +226,32 @@ public class LoginActivity extends Activity implements OnClickListener {
 					break;
 				case MyConstants.REQUEST_SUCCESS:
 					if (loginWaitDialog.mStatus == MyWaitDialog.SHOWING) {
-						// 登录成功后立马记下用户名和密码
-						loginAfter();
+						// 如果Cookie为空，说明用户名密码错误
+						List<Cookie> cookies = MyApplication.getInstance()
+								.getCookieStore().getCookies();
+						if (cookies.size() == 0) {
+							// 关闭等待对话框
+							loginWaitDialog.cancel();
+							// 提醒用户
+							Toast.makeText(LoginActivity.this, "用户名、密码错误！",
+									Toast.LENGTH_SHORT).show();
+							return;
+						}
+
+						// 登录成功后，将用户名密码设为全局变量
+						((MyApplication) getApplicationContext())
+								.setName(userNameEditText.getText().toString());
+						((MyApplication) getApplicationContext())
+								.setPassword(passwordEditText.getText()
+										.toString());
 
 						// 跳转的主页
 						startActivity(new Intent(LoginActivity.this,
 								MainActivity.class));
-
 						// 关闭等待对话框
 						loginWaitDialog.cancel();
+						// 登陆后操作
+						loginAfter();
 						// 关闭登陆页面
 						finish();
 					} else if (loginWaitDialog.mStatus == MyWaitDialog.CANCELLED) {
@@ -255,11 +283,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		PersistentCookieStore myCookieStore = new PersistentCookieStore(this);
 		// 将CookieStore设为全局变量
 		((MyApplication) getApplicationContext()).setCookieStore(myCookieStore);
-		// 将用户名密码设为全局变量
-		((MyApplication) getApplicationContext()).setName(userNameEditText
-				.getText().toString());
-		((MyApplication) getApplicationContext()).setPassword(passwordEditText
-				.getText().toString());
 		// 添加CookieStore
 		MyHttpClient.setCookieStore(myCookieStore);
 		// 添加post请求参数
@@ -277,7 +300,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// post请求
 		MyBBSRequest.mPost(MyConstants.LOGIN_URL, keys, values,
 				"LoginActivity", this);
-	} 
+	}
 
 	/**
 	 * 登录后操作，包括用户名、密码列表序列化
@@ -288,35 +311,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 		String loginName = ((MyApplication) getApplicationContext()).getName();
 		String loginPassword = ((MyApplication) getApplicationContext())
 				.getPassword();
-		Boolean isExist = false;
-		for (int i = 0; i < userPasswords.size(); ++i) {
-			// 用户名相同
-			if (userPasswords.get(i).getName().equals(loginName)) {
-				// 密码相同则存在
-				if (userPasswords.get(i).getPassword().equals(loginPassword)) {
-					isExist = true;
-				}
-				// 密码不同则更新密码
-				else {
-					userPasswords.get(i).setPassword(loginPassword);
-				}
-				break;
-
-			}
-		}
-
-		// 用户不存在则添加用户信息
-		if (!isExist) {
-			UserPasswordBean bean = new UserPasswordBean();
-			bean.setName(loginName);
-			bean.setPassword(loginPassword);
-			userPasswords.add(bean);
-		}
-
-		// 用户名，密码加密
-		try {
-			// 采用默认密钥
-			MyEncryptionDecryptionUtils des = new MyEncryptionDecryptionUtils();
+		if (!loginName.equals(MyFileUtils.USERPASSWORDNAME)) {
+			Boolean isExist = false;
 			for (int i = 0; i < userPasswords.size(); ++i) {
 				// 如果用户名不同，则添加
 				// 如果用户名相同，密码不同，则更新密码
@@ -330,10 +326,15 @@ public class LoginActivity extends Activity implements OnClickListener {
 					break;
 				}
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// 不存在，就添加
+			if (!isExist) {
+				UserPasswordBean bean = new UserPasswordBean();
+				bean.setName(loginName);
+				bean.setPassword(loginPassword);
+				userPasswords.add(bean);
+			}
 		}
+
 		// 序列化到用户名、密码json文件
 		MyBBSCache.setUserPasswordList(userPasswords,
 				MyFileUtils.USERPASSWORDNAME);
@@ -344,7 +345,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	 */
 	private void loginBefore() {
 		// 先读取用户名、密码json文件，再反序列化
-		userPasswords = MyBBSCache
+		userPasswords = (ArrayList<UserPasswordBean>) MyBBSCache
 				.getUserPasswordList(MyFileUtils.USERPASSWORDNAME);
 		// 如果userPasswords为空，当前还不存在用户名、密码json文件
 		if (null == userPasswords) {
@@ -372,7 +373,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private void initWedget() {
 		// 初始化界面组件
 		parent = (LinearLayout) findViewById(R.id.login_user_parent);
-		userNameEditText = (EditText) findViewById(R.id.user_name_editText);
+		userNameEditText = (AutoCompleteTextView) findViewById(R.id.user_name_editText);
 		passwordEditText = (EditText) findViewById(R.id.password_editText);
 		selectImg = (ImageView) findViewById(R.id.btn__multiple_user_select);
 

@@ -21,6 +21,7 @@ import com.bbs.whu.adapter.BulletinAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.BulletinBean;
 import com.bbs.whu.model.bulletin.Page;
+import com.bbs.whu.progresshud.ProgressHUDTask;
 import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
@@ -63,12 +64,18 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 	// get参数
 	ArrayList<String> keys = new ArrayList<String>();
 	ArrayList<String> values = new ArrayList<String>();
+	
+	// 等待对话框
+	private ProgressHUDTask mProgress;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_bulletin);
+		// 显示等待对话框
+		mProgress = new ProgressHUDTask(this);
+		mProgress.execute();
 		// 获取传入的参数
 		board = getIntent().getStringExtra("board");
 		groupid = getIntent().getStringExtra("groupid");
@@ -158,6 +165,11 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 				case MyConstants.REQUEST_FAIL:
 					break;
 				}
+				// 取消显示等待对话框
+				if (mProgress != null) {
+					mProgress.dismiss();
+					mProgress = null;
+				}
 				return;
 			}
 		};
@@ -186,6 +198,11 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		// 请求数据
 		MyBBSRequest.mGet(MyConstants.GET_URL, keys, values,
 				"BulletinActivity", isForcingWebGet, this);
+		// 显示等待对话框
+		if (null == mProgress) {
+			mProgress = new ProgressHUDTask(this);
+			mProgress.execute();
+		}
 	}
 
 	/**
@@ -222,7 +239,7 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 			mListView.setPullLoadEnable(false);
 
 		// 获取帖子内容并添加
-		items.addAll(MyRegexParseUtils.getContentList(page));
+		items.addAll(MyRegexParseUtils.getContentList(this, page));
 		// 刷新ListView
 		mAdapter.notifyDataSetChanged();
 		// 当前页增加一页，便于下次申请

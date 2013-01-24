@@ -1,6 +1,12 @@
 package com.bbs.whu.utils;
 
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+
+import org.apache.http.util.EncodingUtils;
+
+import android.content.Context;
 
 import com.bbs.whu.model.BoardBean;
 import com.bbs.whu.model.PlaybillBean;
@@ -27,6 +33,42 @@ import com.thoughtworks.xstream.XStream;
  * 
  */
 public class MyXMLParseUtils {
+	// 版块名称、版块id号HaspMap
+	private static HashMap<String, String> BoardIdMap;
+
+	public static HashMap<String, String> getBoardIdMap(Context context) {
+		if (BoardIdMap != null) {
+			return BoardIdMap;
+		}
+
+		BoardIdMap = new HashMap<String, String>();
+		// 读取assert/boards.xml
+		String result = "";
+		try {
+			InputStream in = context.getResources().getAssets()
+					.open("boards.xml");
+			// 获取文件的字节数
+			int lenght = in.available();
+			// 创建byte数组
+			byte[] buffer = new byte[lenght];
+			// 将文件中的数据读到byte数组中
+			in.read(buffer);
+			result = EncodingUtils.getString(buffer, "UTF-8");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// 反序列化
+		List<BoardBean> boards = readXml2BoardList(result);
+		// 构造HaspMap
+		for (int i = 0; i < boards.size(); ++i) {
+			for (int j = 0; j < boards.get(i).getBoards().size(); ++j) {
+				BoardIdMap.put(boards.get(i).getBoards().get(j).getId()
+						.getAttributeValue(), boards.get(i).getBoards().get(j)
+						.getNum().getAttributeValue());
+			}
+		}
+		return BoardIdMap;
+	}
 
 	/**
 	 * 反序列化十大文摘列表
@@ -273,4 +315,5 @@ public class MyXMLParseUtils {
 			return null;
 		}
 	}
+	
 }

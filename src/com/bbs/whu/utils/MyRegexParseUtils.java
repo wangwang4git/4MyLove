@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.content.Context;
+
 import com.bbs.whu.model.BulletinBean;
 import com.bbs.whu.model.bulletin.Page;
 import com.bbs.whu.model.bulletin.Page.Article;
@@ -188,14 +190,15 @@ public class MyRegexParseUtils {
 	}
 
 	// 返回帖子详情列表
-	public static List<BulletinBean> getContentList(Page page) {
+	public static List<BulletinBean> getContentList(Context context, Page page) {
 		List<BulletinBean> contents = new ArrayList<BulletinBean>();
 		List<Article> articles = page.getArticles();
 		for (int i = 0; i < articles.size(); ++i) {
 			BulletinBean content = new BulletinBean();
 			String temp = articles.get(i).getContent();
 			// 在content中插入图片URL
-			temp = insertImageURL(temp, articles.get(i).getId());
+			temp = insertImageURL(temp, MyXMLParseUtils.getBoardIdMap(context)
+					.get(getBoard(temp)), articles.get(i).getId());
 			content.setFloor(articles.get(i).getFloor());
 			content.setContent(temp);
 			content.setId(articles.get(i).getId());
@@ -219,15 +222,16 @@ public class MyRegexParseUtils {
 	final static private String IMAGE_REGEX_STRING = "\\[upload=\\d+\\]\\[\\\\/upload\\](.*?)attach\\('.*?', .*?, (.*?)\\);";
 
 	// 在content中插入图片URL
-	static private String insertImageURL(String content, String id) {
+	static private String insertImageURL(String content, String boardId,
+			String contentId) {
 		Pattern pattern = Pattern.compile(IMAGE_REGEX_STRING);
 		while (true) {
 			Matcher matcher = pattern.matcher(content);
 			if (matcher.find()) {
 				// 插入图片URL
 				content = content.replaceAll(IMAGE_REGEX_STRING,
-						"<img src='img' />" + MyConstants.IMAGE_URL
-								+ "?bid=80&id=" + id + "&ap=$2$1");
+						"<img src='img' />" + MyConstants.IMAGE_URL + "?bid="
+								+ boardId + "&id=" + contentId + "&ap=$2$1");
 			} else {
 				break;
 			}
@@ -260,11 +264,18 @@ public class MyRegexParseUtils {
 	final static private String ITALIC_REGEX_STRING = "\\[I\\]([\\s\\S]*?)\\[/I\\]";
 	// 在文本中提取下划线的正则表达式
 	final static private String UNDERLINE_REGEX_STRING = "\\[U\\]([\\s\\S]*?)\\[/U\\]";
+	// 删除[URL=...](...)[/URL]标签
+	final static private String DEL_URL_REGEX_STRING = "\\[URL=.*?\\](.*?)\\[/URL\\]";
+	// 删除[IMG]...[/IMG]标签
+	final static private String DEL_IMGL_REGEX_STRING = "\\[IMG\\](.*?)\\[/IMG\\]";
 
 	// TextView富文本（表情、URL等）显示替换操作
 	// 替换规则，参见http://blog.csdn.net/a_mean/article/details/6930968
 	static public String getRichTextString(String source) {
 		source = source.replaceAll(EXPRESSION_REGEX_STRING, "<img src='$1' />");
+		source = source.replaceAll(DEL_URL_REGEX_STRING, "$1");
+		source = source
+				.replaceAll(DEL_IMGL_REGEX_STRING, "<img src='img' />$1");
 		source = source.replaceAll(URL_REGEX_STRING,
 				"<img src='url' /><a href='$1'>$1</a>");
 		source = source.replaceAll(COLOR_REGEX_STRING,

@@ -139,8 +139,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 		userNameEditText = (AutoCompleteTextView) findViewById(R.id.user_name_editText);
 		passwordEditText = (EditText) findViewById(R.id.password_editText);
 		// 设置用户名、密码初始值
-		// userNameEditText.setText(MyConstants.MY_USER_NAME);
-		// passwordEditText.setText(MyConstants.MY_PASSWORD);
+		userNameEditText.setText(MyConstants.MY_USER_NAME);
+		passwordEditText.setText(MyConstants.MY_PASSWORD);
 
 		// 设置userNameEditText适配器
 		mAdapter = new AdvancedAutoCompleteAdapter(this, userPasswords, 10);
@@ -151,7 +151,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				// TODO Auto-generated method stub
 				passwordEditText.setText(userPasswords.get(arg2).getPassword());
 			}
 		});
@@ -181,7 +180,20 @@ public class LoginActivity extends Activity implements OnClickListener {
 						// 删除userPasswords中的账户
 						userPasswords.remove(delIndex);
 
-						// 将userPasswords存入json文件
+						
+						//深拷贝tempRefreshJson
+						ArrayList<UserPasswordBean> tempRefreshJson = new ArrayList<UserPasswordBean>(); 
+						for(UserPasswordBean tempAdd : userPasswords)
+						{
+							UserPasswordBean tempUser = new UserPasswordBean();
+							tempUser.setName(tempAdd.getName());
+							tempUser.setPassword(tempAdd.getPassword());
+							tempRefreshJson.add(tempUser);
+						}
+						
+						// 序列化到用户名、密码json文件
+						MyBBSCache.setUserPasswordList(tempRefreshJson,
+								MyFileUtils.USERPASSWORDNAME);
 
 						// 刷新下拉列表
 						optionsAdapter.notifyDataSetChanged();

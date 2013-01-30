@@ -19,6 +19,10 @@ public class MyConstants {
 	public static final int REQUEST_SUCCESS = 0;
 	// 请求失败
 	public static final int REQUEST_FAIL = 1;
+	// 登录下拉框选中某项
+	public static final int LOGIN_SELECT_USER = 7;
+	// 登录下拉框删除某项
+	public static final int LOGIN_DELETE_USER = 8; 
 	// 登陆URL
 	public static final String LOGIN_URL = "http://bbs.whu.edu.cn/bbslogin.php";
 	// 退出登录URL

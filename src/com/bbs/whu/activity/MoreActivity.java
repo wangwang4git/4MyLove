@@ -45,9 +45,9 @@ public class MoreActivity extends Activity {
 	 * 初始化控件
 	 */
 	private void initView() {
+		// 
 		mCleanCache = (ViewGroup) findViewById(R.id.more_list_clean_cache);
 		mCleanCache.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -62,11 +62,10 @@ public class MoreActivity extends Activity {
 				imageLoader.clearDiscCache();
 				Toast.makeText(
 						getApplicationContext(),
-						"您点击的是："
-								+ ((TextView) ((ViewGroup) v)
-										.findViewById(R.id.more_list_clean_cache_textview))
-										.getText().toString(),
-						Toast.LENGTH_SHORT).show();
+						((TextView) ((ViewGroup) v)
+								.findViewById(R.id.more_list_clean_cache_textview))
+								.getText().toString(), Toast.LENGTH_SHORT)
+						.show();
 			}
 		});
 	}

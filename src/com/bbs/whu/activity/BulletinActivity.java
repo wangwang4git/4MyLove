@@ -150,6 +150,11 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
+				// 取消显示等待对话框
+				if (mProgress != null) {
+					mProgress.dismiss();
+					mProgress = null;
+				}
 				switch (msg.what) {
 				case MyConstants.REQUEST_SUCCESS:
 					String res = (String) msg.obj;
@@ -165,11 +170,6 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 				case MyConstants.REQUEST_FAIL:
 					break;
 				}
-				// 取消显示等待对话框
-				if (mProgress != null) {
-					mProgress.dismiss();
-					mProgress = null;
-				}
 				return;
 			}
 		};
@@ -184,6 +184,11 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 	 * 请求帖子详情数据
 	 */
 	private void getBulletin() {
+		// 显示等待对话框
+		if (null == mProgress) {
+			mProgress = new ProgressHUDTask(this);
+			mProgress.execute();
+		}
 		keys.clear();
 		values.clear();
 		// 添加get参数
@@ -198,11 +203,6 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		// 请求数据
 		MyBBSRequest.mGet(MyConstants.GET_URL, keys, values,
 				"BulletinActivity", isForcingWebGet, this);
-		// 显示等待对话框
-		if (null == mProgress) {
-			mProgress = new ProgressHUDTask(this);
-			mProgress.execute();
-		}
 	}
 
 	/**

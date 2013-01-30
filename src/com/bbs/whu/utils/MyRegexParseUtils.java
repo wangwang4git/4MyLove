@@ -250,8 +250,8 @@ public class MyRegexParseUtils {
 	
 	// 在文本中提取表情的正则表达式
 	final static private String EXPRESSION_REGEX_STRING = "\\[(em[0,1,2,3,4,5,6][0,1,2,3,4,5,6,7,8,9])\\]";
-	// 在文本中提取URL的正则表达式，出自《精通正则表达式》
-	final static private String URL_REGEX_STRING = "([http|https]+[://]+[0-9A-Za-z:/[-]_#[?][=][.][&]]*)";
+	// 在文本中提取URL的正则表达式，来源《匹配URL或者网址》，URL：http://see.xidian.edu.cn/cpp/html/1435.html
+	final static private String URL_REGEX_STRING = "((http|ftp|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?)";
 	// 在文本中提取字体颜色的正则表达式
 	final static private String COLOR_REGEX_STRING = "(\\[color=(#[0-9A-Z]{6})\\])([\\s\\S]*?)(\\[/color\\])";
 	// 在文本中提取字体大小的正则表达式

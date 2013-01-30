@@ -148,6 +148,11 @@ public class PersonActivity extends Activity {
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
+				// 取消显示等待对话框
+				if (mProgress != null) {
+					mProgress.dismiss();
+					mProgress = null;
+				}
 				switch (msg.what) {
 				case MyConstants.REQUEST_SUCCESS:
 					String res = (String) msg.obj;
@@ -156,11 +161,6 @@ public class PersonActivity extends Activity {
 					break;
 				case MyConstants.REQUEST_FAIL:
 					break;
-				}
-				// 取消显示等待对话框
-				if (mProgress != null) {
-					mProgress.dismiss();
-					mProgress = null;
 				}
 				return;
 			}

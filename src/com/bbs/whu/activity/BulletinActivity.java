@@ -67,6 +67,8 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 	
 	// 等待对话框
 	private ProgressHUDTask mProgress;
+	// 请求响应一一对应布尔变量
+	private boolean mRequestResponse = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -201,6 +203,7 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		keys.add("page");
 		values.add(Integer.toString(currentPage));
 		// 请求数据
+		mRequestResponse = true;
 		MyBBSRequest.mGet(MyConstants.GET_URL, keys, values,
 				"BulletinActivity", isForcingWebGet, this);
 	}
@@ -216,16 +219,19 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		Page page = MyXMLParseUtils.readXml2Page(res);
 		// 论坛错误，无正确数据返回，显示错误提示
 		if (null == page) {
-			// 禁用“下拉刷新”
-			mListView.setPullRefreshEnable(false);
-			// 禁用“显示更多”
-			mListView.setPullLoadEnable(false);
-			// 删除指定Cache文件
-			MyBBSCache.delCacheFile(MyBBSCache.getCacheFileName(
-					MyConstants.GET_URL, keys, values));
-			// toast提醒
-			Toast.makeText(this, R.string.bbs_exception_text,
-					Toast.LENGTH_SHORT).show();
+			if (mRequestResponse == true) {
+				mRequestResponse = false;
+				// 禁用“下拉刷新”
+				mListView.setPullRefreshEnable(false);
+				// 禁用“显示更多”
+				mListView.setPullLoadEnable(false);
+				// 删除指定Cache文件
+				MyBBSCache.delCacheFile(MyBBSCache.getCacheFileName(
+						MyConstants.GET_URL, keys, values));
+				// toast提醒
+				Toast.makeText(this, R.string.bbs_exception_text,
+						Toast.LENGTH_SHORT).show();
+			}
 			return;
 		}
 

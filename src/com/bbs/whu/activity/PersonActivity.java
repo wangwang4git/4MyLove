@@ -76,6 +76,8 @@ public class PersonActivity extends Activity {
 	
 	// 等待对话框
 	private ProgressHUDTask mProgress;
+	// 请求响应一一对应布尔变量
+	private boolean mRequestResponse = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -188,6 +190,7 @@ public class PersonActivity extends Activity {
 		keys.add("userId");
 		values.add(originAuthor);
 		// 请求数据
+		mRequestResponse = true;
 		MyBBSRequest.mGet(MyConstants.GET_URL, keys, values, "PersonActivity",
 				isForcingWebGet, this);
 	}
@@ -199,12 +202,15 @@ public class PersonActivity extends Activity {
 		UserInfoBean userInfo = MyXMLParseUtils.readXml2UserInfo(res);
 		// 论坛错误，无正确数据返回，显示错误提示
 		if (null == userInfo) {
-			// 删除指定Cache文件
-			MyBBSCache.delCacheFile(MyBBSCache.getCacheFileName(
-					MyConstants.GET_URL, keys, values));
-			// toast提醒
-			Toast.makeText(this, R.string.bbs_exception_text,
-					Toast.LENGTH_SHORT).show();
+			if (mRequestResponse == true) {
+				mRequestResponse = false;
+				// 删除指定Cache文件
+				MyBBSCache.delCacheFile(MyBBSCache.getCacheFileName(
+						MyConstants.GET_URL, keys, values));
+				// toast提醒
+				Toast.makeText(this, R.string.bbs_exception_text,
+						Toast.LENGTH_SHORT).show();
+			}
 			return;
 		}
 		

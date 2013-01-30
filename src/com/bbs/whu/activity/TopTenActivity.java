@@ -40,6 +40,9 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 	// get参数
 	ArrayList<String> keys = new ArrayList<String>();
 	ArrayList<String> values = new ArrayList<String>();
+	
+	// 请求响应一一对应布尔变量
+	private boolean mRequestResponse = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -129,6 +132,7 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 		// 注意，因为涉及到tab的嵌套，所以直接传本Activity的context，构造对话框时会出错，
 		// 需要传入父Activity的context，即使用this.getParent()而不是this
 		// 参考链接：http://iandroiddev.com/post/2011-07-11/2817890
+		mRequestResponse = true;
 		MyBBSRequest.mGet(MyConstants.GET_URL, keys, values, "TopTenActivity",
 				isForcingWebGet, this.getParent());
 	}
@@ -147,16 +151,19 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 				.readXml2TopTenList(res);
 		// 论坛错误，无正确数据返回，显示错误提示
 		if (null == topTens) {
-			// 禁用“下拉刷新”
-			mListView.setPullRefreshEnable(false);
-			// 禁用“显示更多”
-			mListView.setPullLoadEnable(false);
-			// 删除指定Cache文件
-			MyBBSCache.delCacheFile(MyBBSCache.getCacheFileName(
-					MyConstants.GET_URL, keys, values));
-			// toast提醒
-			Toast.makeText(this, R.string.bbs_exception_text,
-					Toast.LENGTH_SHORT).show();
+			if (mRequestResponse == true) {
+				mRequestResponse = false;
+				// 禁用“下拉刷新”
+				mListView.setPullRefreshEnable(false);
+				// 禁用“显示更多”
+				mListView.setPullLoadEnable(false);
+				// 删除指定Cache文件
+				MyBBSCache.delCacheFile(MyBBSCache.getCacheFileName(
+						MyConstants.GET_URL, keys, values));
+				// toast提醒
+				Toast.makeText(this, R.string.bbs_exception_text,
+						Toast.LENGTH_SHORT).show();
+			}
 			return;
 		}
 		items.addAll(topTens);

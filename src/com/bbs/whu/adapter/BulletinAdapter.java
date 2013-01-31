@@ -95,78 +95,8 @@ public class BulletinAdapter extends MyBaseAdapter {
 		// 回复
 		String reply = ((BulletinBean) mItems.get(position)).getReply();
 
-		if (getItemViewType(position) == AUTHOR_ITEM) {
-			// 获取“帖子作者”部分的控件
-			BulletinAuthorViewHolder holder = new BulletinAuthorViewHolder();
-			if (convertView == null) {
-				convertView = LayoutInflater.from(context).inflate(
-						R.layout.bulletin_author_item, null);
-				holder.holderBulletinAuthorTitle = (TextView) convertView
-						.findViewById(R.id.bulletin_author_title);
-				holder.holderBulletinAuthorAuthor = (TextView) convertView
-						.findViewById(R.id.bulletin_author_author);
-				holder.holderBulletinAuthorDateTime = (TextView) convertView
-						.findViewById(R.id.bulletin_author_datetime);
-				holder.holderBulletinAuthorText = (TextView) convertView
-						.findViewById(R.id.bulletin_author_text);
-				holder.holderBulletinAuthorSource = (TextView) convertView
-						.findViewById(R.id.bulletin_author_source);
-				// 设置控件集到convertView
-				convertView.setTag(holder);
-			} else {
-				holder = (BulletinAuthorViewHolder) convertView.getTag();
-			}
-			// 填充控件
-			holder.holderBulletinAuthorTitle.setText(title);
-			holder.holderBulletinAuthorAuthor.setText(author);
-			holder.holderBulletinAuthorDateTime.setText(datetime);
-
-			// holder.holderBulletinAuthorText.setText(text);
-			holder.holderBulletinAuthorText.setText(textCharSequence);
-			// 该语句在设置后必加，不然没有任何效果
-			holder.holderBulletinAuthorText
-					.setMovementMethod(LinkMovementMethod.getInstance());
-
-			holder.holderBulletinAuthorSource.setText(source);
-
-		} else if (getItemViewType(position) == COMMENT_ITEM) {
-			// 获取“回复”部分的控件
-			BulletinCommentViewHolder holder = new BulletinCommentViewHolder();
-			if (convertView == null) {
-				convertView = LayoutInflater.from(context).inflate(
-						R.layout.bulletin_comment_item, null);
-				holder.holderBulletinCommentAuthor = (TextView) convertView
-						.findViewById(R.id.bulletin_comment_author);
-				holder.holderBulletinCommentContent = (TextView) convertView
-						.findViewById(R.id.bulletin_comment_content);
-				holder.holderBulletinCommentReplyLinearLayout = (LinearLayout) convertView
-						.findViewById(R.id.bulletin_comment_reply_linearLayout);
-				holder.holderBulletinCommentReply = (TextView) convertView
-						.findViewById(R.id.bulletin_comment_reply);
-				holder.holderBulletinCommentSource = (TextView) convertView
-						.findViewById(R.id.bulletin_comment_source);
-				// 设置控件集到convertView
-				convertView.setTag(holder);
-			} else {
-				holder = (BulletinCommentViewHolder) convertView.getTag();
-			}
-			// 填充控件
-			holder.holderBulletinCommentAuthor.setText(author);
-			// if (reply.equals("null"))
-			// holder.holderCommentReplyLinearLayout.setVisibility(View.GONE);
-			// else
-			holder.holderBulletinCommentReply.setText(reply);
-
-			// holder.holderBulletinCommentContent.setText(text);
-			holder.holderBulletinCommentContent.setText(textCharSequence);
-			// 该语句在设置后必加，不然没有任何效果
-			holder.holderBulletinCommentContent
-					.setMovementMethod(LinkMovementMethod.getInstance());
-
-			holder.holderBulletinCommentSource.setText(source);
-		}
-		// 设置长按动作
-		convertView.setOnLongClickListener(new OnLongClickListener() {
+		// 长按事件监听
+		OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
 				// 是否是匿名用户
@@ -198,7 +128,84 @@ public class BulletinAdapter extends MyBaseAdapter {
 								}).show();
 				return false;
 			}
-		});
+		};
+
+		if (getItemViewType(position) == AUTHOR_ITEM) {
+			// 获取“帖子作者”部分的控件
+			BulletinAuthorViewHolder holder = new BulletinAuthorViewHolder();
+			if (convertView == null) {
+				convertView = LayoutInflater.from(context).inflate(
+						R.layout.bulletin_author_item, null);
+				holder.holderBulletinAuthorTitle = (TextView) convertView
+						.findViewById(R.id.bulletin_author_title);
+				holder.holderBulletinAuthorAuthor = (TextView) convertView
+						.findViewById(R.id.bulletin_author_author);
+				holder.holderBulletinAuthorDateTime = (TextView) convertView
+						.findViewById(R.id.bulletin_author_datetime);
+				holder.holderBulletinAuthorText = (TextView) convertView
+						.findViewById(R.id.bulletin_author_text);
+				holder.holderBulletinAuthorText
+						.setOnLongClickListener(mOnLongClickListener);
+				holder.holderBulletinAuthorSource = (TextView) convertView
+						.findViewById(R.id.bulletin_author_source);
+				// 设置控件集到convertView
+				convertView.setTag(holder);
+			} else {
+				holder = (BulletinAuthorViewHolder) convertView.getTag();
+			}
+			// 填充控件
+			holder.holderBulletinAuthorTitle.setText(title);
+			holder.holderBulletinAuthorAuthor.setText(author);
+			holder.holderBulletinAuthorDateTime.setText(datetime);
+
+			// holder.holderBulletinAuthorText.setText(text);
+			holder.holderBulletinAuthorText.setText(textCharSequence);
+			// 该语句在设置后必加，不然没有任何效果
+			holder.holderBulletinAuthorText
+					.setMovementMethod(LinkMovementMethod.getInstance());
+
+			holder.holderBulletinAuthorSource.setText(source);
+
+		} else if (getItemViewType(position) == COMMENT_ITEM) {
+			// 获取“回复”部分的控件
+			BulletinCommentViewHolder holder = new BulletinCommentViewHolder();
+			if (convertView == null) {
+				convertView = LayoutInflater.from(context).inflate(
+						R.layout.bulletin_comment_item, null);
+				holder.holderBulletinCommentAuthor = (TextView) convertView
+						.findViewById(R.id.bulletin_comment_author);
+				holder.holderBulletinCommentContent = (TextView) convertView
+						.findViewById(R.id.bulletin_comment_content);
+				holder.holderBulletinCommentContent
+						.setOnLongClickListener(mOnLongClickListener);
+				holder.holderBulletinCommentReplyLinearLayout = (LinearLayout) convertView
+						.findViewById(R.id.bulletin_comment_reply_linearLayout);
+				holder.holderBulletinCommentReply = (TextView) convertView
+						.findViewById(R.id.bulletin_comment_reply);
+				holder.holderBulletinCommentSource = (TextView) convertView
+						.findViewById(R.id.bulletin_comment_source);
+				// 设置控件集到convertView
+				convertView.setTag(holder);
+			} else {
+				holder = (BulletinCommentViewHolder) convertView.getTag();
+			}
+			// 填充控件
+			holder.holderBulletinCommentAuthor.setText(author);
+			// if (reply.equals("null"))
+			// holder.holderCommentReplyLinearLayout.setVisibility(View.GONE);
+			// else
+			holder.holderBulletinCommentReply.setText(reply);
+
+			// holder.holderBulletinCommentContent.setText(text);
+			holder.holderBulletinCommentContent.setText(textCharSequence);
+			// 该语句在设置后必加，不然没有任何效果
+			holder.holderBulletinCommentContent
+					.setMovementMethod(LinkMovementMethod.getInstance());
+
+			holder.holderBulletinCommentSource.setText(source);
+		}
+		// 设置长按动作
+		convertView.setOnLongClickListener(mOnLongClickListener);
 		return convertView;
 	}
 

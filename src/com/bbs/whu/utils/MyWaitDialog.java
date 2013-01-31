@@ -36,7 +36,7 @@ public class MyWaitDialog extends Activity {
 		mTitle = title;
 		mContent = content;
 
-		mProgressDialog = new ProgressDialog(this);
+		mProgressDialog = new ProgressDialog(mContext);
 		mProgressDialog.setTitle(mTitle);
 		mProgressDialog.setMessage(mContent);
 		// 监听等待对话框的返回键

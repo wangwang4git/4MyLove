@@ -63,7 +63,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private Button anonymousButton;
 	// 接收请求数据的handler
 	Handler mHandler;
-	
+
 	// 登录时的等待对话框
 	private MyWaitDialog loginWaitDialog;
 	// PopupWindow对象
@@ -106,7 +106,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 设定loginWaitDialog的属性
 		// loginWaitDialog = new WaitDialog(LoginActivity.this, "提示",
 		// "正在登录...");
-		loginWaitDialog = new MyWaitDialog(LoginActivity.this);
+		loginWaitDialog = new MyWaitDialog(LoginActivity.this, "登录",
+				"正在登录，稍安勿躁......");
 	}
 
 	@Override
@@ -139,11 +140,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 设置用户名、密码初始值
 		// userNameEditText.setText(MyConstants.MY_USER_NAME);
 		// passwordEditText.setText(MyConstants.MY_PASSWORD);
-		
+
 		// 设置userNameEditText适配器
 		mAdapter = new AdvancedAutoCompleteAdapter(this, userPasswords, 10);
 		userNameEditText.setAdapter(mAdapter);
-		
+
 		// 设置userNameEditText监听器
 		userNameEditText.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -153,14 +154,14 @@ public class LoginActivity extends Activity implements OnClickListener {
 				passwordEditText.setText(userPasswords.get(arg2).getPassword());
 			}
 		});
-		
+
 		// 确定按钮
 		loginButton = (Button) findViewById(R.id.login_button);
 		loginButton.setOnClickListener(this);
 		// 匿名按钮
 		anonymousButton = (Button) findViewById(R.id.anonymous_button);
 		anonymousButton.setOnClickListener(this);
-		
+
 		// 删除账号缓存文件的确认对话框
 		deleteConfirmDlg = new Builder(LoginActivity.this);
 		deleteConfirmDlg.setMessage("确认删除该账户的缓存文件吗？");
@@ -254,7 +255,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 						((MyApplication) getApplicationContext())
 								.setPassword(passwordEditText.getText()
 										.toString());
-						
+
 						// 跳转的主页
 						startActivity(new Intent(LoginActivity.this,
 								MainActivity.class));

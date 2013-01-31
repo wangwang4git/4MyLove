@@ -95,7 +95,7 @@
                 android:orientation="vertical" >
 
                 <LinearLayout
-                	android:id="@+id/login_user_parent"
+                    android:id="@+id/login_user_parent"
                     android:layout_width="230dip"
                     android:layout_height="50dip"
                     android:background="@drawable/login_input_frame"
@@ -117,7 +117,7 @@
                         android:scaleType="centerInside"
                         android:src="@drawable/login_input_separator" />
 
-					<RelativeLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
 
@@ -129,10 +129,10 @@
                             android:layout_marginLeft="3dp"
                             android:layout_marginRight="5dp"
                             android:layout_marginTop="3dp"
+                            android:completionThreshold="100"
                             android:hint="@string/login_user_name"
                             android:inputType="text"
-                            android:textColor="#FF000000"
-                            android:completionThreshold="100" />
+                            android:textColor="#FF000000" />
 
                         <ImageView
                             android:id="@+id/btn__multiple_user_select"
@@ -144,9 +144,7 @@
                             android:layout_marginRight="5dp"
                             android:scaleType="centerInside"
                             android:src="@drawable/login_select" />
-                            
                     </RelativeLayout>
-                        
                 </LinearLayout>
 
                 <LinearLayout
@@ -212,6 +210,7 @@
                         android:layout_height="40dp"
                         android:layout_alignParentLeft="true"
                         android:background="@drawable/button_click_login"
+                        android:paddingLeft="10dp"
                         android:text="@string/login"
                         android:textSize="20sp" />
 
@@ -221,6 +220,7 @@
                         android:layout_height="40dp"
                         android:layout_alignParentRight="true"
                         android:background="@drawable/button_click_login"
+                        android:paddingLeft="10dp"
                         android:text="@string/anonymous"
                         android:textSize="20sp" />
                 </RelativeLayout>

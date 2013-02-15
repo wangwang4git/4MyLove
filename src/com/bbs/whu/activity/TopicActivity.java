@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +61,8 @@ public class TopicActivity extends Activity implements IXListViewListener,
 	private Button publishButton;
 	// 接收请求数据的handler
 	Handler mHandler;
+	// 返回按钮
+	private ImageView backButton;
 
 	// get参数
 	ArrayList<String> keys = new ArrayList<String>();
@@ -101,6 +104,10 @@ public class TopicActivity extends Activity implements IXListViewListener,
 		case R.id.topic_publish_button:
 			// 发表新帖
 			publishBulletin();
+			break;
+		case R.id.topic_back_icon:
+			// 退出
+			onBackPressed();
 			break;
 		}
 	}
@@ -160,6 +167,9 @@ public class TopicActivity extends Activity implements IXListViewListener,
 			publishButton.setVisibility(View.GONE);
 		else
 			publishButton.setVisibility(View.VISIBLE);
+		// 返回按钮
+		backButton = (ImageView) findViewById(R.id.topic_back_icon);
+		backButton.setOnClickListener(this);
 	}
 
 	/**

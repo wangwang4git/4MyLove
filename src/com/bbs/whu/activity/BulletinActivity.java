@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bbs.whu.R;
@@ -58,6 +59,8 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 	private ArrayList<BulletinBean> items = new ArrayList<BulletinBean>();
 	// 帖子回复按钮
 	private Button replyButton;
+	// 返回按钮
+	private ImageView backButton;
 	// 接收请求数据的handler
 	Handler mHandler;
 	// 回复列表
@@ -118,6 +121,10 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 			// 回复本帖
 			goToBulletinReply();
 			break;
+		case R.id.bulletin_back_icon:
+			// 退出
+			onBackPressed();
+			break;
 		}
 	}
 
@@ -168,6 +175,9 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		// 回复按钮
 		replyButton = (Button) findViewById(R.id.bulletin_reply_button);
 		replyButton.setOnClickListener(this);
+		// 返回按钮
+		backButton = (ImageView) findViewById(R.id.bulletin_back_icon);
+		backButton.setOnClickListener(this);
 		// 如果是匿名用户，不显示回复按钮
 		if (MyApplication.getInstance().getName().equals("4MyLove"))
 			replyButton.setVisibility(View.GONE);

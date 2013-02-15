@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -63,12 +64,15 @@ public class TopicActivity extends Activity implements IXListViewListener,
 	// get参数
 	ArrayList<String> keys = new ArrayList<String>();
 	ArrayList<String> values = new ArrayList<String>();
-	
+
 	// 等待对话框
 	private ProgressHUDTask mProgress;
-	
+
 	// 请求响应一一对应布尔变量
 	private boolean mRequestResponse = false;
+
+	// 进行手势动作时候的坐标
+	float x_temp1 = 0, x_temp2;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +103,43 @@ public class TopicActivity extends Activity implements IXListViewListener,
 			publishBulletin();
 			break;
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		// 设置切换动画，从左边进入，右边退出
+		overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// 获得当前坐标
+		float x = event.getX();
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			x_temp1 = x;
+			break;
+
+		case MotionEvent.ACTION_UP: {
+			x_temp2 = x;
+			// 右滑
+			if (x_temp1 != 0 && x_temp2 - x_temp1 >= 200) {
+				onBackPressed();
+			}
+		}
+			break;
+		}
+		return super.onTouchEvent(event);
+	}
+
+	/**
+	 * 最先响应触屏事件，因为ListView会屏蔽掉Activity的onTouchEvent事件，所以需要重写此方法
+	 */
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		super.dispatchTouchEvent(event);
+		return onTouchEvent(event);
 	}
 
 	/**

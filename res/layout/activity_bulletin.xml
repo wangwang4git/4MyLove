@@ -55,7 +55,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:background="@drawable/login_head"
+            android:background="@drawable/button_click"
             android:text="@string/bulletin_reply"
             android:textSize="15sp" >
         </Button>

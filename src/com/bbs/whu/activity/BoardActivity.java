@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,7 +26,6 @@ import com.bbs.whu.adapter.BoardAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.BoardBean;
 import com.bbs.whu.model.board.Board;
-import com.bbs.whu.progresshud.ProgressHUDTask;
 import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
@@ -44,7 +44,7 @@ public class BoardActivity extends Activity {
 	// get参数
 	ArrayList<String> keys = new ArrayList<String>();
 	ArrayList<String> values = new ArrayList<String>();
-	
+
 	// 搜索匹配数据源
 	private List<String> mSearchBoardsList = new ArrayList<String>();
 	// 搜索匹配适配器
@@ -57,9 +57,13 @@ public class BoardActivity extends Activity {
 	private ImageView mSearchConfirmButton;
 	// 触发搜索布局显示按钮
 	private Button mShowSearch;
-	
-	// 等待对话框
-	private ProgressHUDTask mProgress;
+	// 刷新按钮
+	private Button refreshButton;
+	// 刷新动态图
+	private ImageView refreshImageView;
+	// 刷新动作
+	private AnimationDrawable refreshAnimationDrawable;
+
 	// 请求响应一一对应布尔变量
 	private boolean mRequestResponse = false;
 
@@ -67,9 +71,6 @@ public class BoardActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_board);
-		// 显示等待对话框
-		mProgress = new ProgressHUDTask(this);
-		mProgress.execute();
 		// 初始化控件
 		initView();
 		// 初始化适配器
@@ -119,7 +120,6 @@ public class BoardActivity extends Activity {
 		mSearchConfirmButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				searchLayoutShow(false);
 				searchTheBoard(mSearchEditText.getText().toString());
 			}
@@ -128,10 +128,24 @@ public class BoardActivity extends Activity {
 		mShowSearch.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				searchLayoutShow(true);
 			}
 		});
+
+		// 刷新按钮
+		refreshButton = (Button) findViewById(R.id.board_refresh_button);
+		refreshButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// 刷新
+				getBoardList(true);
+			}
+		});
+		// 刷新动态图
+		refreshImageView = (ImageView) findViewById(R.id.board_refresh_imageView);
+		// 刷新动作
+		refreshAnimationDrawable = (AnimationDrawable) refreshImageView
+				.getBackground();
 	}
 
 	/**
@@ -151,11 +165,11 @@ public class BoardActivity extends Activity {
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				// 取消显示等待对话框
-				if (mProgress != null) {
-					mProgress.dismiss();
-					mProgress = null;
-				}
+				// 停止刷新动画
+				refreshAnimationDrawable.stop();
+				refreshImageView.setVisibility(View.GONE);
+				refreshButton.setVisibility(View.VISIBLE);
+
 				switch (msg.what) {
 				case MyConstants.REQUEST_SUCCESS:
 					String res = (String) msg.obj;
@@ -182,6 +196,10 @@ public class BoardActivity extends Activity {
 	 *            是否强制从网络获取数据
 	 */
 	private void getBoardList(boolean isForcingWebGet) {
+		// 显示刷新动画
+		refreshButton.setVisibility(View.GONE);
+		refreshImageView.setVisibility(View.VISIBLE);
+		refreshAnimationDrawable.start();
 		keys.clear();
 		values.clear();
 		// 添加get参数

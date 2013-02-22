@@ -22,7 +22,7 @@
         android:id="@+id/bulletin_title_linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/mine_titlebar_bg" >
+        android:background="@drawable/darker_titlebar_bg" >
 
         <LinearLayout
             android:layout_width="40dp"
@@ -49,32 +49,53 @@
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/bulletin_reply_button"
-            android:layout_width="50dp"
-            android:layout_height="30dp"
+            android:id="@+id/bulletin_refresh_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:background="@drawable/button_click"
-            android:text="@string/bulletin_reply"
-            android:textSize="15sp" >
+            android:background="@drawable/reload" >
         </Button>
+
+        <ImageView
+            android:id="@+id/bulletin_refresh_imageView"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@anim/spinner"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <com.bbs.whu.xlistview.XListView
         android:id="@+id/bulletin_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/bulletin_reply_button"
         android:layout_below="@id/bulletin_title_linearLayout"
         android:cacheColorHint="#00000000"
         android:fastScrollEnabled="true" >
     </com.bbs.whu.xlistview.XListView>
 
-    <LinearLayout
+    <Button
+        android:id="@+id/bulletin_reply_button"
         android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_click"
+        android:text="@string/bulletin_reply"
+        android:textSize="20sp" >
+    </Button>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/bulletin_reply_button"
         android:layout_below="@id/bulletin_listview"
-        android:gravity="center" >
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" >
 
         <ImageView
             android:layout_width="wrap_content"

@@ -23,7 +23,7 @@
         android:id="@+id/bulletin_reply_head_linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/mine_titlebar_bg" >
+        android:background="@drawable/darker_titlebar_bg" >
 
         <TextView
             android:id="@+id/bulletin_reply_head"

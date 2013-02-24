@@ -9,5 +9,7 @@
     <color name="tabTransparent">#10ffffff</color>
     <color name="login_center">#88FAE9CD</color>
     <color name="login_background">#FFF7D0</color>
+    <color name="list_item_background">#00FAFAF7</color>
+    <color name="list_item_background_on_click">#BFC2BA</color>
 
 </resources>

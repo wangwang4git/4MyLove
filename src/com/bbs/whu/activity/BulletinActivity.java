@@ -3,17 +3,21 @@ package com.bbs.whu.activity;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bbs.whu.R;
@@ -21,7 +25,6 @@ import com.bbs.whu.adapter.BulletinAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.BulletinBean;
 import com.bbs.whu.model.bulletin.Page;
-import com.bbs.whu.progresshud.ProgressHUDTask;
 import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
@@ -49,6 +52,10 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 	int currentPage = 1;
 	// 帖子总页数
 	int totalPage;
+	// 是否为刷新当前页
+	boolean isRefreshCurrentPage = false;
+	// 当前页的评论数
+	int commentCount;
 	// 是否强制从网络获取数据
 	boolean isForcingWebGet = false;
 	// 帖子回复列表适配器
@@ -57,27 +64,33 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 	private ArrayList<BulletinBean> items = new ArrayList<BulletinBean>();
 	// 帖子回复按钮
 	private Button replyButton;
+	// 返回按钮
+	private ImageView backButton;
+	// 刷新按钮
+	private Button refreshButton;
+	// 刷新动态图
+	private ImageView refreshImageView;
+	// 刷新动作
+	private AnimationDrawable refreshAnimationDrawable;
 	// 接收请求数据的handler
-	Handler mHandler;
+	private Handler mHandler;
 	// 回复列表
 	private XListView mListView;
 	// get参数
 	ArrayList<String> keys = new ArrayList<String>();
 	ArrayList<String> values = new ArrayList<String>();
-	
-	// 等待对话框
-	private ProgressHUDTask mProgress;
+
 	// 请求响应一一对应布尔变量
 	private boolean mRequestResponse = false;
+
+	// 进行手势动作时候的坐标
+	float x_temp1 = 0, y_temp1 = 0, x_temp2, y_temp2;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_bulletin);
-		// 显示等待对话框
-		mProgress = new ProgressHUDTask(this);
-		mProgress.execute();
 		// 获取传入的参数
 		board = getIntent().getStringExtra("board");
 		groupid = getIntent().getStringExtra("groupid");
@@ -114,7 +127,57 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 			// 回复本帖
 			goToBulletinReply();
 			break;
+		case R.id.bulletin_back_icon:
+			// 退出
+			onBackPressed();
+			break;
+		case R.id.bulletin_refresh_button:
+			// 刷新
+			onRefresh();
+			break;
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		// 设置切换动画，从左边进入，右边退出
+		overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// 获得当前坐标
+		float x = event.getX();
+		float y = event.getY();
+
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			x_temp1 = x;
+			y_temp1 = y;
+			break;
+
+		case MotionEvent.ACTION_UP: {
+			x_temp2 = x;
+			y_temp2 = y;
+			// 右滑
+			if (x_temp1 != 0 && x_temp2 - x_temp1 > MyConstants.MIN_GAP_X
+					&& Math.abs(y_temp2 - y_temp1) < MyConstants.MAX_GAP_Y) {
+				onBackPressed();
+			}
+		}
+			break;
+		}
+		return super.onTouchEvent(event);
+	}
+
+	/**
+	 * 最先响应触屏事件，因为ListView会屏蔽掉Activity的onTouchEvent事件，所以需要重写此方法
+	 */
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		super.dispatchTouchEvent(event);
+		return onTouchEvent(event);
 	}
 
 	/**
@@ -127,11 +190,22 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		// 回复按钮
 		replyButton = (Button) findViewById(R.id.bulletin_reply_button);
 		replyButton.setOnClickListener(this);
+		// 返回按钮
+		backButton = (ImageView) findViewById(R.id.bulletin_back_icon);
+		backButton.setOnClickListener(this);
 		// 如果是匿名用户，不显示回复按钮
 		if (MyApplication.getInstance().getName().equals("4MyLove"))
 			replyButton.setVisibility(View.GONE);
 		else
 			replyButton.setVisibility(View.VISIBLE);
+		// 刷新按钮
+		refreshButton = (Button) findViewById(R.id.bulletin_refresh_button);
+		refreshButton.setOnClickListener(this);
+		// 刷新动态图
+		refreshImageView = (ImageView) findViewById(R.id.bulletin_refresh_imageView);
+		// 刷新动作
+		refreshAnimationDrawable = (AnimationDrawable) refreshImageView
+				.getBackground();
 	}
 
 	/**
@@ -152,11 +226,11 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				// 取消显示等待对话框
-				if (mProgress != null) {
-					mProgress.dismiss();
-					mProgress = null;
-				}
+				// 停止刷新动画
+				refreshAnimationDrawable.stop();
+				refreshImageView.setVisibility(View.GONE);
+				refreshButton.setVisibility(View.VISIBLE);
+
 				switch (msg.what) {
 				case MyConstants.REQUEST_SUCCESS:
 					String res = (String) msg.obj;
@@ -186,11 +260,10 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 	 * 请求帖子详情数据
 	 */
 	private void getBulletin() {
-		// 显示等待对话框
-		if (null == mProgress) {
-			mProgress = new ProgressHUDTask(this);
-			mProgress.execute();
-		}
+		// 显示刷新动画
+		refreshButton.setVisibility(View.GONE);
+		refreshImageView.setVisibility(View.VISIBLE);
+		refreshAnimationDrawable.start();
 		keys.clear();
 		values.clear();
 		// 添加get参数
@@ -245,7 +318,22 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 			mListView.setPullLoadEnable(false);
 
 		// 获取帖子内容并添加
-		items.addAll(MyRegexParseUtils.getContentList(this, page));
+		List<BulletinBean> bulletinBeans = MyRegexParseUtils.getContentList(
+				this, page);
+		// 当前页回复数
+		int size = bulletinBeans.size();
+		if (isRefreshCurrentPage) {
+			if (bulletinBeans.size() > commentCount) {
+				// 只加载增加的评论
+				for (int i = 0; i < commentCount; i++)
+					bulletinBeans.remove(0);
+			} else
+				bulletinBeans.clear();
+			isRefreshCurrentPage = false;
+		}
+		// 记录本次加载的当前页回复数，以便下次刷新
+		commentCount = size;
+		items.addAll(bulletinBeans);
 		// 刷新ListView
 		mAdapter.notifyDataSetChanged();
 		// 当前页增加一页，便于下次申请
@@ -282,10 +370,9 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 
 	@Override
 	public void onRefresh() {
-		// 将当前页设为首页
-		currentPage = 1;
-		// 清空数据
-		items.clear();
+		// 重新刷新当前页
+		currentPage--;
+		isRefreshCurrentPage = true;
 		// 启用强制从网络请求帖子详情数据
 		isForcingWebGet = true;
 		// 禁用“显示更多”

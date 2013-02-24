@@ -7,13 +7,16 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +25,6 @@ import com.bbs.whu.adapter.TopicAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.TopicBean;
 import com.bbs.whu.model.topic.Topics;
-import com.bbs.whu.progresshud.ProgressHUDTask;
 import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
@@ -59,25 +61,30 @@ public class TopicActivity extends Activity implements IXListViewListener,
 	private Button publishButton;
 	// 接收请求数据的handler
 	Handler mHandler;
+	// 返回按钮
+	private ImageView backButton;
+	// 刷新按钮
+	private Button refreshButton;
+	// 刷新动态图
+	private ImageView refreshImageView;
+	// 刷新动作
+	private AnimationDrawable refreshAnimationDrawable;
 
 	// get参数
 	ArrayList<String> keys = new ArrayList<String>();
 	ArrayList<String> values = new ArrayList<String>();
-	
-	// 等待对话框
-	private ProgressHUDTask mProgress;
-	
+
 	// 请求响应一一对应布尔变量
 	private boolean mRequestResponse = false;
+
+	// 进行手势动作时候的坐标
+	float x_temp1 = 0, y_temp1 = 0, x_temp2, y_temp2;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_topic);
-		// 显示等待对话框
-		mProgress = new ProgressHUDTask(this);
-		mProgress.execute();
 		// 获取传入的参数
 		board = getIntent().getStringExtra("board");
 		name = getIntent().getStringExtra("name");
@@ -98,7 +105,57 @@ public class TopicActivity extends Activity implements IXListViewListener,
 			// 发表新帖
 			publishBulletin();
 			break;
+		case R.id.topic_back_icon:
+			// 退出
+			onBackPressed();
+			break;
+		case R.id.topic_refresh_button:
+			// 刷新
+			onRefresh();
+			break;
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		// 设置切换动画，从左边进入，右边退出
+		overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// 获得当前坐标
+		float x = event.getX();
+		float y = event.getY();
+
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			x_temp1 = x;
+			y_temp1 = y;
+			break;
+
+		case MotionEvent.ACTION_UP: {
+			x_temp2 = x;
+			y_temp2 = y;
+			// 右滑
+			if (x_temp1 != 0 && x_temp2 - x_temp1 > MyConstants.MIN_GAP_X
+					&& Math.abs(y_temp2 - y_temp1) < MyConstants.MAX_GAP_Y) {
+				onBackPressed();
+			}
+		}
+			break;
+		}
+		return super.onTouchEvent(event);
+	}
+
+	/**
+	 * 最先响应触屏事件，因为ListView会屏蔽掉Activity的onTouchEvent事件，所以需要重写此方法
+	 */
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		super.dispatchTouchEvent(event);
+		return onTouchEvent(event);
 	}
 
 	/**
@@ -119,6 +176,17 @@ public class TopicActivity extends Activity implements IXListViewListener,
 			publishButton.setVisibility(View.GONE);
 		else
 			publishButton.setVisibility(View.VISIBLE);
+		// 返回按钮
+		backButton = (ImageView) findViewById(R.id.topic_back_icon);
+		backButton.setOnClickListener(this);
+		// 刷新按钮
+		refreshButton = (Button) findViewById(R.id.topic_refresh_button);
+		refreshButton.setOnClickListener(this);
+		// 刷新动态图
+		refreshImageView = (ImageView) findViewById(R.id.topic_refresh_imageView);
+		// 刷新动作
+		refreshAnimationDrawable = (AnimationDrawable) refreshImageView
+				.getBackground();
 	}
 
 	/**
@@ -138,11 +206,11 @@ public class TopicActivity extends Activity implements IXListViewListener,
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				// 取消显示等待对话框
-				if (mProgress != null) {
-					mProgress.dismiss();
-					mProgress = null;
-				}
+				// 停止刷新动画
+				refreshAnimationDrawable.stop();
+				refreshImageView.setVisibility(View.GONE);
+				refreshButton.setVisibility(View.VISIBLE);
+
 				switch (msg.what) {
 				case MyConstants.REQUEST_SUCCESS:
 					String res = (String) msg.obj;
@@ -174,11 +242,10 @@ public class TopicActivity extends Activity implements IXListViewListener,
 	 */
 
 	private void getTopic() {
-		// 显示等待对话框
-		if (null == mProgress) {
-			mProgress = new ProgressHUDTask(this);
-			mProgress.execute();
-		}
+		// 显示刷新动画
+		refreshButton.setVisibility(View.GONE);
+		refreshImageView.setVisibility(View.VISIBLE);
+		refreshAnimationDrawable.start();
 		keys.clear();
 		values.clear();
 		// 添加get参数

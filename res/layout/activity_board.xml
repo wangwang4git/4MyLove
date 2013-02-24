@@ -47,6 +47,22 @@
                 android:textColor="#FF7B7B7B"
                 android:textSize="20sp" />
 
+            <Button
+                android:id="@+id/board_refresh_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:background="@drawable/reload" >
+            </Button>
+
+            <ImageView
+                android:id="@+id/board_refresh_imageView"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="right"
+                android:background="@anim/spinner"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:id="@+id/board_search_linearlayout"
                 android:layout_width="fill_parent"

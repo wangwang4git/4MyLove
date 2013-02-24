@@ -6,11 +6,11 @@
 
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:gravity="center"
-		android:background="@drawable/more_titlebar_bg">
+		android:background="@drawable/lighter_titlebar_bg">
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_gravity="center"
 			android:text="@string/activity_more" android:textSize="18sp"
-			android:textColor="#FF000000" />
+			android:textColor="#FF7B7B7B" />
 	</LinearLayout>
 
 	<ScrollView android:layout_width="fill_parent"

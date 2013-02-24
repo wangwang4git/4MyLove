@@ -132,6 +132,7 @@
                             android:completionThreshold="100"
                             android:hint="@string/login_user_name"
                             android:inputType="text"
+                            android:paddingRight="35dp"
                             android:textColor="#FF000000" />
 
                         <ImageView

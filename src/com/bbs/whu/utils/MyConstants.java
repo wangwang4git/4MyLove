@@ -22,7 +22,7 @@ public class MyConstants {
 	// 登录下拉框选中某项
 	public static final int LOGIN_SELECT_USER = 7;
 	// 登录下拉框删除某项
-	public static final int LOGIN_DELETE_USER = 8; 
+	public static final int LOGIN_DELETE_USER = 8;
 	// 登陆URL
 	public static final String LOGIN_URL = "http://bbs.whu.edu.cn/bbslogin.php";
 	// 退出登录URL
@@ -39,4 +39,8 @@ public class MyConstants {
 	public static final int NEW_BULLETIN = 0;
 	// 帖子回复
 	public static final int BULLETIN_REPLY = 1;
+	// 滑动退出的x轴最小像素间距
+	public static final int MIN_GAP_X = 150;
+	// 滑动退出的y轴最小像素间距
+	public static final int MAX_GAP_Y = 100;
 }

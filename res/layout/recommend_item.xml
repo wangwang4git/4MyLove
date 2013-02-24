@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="#00FAFAF7"
+    android:background="@drawable/list_item"
     android:minHeight="60dip" >
 
     <RelativeLayout
@@ -136,10 +136,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:text="1"
                 android:textColor="#ffffffff"
                 android:textSize="12sp"
-                android:textStyle="bold" 
-                android:text="1" />
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 

@@ -3,6 +3,7 @@ package com.bbs.whu.activity;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -51,6 +52,10 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 	int currentPage = 1;
 	// 帖子总页数
 	int totalPage;
+	// 是否为刷新当前页
+	boolean isRefreshCurrentPage = false;
+	// 当前页的评论数
+	int commentCount;
 	// 是否强制从网络获取数据
 	boolean isForcingWebGet = false;
 	// 帖子回复列表适配器
@@ -152,7 +157,7 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		case MotionEvent.ACTION_UP: {
 			x_temp2 = x;
 			// 右滑
-			if (x_temp1 != 0 && x_temp2 - x_temp1 >= 200) {
+			if (x_temp1 != 0 && x_temp2 - x_temp1 >= MyConstants.MIN_GAP) {
 				onBackPressed();
 			}
 		}
@@ -308,7 +313,22 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 			mListView.setPullLoadEnable(false);
 
 		// 获取帖子内容并添加
-		items.addAll(MyRegexParseUtils.getContentList(this, page));
+		List<BulletinBean> bulletinBeans = MyRegexParseUtils.getContentList(
+				this, page);
+		// 当前页回复数
+		int size = bulletinBeans.size();
+		if (isRefreshCurrentPage) {
+			if (bulletinBeans.size() > commentCount) {
+				// 只加载增加的评论
+				for (int i = 0; i < commentCount; i++)
+					bulletinBeans.remove(0);
+			} else
+				bulletinBeans.clear();
+			isRefreshCurrentPage = false;
+		}
+		// 记录本次加载的当前页回复数，以便下次刷新
+		commentCount = size;
+		items.addAll(bulletinBeans);
 		// 刷新ListView
 		mAdapter.notifyDataSetChanged();
 		// 当前页增加一页，便于下次申请
@@ -345,10 +365,9 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 
 	@Override
 	public void onRefresh() {
-		// 将当前页设为首页
-		currentPage = 1;
-		// 清空数据
-		items.clear();
+		// 重新刷新当前页
+		currentPage--;
+		isRefreshCurrentPage = true;
 		// 启用强制从网络请求帖子详情数据
 		isForcingWebGet = true;
 		// 禁用“显示更多”

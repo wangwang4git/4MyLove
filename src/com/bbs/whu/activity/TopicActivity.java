@@ -135,7 +135,7 @@ public class TopicActivity extends Activity implements IXListViewListener,
 		case MotionEvent.ACTION_UP: {
 			x_temp2 = x;
 			// ÓÒ»¬
-			if (x_temp1 != 0 && x_temp2 - x_temp1 >= 200) {
+			if (x_temp1 != 0 && x_temp2 - x_temp1 >= MyConstants.MIN_GAP) {
 				onBackPressed();
 			}
 		}

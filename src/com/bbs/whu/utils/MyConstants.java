@@ -39,4 +39,6 @@ public class MyConstants {
 	public static final int NEW_BULLETIN = 0;
 	// 帖子回复
 	public static final int BULLETIN_REPLY = 1;
+	//滑动退出的最小像素间距
+	public static final int MIN_GAP=200;
 }

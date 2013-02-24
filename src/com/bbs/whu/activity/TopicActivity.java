@@ -78,7 +78,7 @@ public class TopicActivity extends Activity implements IXListViewListener,
 	private boolean mRequestResponse = false;
 
 	// 进行手势动作时候的坐标
-	float x_temp1 = 0, x_temp2;
+	float x_temp1 = 0, y_temp1 = 0, x_temp2, y_temp2;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -127,15 +127,20 @@ public class TopicActivity extends Activity implements IXListViewListener,
 	public boolean onTouchEvent(MotionEvent event) {
 		// 获得当前坐标
 		float x = event.getX();
+		float y = event.getY();
+
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			x_temp1 = x;
+			y_temp1 = y;
 			break;
 
 		case MotionEvent.ACTION_UP: {
 			x_temp2 = x;
+			y_temp2 = y;
 			// 右滑
-			if (x_temp1 != 0 && x_temp2 - x_temp1 >= MyConstants.MIN_GAP) {
+			if (x_temp1 != 0 && x_temp2 - x_temp1 > MyConstants.MIN_GAP_X
+					&& Math.abs(y_temp2 - y_temp1) < MyConstants.MAX_GAP_Y) {
 				onBackPressed();
 			}
 		}

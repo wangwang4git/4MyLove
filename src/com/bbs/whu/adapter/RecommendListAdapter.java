@@ -64,11 +64,12 @@ public class RecommendListAdapter extends MyBaseAdapter {
 		// 推荐时间
 		String recommTime = ((RecommendBean) mItems.get(position))
 				.getRecommTime();
-		// 文章所在推荐版块的英文名
-		final String board = ((RecommendBean) mItems.get(position)).getBoard();
-		// 文章所在推荐版块的编号
+		// 文章所在原始版块的英文名
+		final String board = ((RecommendBean) mItems.get(position))
+				.getOriginBoard();
+		// 文章所在原始版块的编号
 		final String recommGID = ((RecommendBean) mItems.get(position))
-				.getRecommGID();
+				.getOriginGID();
 
 		// 填充控件
 		holder.holderRecommendTitle.setText(title);

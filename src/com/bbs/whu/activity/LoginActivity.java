@@ -1,6 +1,7 @@
 package com.bbs.whu.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.cookie.Cookie;
@@ -349,13 +350,23 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 序列化到用户名、密码json文件
 		MyBBSCache.setUserPasswordList(userPasswords,
 				MyFileUtils.USERPASSWORDNAME);
+		
+		// 读取已读标记json文件，并反序列化
+		HashMap<String, Byte> readedTagMap = MyBBSCache
+				.getReadedTagMap(MyFileUtils.READEDTAGNAME);
+		// 如果readedTagMap为空，当前还不存在已读标记json文件
+		if (null == readedTagMap) {
+			readedTagMap = new HashMap<String, Byte>();
+		}
+		// 设置全部变量
+		((MyApplication) getApplicationContext()).setReadedTag(readedTagMap);
 	}
 
 	/**
-	 * 登录前操作，包括反序列化用户名、密码json文件
+	 * 登录前操作，包括反序列化用户名、密码json文件；已读标记json文件
 	 */
 	private void loginBefore() {
-		// 先读取用户名、密码json文件，再反序列化
+		// 读取用户名、密码json文件，并反序列化
 		userPasswords = (ArrayList<UserPasswordBean>) MyBBSCache
 				.getUserPasswordList(MyFileUtils.USERPASSWORDNAME);
 		// 如果userPasswords为空，当前还不存在用户名、密码json文件

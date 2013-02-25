@@ -1,9 +1,11 @@
 package com.bbs.whu.adapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,6 +15,9 @@ import android.widget.TextView;
 import com.bbs.whu.R;
 import com.bbs.whu.activity.BulletinActivity;
 import com.bbs.whu.model.TopicBean;
+import com.bbs.whu.utils.MyApplication;
+import com.bbs.whu.utils.MyBBSCache;
+import com.bbs.whu.utils.MyFileUtils;
 
 /**
  * 分类中的板块下的帖子列表数据适配器
@@ -32,7 +37,7 @@ public class TopicAdapter extends MyBaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		TopicViewHolder holder;
+		final TopicViewHolder holder;
 		if (convertView == null) {
 			holder = new TopicViewHolder();
 			convertView = LayoutInflater.from(context).inflate(
@@ -62,6 +67,25 @@ public class TopicAdapter extends MyBaseAdapter {
 		// 帖子ID
 		final String groupid = ((TopicBean) mItems.get(position)).getGID();
 
+		// 读取已读标记
+		HashMap<String, Byte> readedTagMap = MyApplication.getInstance()
+				.getReadedTag();
+		String key = groupid;
+		if (readedTagMap.containsKey(key)) {
+			Byte tag = (Byte) readedTagMap.get(key);
+			if ((byte) 0 == tag) {
+				// 未读，设置为黑色
+				holder.holderTopicTitle.setTextColor(Color.BLACK);
+			} else {
+				// 已读，设置为灰色
+				holder.holderTopicTitle.setTextColor(Color.GRAY);
+			}
+		} else {
+			// 未读，设置为黑色
+			holder.holderTopicTitle.setTextColor(Color.BLACK);
+			readedTagMap.put(key, (byte) 0);
+		}
+		
 		// 填充控件
 		holder.holderTopicTitle.setText(title);
 		holder.holderTopicAuthor.setText(author);
@@ -71,6 +95,19 @@ public class TopicAdapter extends MyBaseAdapter {
 		// 添加点击响应事件
 		convertView.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				// 已读，设置为灰色
+				holder.holderTopicTitle.setTextColor(Color.GRAY);
+				// 更新已读标记
+				HashMap<String, Byte> readedTagMap = MyApplication
+						.getInstance().getReadedTag();
+				String key = groupid;
+				// 如果该条目未读，需要标记为已读
+				readedTagMap.put(key, (byte) 1);
+				MyApplication.getInstance().setReadedTag(readedTagMap);
+				// 序列化到已读标记json文件
+				MyBBSCache.setReadedTagMap(MyApplication.getInstance()
+						.getReadedTag(), MyFileUtils.READEDTAGNAME);
+				
 				// 跳转到帖子详情界面
 				Intent mIntent = new Intent(context, BulletinActivity.class);
 				// 添加参数

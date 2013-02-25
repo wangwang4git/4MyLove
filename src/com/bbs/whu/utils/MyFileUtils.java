@@ -20,6 +20,8 @@ public class MyFileUtils {
 	private static final int BUFFER = 8192;
 	// 用户名、密码json文件名
 	public static final String USERPASSWORDNAME = "4MyLove";
+	// 已读标记json文件名
+	public static final String READEDTAGNAME = "ReadedTag";
 	
 	// 缓存文件SD卡路径
 	private static String mSdcardDataCacheDir;

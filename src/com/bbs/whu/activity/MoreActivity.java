@@ -1,6 +1,7 @@
 package com.bbs.whu.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -14,17 +15,12 @@ import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyFileUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class MoreActivity extends Activity {
+public class MoreActivity extends Activity implements OnClickListener {
 	private ViewGroup mCleanCache = null;
 	private ViewGroup mCheckUpdate = null;
-
+	private ViewGroup mAbout = null;
 	// 图片异步下载下载器
 	private ImageLoader imageLoader = ImageLoader.getInstance();
-
-	// 清空内存缓存调用方法
-	// imageLoader.clearMemoryCache();
-	// 清空文件缓存调用方法
-	// imageLoader.clearDiscCache();
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -42,28 +38,34 @@ public class MoreActivity extends Activity {
 		return false;
 	}
 
+	@Override
+	public void onClick(View view) {
+		switch (view.getId()) {
+		case R.id.more_list_clean_cache:
+			cleanCache();
+			break;
+		case R.id.more_list_about:
+			// 跳转到“关于”页面
+			startActivity(new Intent(this, AboutActivity.class));
+			break;
+		case R.id.more_list_check_update:
+			checkUpdate();
+			break;
+		}
+	}
+
 	/**
 	 * 初始化控件
 	 */
 	private void initView() {
-		// 
+		// 清除缓存
 		mCleanCache = (ViewGroup) findViewById(R.id.more_list_clean_cache);
-		mCleanCache.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				cleanCache();
-			}
-		});
-
+		mCleanCache.setOnClickListener(this);
 		mCheckUpdate = (ViewGroup) findViewById(R.id.more_list_check_update);
-		mCheckUpdate.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				checkUpdate();
-			}
-		});
+		mCheckUpdate.setOnClickListener(this);
+		// 关于
+		mAbout = (ViewGroup) findViewById(R.id.more_list_about);
+		mAbout.setOnClickListener(this);
 	}
 
 	private void cleanCache() {

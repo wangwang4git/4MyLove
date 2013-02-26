@@ -51,6 +51,8 @@ public class MoreActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				// 清空已读缓存
+				MyApplication.getInstance().clearReadedTag();
 				// 清空本地文件缓存
 				// 删除/whubbs/data/cache/username/文件夹
 				MyFileUtils.delFolder(MyFileUtils

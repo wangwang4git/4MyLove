@@ -68,6 +68,12 @@ public class MyApplication extends Application {
 	public void setReadedTag(HashMap<String, Byte> readedTagMap) {
 		this.readedTagMap = readedTagMap;
 	}
+	
+	public void clearReadedTag() {
+		if (this.readedTagMap != null) {
+			this.readedTagMap.clear();
+		}
+	}
 
 	@Override
 	public void onCreate() {

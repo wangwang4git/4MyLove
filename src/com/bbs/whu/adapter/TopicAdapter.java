@@ -1,6 +1,9 @@
 package com.bbs.whu.adapter;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import android.content.Context;
@@ -10,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bbs.whu.R;
@@ -43,6 +47,8 @@ public class TopicAdapter extends MyBaseAdapter {
 			convertView = LayoutInflater.from(context).inflate(
 					this.mRLayoutList, null);
 			// 获取列表元素中的控件对象
+			holder.holderTopicTag = (ImageView) convertView
+					.findViewById(R.id.topic_tag);
 			holder.holderTopicTitle = (TextView) convertView
 					.findViewById(R.id.topic_title);
 			holder.holderTopicAuthor = (TextView) convertView
@@ -87,6 +93,12 @@ public class TopicAdapter extends MyBaseAdapter {
 		}
 		
 		// 填充控件
+		if (isNewTopic(datetime)) {
+			holder.holderTopicTag.setVisibility(View.VISIBLE);
+			holder.holderTopicTag.setImageResource(R.drawable.new_topic);
+		} else {
+			holder.holderTopicTag.setVisibility(View.INVISIBLE);
+		}
 		holder.holderTopicTitle.setText(title);
 		holder.holderTopicAuthor.setText(author);
 		holder.holderTopicDatetime.setText(datetime);
@@ -117,5 +129,25 @@ public class TopicAdapter extends MyBaseAdapter {
 			}
 		});
 		return convertView;
+	}
+	
+	private boolean isNewTopic(String topicDateString) {
+		// 定义时间格式
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		// 获取当前时间
+		Date nowDate = new Date();
+		// 由字符串构造发帖时间
+		Date topicDate = null;
+		try {
+			topicDate = sdf.parse(topicDateString);
+			// 与当前时间间隔一天内的帖子，约定为新帖
+			if ((nowDate.getTime() - topicDate.getTime()) / (1000 * 60 * 60) <= 24) {
+				return true;
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

@@ -25,6 +25,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -62,6 +64,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private Button loginButton;
 	// 匿名按钮
 	private Button anonymousButton;
+	// 记住密码checkbox
+	private CheckBox rememberUserCheckBox;
+	// 记住密码标志
+	private boolean rememberUserFlag = true;
 	// 接收请求数据的handler
 	Handler mHandler;
 
@@ -162,6 +168,24 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 匿名按钮
 		anonymousButton = (Button) findViewById(R.id.anonymous_button);
 		anonymousButton.setOnClickListener(this);
+		
+		// 记住密码checkbox
+		rememberUserCheckBox = (CheckBox) findViewById(R.id.remember_user_checkBox);
+		rememberUserCheckBox
+				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						// TODO Auto-generated method stub
+						if (isChecked) {
+							// 选中
+							rememberUserFlag = true;
+						} else {
+							// 未选中
+							rememberUserFlag = false;
+						}
+					}
+				});
 
 		// 删除账号缓存文件的确认对话框
 		deleteConfirmDlg = new Builder(LoginActivity.this);
@@ -348,6 +372,15 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 
 		// 序列化到用户名、密码json文件
+		// 如果未选中记住密码，则不保存密码
+		if (!rememberUserFlag) {
+			for (int i = 0; i < userPasswords.size(); ++i) {
+				if (userPasswords.get(i).getName().equals(loginName)) {
+					userPasswords.get(i).setPassword("");
+					break;
+				}
+			}
+		}
 		MyBBSCache.setUserPasswordList(userPasswords,
 				MyFileUtils.USERPASSWORDNAME);
 		

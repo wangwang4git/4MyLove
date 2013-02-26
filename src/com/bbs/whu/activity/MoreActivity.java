@@ -6,16 +6,17 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bbs.whu.R;
+import com.bbs.whu.update.UpdateManager;
 import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyFileUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class MoreActivity extends Activity {
 	private ViewGroup mCleanCache = null;
+	private ViewGroup mCheckUpdate = null;
 
 	// 图片异步下载下载器
 	private ImageLoader imageLoader = ImageLoader.getInstance();
@@ -51,24 +52,37 @@ public class MoreActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				// 清空已读缓存
-				MyApplication.getInstance().clearReadedTag();
-				// 清空本地文件缓存
-				// 删除/whubbs/data/cache/username/文件夹
-				MyFileUtils.delFolder(MyFileUtils
-						.getSdcardDataCacheDir(((MyApplication) getApplication())
-								.getName()));
-				// 清空图片下载器内存缓存
-				imageLoader.clearMemoryCache();
-				// 清空图片下载器文件缓存
-				imageLoader.clearDiscCache();
-				Toast.makeText(
-						getApplicationContext(),
-						((TextView) ((ViewGroup) v)
-								.findViewById(R.id.more_list_clean_cache_textview))
-								.getText().toString(), Toast.LENGTH_SHORT)
-						.show();
+				cleanCache();
 			}
 		});
+
+		mCheckUpdate = (ViewGroup) findViewById(R.id.more_list_check_update);
+		mCheckUpdate.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				checkUpdate();
+			}
+		});
+	}
+
+	private void cleanCache() {
+		// 清空已读缓存
+		MyApplication.getInstance().clearReadedTag();
+		// 清空本地文件缓存
+		// 删除/whubbs/data/cache/username/文件夹
+		MyFileUtils.delFolder(MyFileUtils
+				.getSdcardDataCacheDir(((MyApplication) getApplication())
+						.getName()));
+		// 清空图片下载器内存缓存
+		imageLoader.clearMemoryCache();
+		// 清空图片下载器文件缓存
+		imageLoader.clearDiscCache();
+		Toast.makeText(this, "清除缓存", Toast.LENGTH_SHORT).show();
+	}
+
+	private void checkUpdate() {
+		UpdateManager updateManager = new UpdateManager(this);
+		updateManager.checkUpdate();
 	}
 }

@@ -29,7 +29,8 @@
 					android:background="@drawable/more_list_triangle" />
 			</LinearLayout>
 
-			<LinearLayout android:orientation="horizontal"
+			<LinearLayout android:id="@+id/more_list_check_update" 
+				android:orientation="horizontal"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:clickable="true" android:background="@drawable/more_list_mid">
 				<TextView style="@style/more_list_font" android:text="检查更新" />

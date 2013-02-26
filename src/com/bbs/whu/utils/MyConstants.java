@@ -43,4 +43,7 @@ public class MyConstants {
 	public static final int MIN_GAP_X = 150;
 	// 滑动退出的y轴最小像素间距
 	public static final int MAX_GAP_Y = 100;
+	
+	// 客户端更新URL
+	public static final String UPDATE_CLIENT_URL = "http://192.168.1.118:8080/update/update.xml";
 }

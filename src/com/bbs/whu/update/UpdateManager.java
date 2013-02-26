@@ -129,7 +129,7 @@ public class UpdateManager {
 				try {
 					File file = DownLoadManager.getFileFromServer(
 							mInfo.getUrl(), pd);
-					sleep(3000);
+					sleep(500);
 					installApk(file);
 					pd.dismiss(); // 结束掉进度条对话框
 				} catch (Exception e) {

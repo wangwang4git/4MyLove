@@ -16,6 +16,7 @@ import com.bbs.whu.utils.MyFileUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class MoreActivity extends Activity implements OnClickListener {
+	private ViewGroup mNewGuid = null;
 	private ViewGroup mCleanCache = null;
 	private ViewGroup mCheckUpdate = null;
 	private ViewGroup mAbout = null;
@@ -41,6 +42,10 @@ public class MoreActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
+		case R.id.more_list_guide:
+			// 跳转至新手导航页
+			startActivity(new Intent(this, BeginnerNavigationActivity.class));
+			break;
 		case R.id.more_list_clean_cache:
 			cleanCache();
 			break;
@@ -58,6 +63,9 @@ public class MoreActivity extends Activity implements OnClickListener {
 	 * 初始化控件
 	 */
 	private void initView() {
+		//新手导航
+		mNewGuid= (ViewGroup) findViewById(R.id.more_list_guide);
+		mNewGuid.setOnClickListener(this);
 		// 清除缓存
 		mCleanCache = (ViewGroup) findViewById(R.id.more_list_clean_cache);
 		mCleanCache.setOnClickListener(this);

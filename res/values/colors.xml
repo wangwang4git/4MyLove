@@ -11,5 +11,7 @@
     <color name="login_background">#FFF7D0</color>
     <color name="list_item_background">#00FAFAF7</color>
     <color name="list_item_background_on_click">#BFC2BA</color>
+    <color name="TextColor">#FFFFFF</color>
+    <color name="bgColor">#000000</color>
 
 </resources>

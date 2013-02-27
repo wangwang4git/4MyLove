@@ -290,8 +290,8 @@ public class TopicActivity extends Activity implements IXListViewListener,
 		}
 		// 获得当前页号
 		currentPage = Integer.parseInt(topics.getPage().toString());
-		// 最多加载10页
-		if (currentPage == 10) {
+		// 最多加载的页数
+		if (currentPage == MyConstants.TOPIC_MAX_PAGES) {
 			// 禁用“显示更多”
 			mListView.setPullLoadEnable(false);
 		}

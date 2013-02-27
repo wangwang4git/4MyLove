@@ -1,5 +1,7 @@
 package com.bbs.whu.utils;
 
+import java.util.HashMap;
+
 import android.app.Application;
 
 import com.bbs.whu.imageloader.ExtendedImageDownloader;
@@ -20,7 +22,7 @@ public class MyApplication extends Application {
 	private static MyApplication instance;
 
 	PersistentCookieStore myCookieStore;
-
+	
 	public PersistentCookieStore getCookieStore() {
 		return myCookieStore;
 	}
@@ -54,6 +56,23 @@ public class MyApplication extends Application {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	// ÒÑ¶Á±ê¼ÇHashMap
+	private HashMap<String, Byte> readedTagMap;
+
+	public HashMap<String, Byte> getReadedTag() {
+		return readedTagMap;
+	}
+
+	public void setReadedTag(HashMap<String, Byte> readedTagMap) {
+		this.readedTagMap = readedTagMap;
+	}
+	
+	public void clearReadedTag() {
+		if (this.readedTagMap != null) {
+			this.readedTagMap.clear();
+		}
 	}
 
 	@Override

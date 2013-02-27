@@ -32,6 +32,7 @@
 		<activity android:name="com.bbs.whu.activity.MainActivity"
 			android:launchMode="singleTask" />
         <activity android:name="com.bbs.whu.activity.HomeActivity" />
+        <activity android:name="com.bbs.whu.activity.AboutActivity" />
         <activity android:name="com.bbs.whu.activity.BoardActivity" />
         <activity android:name="com.bbs.whu.activity.MineActivity" />
         <activity android:name="com.bbs.whu.activity.MessageActivity" />
@@ -39,15 +40,17 @@
         <activity android:name="com.bbs.whu.activity.TopTenActivity" />
         <activity android:name="com.bbs.whu.activity.TopicActivity" />
         <activity android:name="com.bbs.whu.activity.BulletinActivity" />
- 		<activity android:name="com.bbs.whu.activity.BulletinReplyActivity"
- 			 android:windowSoftInputMode="adjustResize" />
- 		<activity android:name="com.bbs.whu.activity.PersonActivity" />
+        <activity
+            android:name="com.bbs.whu.activity.BulletinReplyActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.bbs.whu.activity.PersonActivity" />
         <activity android:name="com.bbs.whu.activity.CollectBoardActivity" />
         <activity android:name="com.bbs.whu.activity.OnlineFriendActivity" />
         <activity android:name="com.bbs.whu.activity.RecommendActivity" />
         <activity android:name="com.bbs.whu.activity.PlaybillActivity" />
-        <activity android:name="activity.MailSendActivity" 
-        	android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="com.bbs.whu.activity.MailSendActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

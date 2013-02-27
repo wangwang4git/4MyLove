@@ -84,8 +84,8 @@ public class BeginnerNavigationActivity extends Activity implements OnViewChange
 					public void onAnimationEnd(Animation animation) {
 						leftLayout.setVisibility(View.GONE);
 						rightLayout.setVisibility(View.GONE);
-						Intent intent = new Intent(BeginnerNavigationActivity.this,LoginActivity.class);
-						BeginnerNavigationActivity.this.startActivity(intent);
+//						Intent intent = new Intent(BeginnerNavigationActivity.this,LoginActivity.class);
+//						BeginnerNavigationActivity.this.startActivity(intent);
 						BeginnerNavigationActivity.this.finish();
 						overridePendingTransition(R.anim.zoom_out_enter, R.anim.zoom_out_exit);
 					}

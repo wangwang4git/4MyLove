@@ -123,8 +123,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			
 			//跳转至新手导航页
 			Intent intent = new Intent(LoginActivity.this,BeginnerNavigationActivity.class);
-			LoginActivity.this.startActivity(intent);
-			LoginActivity.this.finish();
+			LoginActivity.this.startActivity(intent); 
 		}
 
 		// 登录前操作

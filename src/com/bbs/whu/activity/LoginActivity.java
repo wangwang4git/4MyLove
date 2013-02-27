@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.apache.http.cookie.Cookie;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -47,7 +46,7 @@ import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyFileUtils;
 import com.bbs.whu.utils.MyHttpClient;
-import com.bbs.whu.utils.MyWaitDialog; 
+import com.bbs.whu.utils.MyWaitDialog;
 import com.loopj.android.http.PersistentCookieStore;
 
 /**
@@ -56,7 +55,7 @@ import com.loopj.android.http.PersistentCookieStore;
  * @author double
  * 
  */
-@SuppressLint({ "WorldReadableFiles", "HandlerLeak" })
+
 public class LoginActivity extends Activity implements OnClickListener {
 	// 用户名输入框
 	private AutoCompleteTextView userNameEditText;

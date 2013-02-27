@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.apache.http.cookie.Cookie;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,7 +44,7 @@ import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyFileUtils;
 import com.bbs.whu.utils.MyHttpClient;
-import com.bbs.whu.utils.MyWaitDialog;
+import com.bbs.whu.utils.MyWaitDialog; 
 import com.loopj.android.http.PersistentCookieStore;
 
 /**
@@ -51,6 +53,7 @@ import com.loopj.android.http.PersistentCookieStore;
  * @author double
  * 
  */
+@SuppressLint({ "WorldReadableFiles", "HandlerLeak" })
 public class LoginActivity extends Activity implements OnClickListener {
 	// 用户名输入框
 	private AutoCompleteTextView userNameEditText;
@@ -90,12 +93,33 @@ public class LoginActivity extends Activity implements OnClickListener {
 	// 选中的要删除的项
 	private int delIndex;
 
+	// 记录应用是否为第一次使用
+	private SharedPreferences firstUseSP;
+	private SharedPreferences.Editor firstUseEditor;
+	private String firstUseSPKey  = "isUsed";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// 取出Activity的title
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
+
+		// 判断是否为第一次使用
+		firstUseSP = this.getSharedPreferences("firstUse", MODE_WORLD_READABLE); 
+		
+		//如果为第一次使用则生成SharedPreferences变量并跳转至新手导航页
+		if (!firstUseSP.contains(firstUseSPKey)) { 
+			firstUseEditor = firstUseSP.edit(); 
+			firstUseEditor.putInt(firstUseSPKey, 1);// 1为使用过 
+			firstUseEditor.commit(); // 提交 
+			
+			//跳转至新手导航页
+			Intent intent = new Intent(LoginActivity.this,BeginnerNavigationActivity.class);
+			LoginActivity.this.startActivity(intent);
+			LoginActivity.this.finish();
+		}
+
 		// 登录前操作
 		loginBefore();
 		// 初始化控件
@@ -150,7 +174,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				// TODO Auto-generated method stub
 				passwordEditText.setText(userPasswords.get(arg2).getPassword());
 			}
 		});

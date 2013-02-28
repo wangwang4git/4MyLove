@@ -63,8 +63,8 @@ public class MoreActivity extends Activity implements OnClickListener {
 	 * 初始化控件
 	 */
 	private void initView() {
-		//新手导航
-		mNewGuid= (ViewGroup) findViewById(R.id.more_list_guide);
+		// 新手导航
+		mNewGuid = (ViewGroup) findViewById(R.id.more_list_guide);
 		mNewGuid.setOnClickListener(this);
 		// 清除缓存
 		mCleanCache = (ViewGroup) findViewById(R.id.more_list_clean_cache);

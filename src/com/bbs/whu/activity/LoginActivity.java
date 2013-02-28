@@ -102,8 +102,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 	// 记录应用是否为第一次使用
 	private SharedPreferences firstUseSP;
 	private SharedPreferences.Editor firstUseEditor;
-	private String firstUseSPKey  = "isUsed";
-	
+	private String firstUseSPKey = "isUsed";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -112,17 +112,18 @@ public class LoginActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_login);
 
 		// 判断是否为第一次使用
-		firstUseSP = this.getSharedPreferences("firstUse", MODE_WORLD_READABLE); 
-		
-		//如果为第一次使用则生成SharedPreferences变量并跳转至新手导航页
-		if (!firstUseSP.contains(firstUseSPKey)) { 
-			firstUseEditor = firstUseSP.edit(); 
-			firstUseEditor.putInt(firstUseSPKey, 1);// 1为使用过 
-			firstUseEditor.commit(); // 提交 
-			
-			//跳转至新手导航页
-			Intent intent = new Intent(LoginActivity.this,BeginnerNavigationActivity.class);
-			LoginActivity.this.startActivity(intent); 
+		firstUseSP = this.getSharedPreferences("firstUse", MODE_WORLD_READABLE);
+
+		// 如果为第一次使用则生成SharedPreferences变量并跳转至新手导航页
+		if (!firstUseSP.contains(firstUseSPKey)) {
+			firstUseEditor = firstUseSP.edit();
+			firstUseEditor.putInt(firstUseSPKey, 1);// 1为使用过
+			firstUseEditor.commit(); // 提交
+
+			// 跳转至新手导航页
+			Intent intent = new Intent(LoginActivity.this,
+					BeginnerNavigationActivity.class);
+			LoginActivity.this.startActivity(intent);
 		}
 
 		// 登录前操作
@@ -189,7 +190,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 匿名按钮
 		anonymousButton = (Button) findViewById(R.id.anonymous_button);
 		anonymousButton.setOnClickListener(this);
-		
+
 		// 记住密码checkbox
 		rememberUserCheckBox = (CheckBox) findViewById(R.id.remember_user_checkBox);
 		rememberUserCheckBox
@@ -404,7 +405,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 		MyBBSCache.setUserPasswordList(userPasswords,
 				MyFileUtils.USERPASSWORDNAME);
-		
+
 		// 读取已读标记json文件，并反序列化
 		HashMap<String, Byte> readedTagMap = MyBBSCache
 				.getReadedTagMap(MyFileUtils.READEDTAGNAME);

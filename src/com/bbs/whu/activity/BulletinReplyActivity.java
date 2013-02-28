@@ -157,6 +157,17 @@ public class BulletinReplyActivity extends Activity {
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
+				// 取消显示等待对话框
+				if (mProgress != null) {
+					mProgress.dismiss();
+					mProgress = null;
+				}
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				String toastString;
 				switch (msg.what) {
 				case MyConstants.REQUEST_SUCCESS:
@@ -179,11 +190,6 @@ public class BulletinReplyActivity extends Activity {
 					// 退出本Activity
 					finish();
 					break;
-				}
-				// 取消显示等待对话框
-				if (mProgress != null) {
-					mProgress.dismiss();
-					mProgress = null;
 				}
 				return;
 			}

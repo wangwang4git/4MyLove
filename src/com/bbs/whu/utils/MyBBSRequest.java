@@ -161,7 +161,7 @@ public class MyBBSRequest {
 			ArrayList<String> values, final String activityName, Context context) {
 		// 检测网络状态
 		if (checkNetwork(context)) {
-			// 异步的get请求
+			// 异步的post请求
 			post(url, keys, values, activityName, context);
 		} else {
 			MyNetworkUtils.setNetworkState(context);

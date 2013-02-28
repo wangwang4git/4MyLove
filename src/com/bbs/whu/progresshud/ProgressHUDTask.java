@@ -45,7 +45,7 @@ public class ProgressHUDTask extends AsyncTask<Void, String, Void> implements
 
 	@Override
 	protected void onPostExecute(Void result) {
-		mProgressHUD.dismiss();
+		// mProgressHUD.dismiss();
 		super.onPostExecute(result);
 	}
 
@@ -57,5 +57,6 @@ public class ProgressHUDTask extends AsyncTask<Void, String, Void> implements
 
 	public void dismiss() {
 		isFinish = true;
+		mProgressHUD.dismiss();
 	}
 }

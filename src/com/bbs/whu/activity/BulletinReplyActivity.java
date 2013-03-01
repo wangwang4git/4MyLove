@@ -165,7 +165,6 @@ public class BulletinReplyActivity extends Activity {
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				String toastString;
@@ -187,8 +186,6 @@ public class BulletinReplyActivity extends Activity {
 						toastString = "ÆÀÂÛÊ§°Ü£¡";
 					Toast.makeText(BulletinReplyActivity.this, toastString,
 							Toast.LENGTH_SHORT).show();
-					// ÍË³ö±¾Activity
-					finish();
 					break;
 				}
 				return;

@@ -17,7 +17,7 @@ public class MyScrollLayout extends ViewGroup {
 
 	private static final int SNAP_VELOCITY = 600;
 
-	private Scroller mScroller; // 滑动控制 
+	private Scroller mScroller; // 滑动控制
 
 	private int mCurScreen;
 
@@ -69,11 +69,11 @@ public class MyScrollLayout extends ViewGroup {
 	}
 
 	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) { 
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
 		final int width = MeasureSpec.getSize(widthMeasureSpec);
-		final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+		// final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
 
 		final int count = getChildCount();
 		for (int i = 0; i < count; i++) {
@@ -91,7 +91,7 @@ public class MyScrollLayout extends ViewGroup {
 		snapToScreen(destScreen);
 	}
 
-	public void snapToScreen(int whichScreen) { 
+	public void snapToScreen(int whichScreen) {
 		// get the valid layout page
 		whichScreen = Math.max(0, Math.min(whichScreen, getChildCount() - 1));
 		if (getScrollX() != (whichScreen * getWidth())) {
@@ -123,7 +123,7 @@ public class MyScrollLayout extends ViewGroup {
 	public boolean onTouchEvent(MotionEvent event) {
 		final int action = event.getAction();
 		final float x = event.getX();
-		final float y = event.getY();
+		// final float y = event.getY();
 
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
@@ -182,12 +182,13 @@ public class MyScrollLayout extends ViewGroup {
 			if (mVelocityTracker != null) {
 				mVelocityTracker.recycle();
 				mVelocityTracker = null;
-			} 
+			}
 			break;
 		}
 
 		return true;
-	} 
+	}
+
 	private boolean IsCanMove(int deltaX) {
 
 		if (getScrollX() <= 0 && deltaX < 0) {

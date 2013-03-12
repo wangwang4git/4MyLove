@@ -8,6 +8,7 @@ import android.view.Window;
 import android.widget.ImageView;
 
 import com.bbs.whu.R;
+import com.bbs.whu.utils.MyFontManager;
 
 public class AboutActivity extends Activity implements OnClickListener {
 	// 返回按钮
@@ -15,9 +16,10 @@ public class AboutActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState); 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_about);
+		MyFontManager.changeFontType(this);//设置当前Activity的字体
 		// 初始化控件
 		initView();
 	}

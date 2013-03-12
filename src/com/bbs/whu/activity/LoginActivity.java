@@ -45,6 +45,7 @@ import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyFileUtils;
+import com.bbs.whu.utils.MyFontManager;
 import com.bbs.whu.utils.MyHttpClient;
 import com.bbs.whu.utils.MyWaitDialog;
 import com.loopj.android.http.PersistentCookieStore;
@@ -110,7 +111,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 取出Activity的title
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
-
+		MyFontManager.changeFontType(this);//设置当前Activity的字体
+		
 		// 判断是否为第一次使用
 		firstUseSP = this.getSharedPreferences("firstUse", MODE_WORLD_READABLE);
 

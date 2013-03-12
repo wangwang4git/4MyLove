@@ -20,6 +20,7 @@ import com.bbs.whu.R;
 import com.bbs.whu.adapter.FaceGridAdapter;
 import com.bbs.whu.model.FaceBean;
 import com.bbs.whu.utils.MyBBSFacesUtils;
+import com.bbs.whu.utils.MyFontManager;
 
 /**
  * 邮件发送
@@ -55,7 +56,8 @@ public class MailSendActivity extends Activity {
 		// 取消标题栏显示
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_mail_send);
-
+		MyFontManager.changeFontType(this);//设置当前Activity的字体
+		
 		// 初始化控件
 		initView();
 		// 初始化适配器

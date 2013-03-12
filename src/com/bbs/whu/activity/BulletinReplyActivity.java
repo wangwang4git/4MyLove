@@ -121,6 +121,7 @@ public class BulletinReplyActivity extends Activity {
 				contentFormat(originAuthor, originContent).length(),
 				Spanned.SPAN_COMPOSING);
 		replyContent.setText(builder, BufferType.EDITABLE);
+		replyContent.setOnClickListener(bulletinReplyClickListener);
 		// 设置输入框焦点变更统一监听器
 		replyContent.setOnFocusChangeListener(bulletinReplyEditFocusListener);
 
@@ -306,6 +307,13 @@ public class BulletinReplyActivity extends Activity {
 			case R.id.bulletin_reply_bottom_keyboard:
 				// 表情选择器隐藏
 				facesGridViewShow(false);
+				break;
+			case R.id.bulletin_reply_content:
+				if (mBBSFacesGridView.isShown()) {
+					mBBSFacesGridView.setVisibility(View.GONE);
+					mBtnFace.setVisibility(View.VISIBLE);
+					mBtnKeyboard.setVisibility(View.GONE);
+				}
 				break;
 			default:
 				break;

@@ -13,6 +13,7 @@ import com.bbs.whu.R;
 import com.bbs.whu.update.UpdateManager;
 import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyFileUtils;
+import com.bbs.whu.utils.MyFontManager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class MoreActivity extends Activity implements OnClickListener {
@@ -26,6 +27,8 @@ public class MoreActivity extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_more);
+		MyFontManager.changeFontType(this);//设置当前Activity的字体
+		
 		// 初始化控件
 		initView();
 	}

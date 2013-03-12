@@ -20,6 +20,7 @@ import com.bbs.whu.progresshud.ProgressHUDTask;
 import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
+import com.bbs.whu.utils.MyFontManager;
 import com.bbs.whu.utils.MyXMLParseUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -88,6 +89,8 @@ public class PersonActivity extends Activity {
 		// 取消显示title栏
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_person);
+		MyFontManager.changeFontType(this);//设置当前Activity的字体
+		
 		// 显示等待对话框
 		mProgress = new ProgressHUDTask(this);
 		mProgress.execute();

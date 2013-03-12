@@ -34,6 +34,7 @@ import com.bbs.whu.progresshud.ProgressHUDTask;
 import com.bbs.whu.utils.MyBBSFacesUtils;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
+import com.bbs.whu.utils.MyFontManager;
 
 public class BulletinReplyActivity extends Activity {
 	private int head;// “帖子回复”还是“帖子发表”
@@ -74,7 +75,8 @@ public class BulletinReplyActivity extends Activity {
 		// 取消标题栏显示
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_bulletin_reply);
-
+		MyFontManager.changeFontType(this);//设置当前Activity的字体
+		
 		// 获取传过来的数据，加载到界面上
 		Intent postInfoIntent = getIntent();
 		head = postInfoIntent.getIntExtra("head", -1);

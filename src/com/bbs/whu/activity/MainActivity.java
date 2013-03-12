@@ -18,6 +18,7 @@ import com.bbs.whu.R;
 import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
+import com.bbs.whu.utils.MyFontManager;
 
 /**
  * 主界面Activity，
@@ -31,9 +32,10 @@ public class MainActivity extends TabActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);  
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
+		MyFontManager.changeFontType(this);//设置当前Activity的字体
 		tabHost = getTabHost();
 		// 添加tab
 		setTabs();

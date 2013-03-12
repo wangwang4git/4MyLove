@@ -29,6 +29,7 @@ import com.bbs.whu.model.board.Board;
 import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
+import com.bbs.whu.utils.MyFontManager;
 import com.bbs.whu.utils.MyXMLParseUtils;
 
 public class BoardActivity extends Activity {
@@ -71,6 +72,7 @@ public class BoardActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_board);
+		MyFontManager.changeFontType(this);//设置当前Activity的字体
 		// 初始化控件
 		initView();
 		// 初始化适配器

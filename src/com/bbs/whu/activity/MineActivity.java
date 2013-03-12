@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 
 import com.bbs.whu.R;
 import com.bbs.whu.utils.MyApplication;
+import com.bbs.whu.utils.MyFontManager;
 
 /**
  * 我的山水界面， 可通过点击“个人资料”进入个人资料界面， 可通过点击“站内信息”进入站内信息界面， 可通过点击“收藏版面”进入收藏版面界面，
@@ -31,6 +32,7 @@ public class MineActivity extends Activity implements View.OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mine);
+		MyFontManager.changeFontType(this);//设置当前Activity的字体
 		
 		// 初始化控件
 		initView();

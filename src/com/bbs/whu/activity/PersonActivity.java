@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -51,6 +52,8 @@ public class PersonActivity extends Activity {
 	private TextView mPersonLoginNumber;
 	// 上次登录时间
 	private TextView mPersonLoginTime;
+	// 用户状态
+	private TextView mPersonUserMode;
 	// 个性签名
 	private TextView mPersonSign;
 	// 接收请求数据的handler
@@ -105,7 +108,7 @@ public class PersonActivity extends Activity {
 		// 初始化handler
 		initHandler();
 		// 请求个人信息数据
-		getUserInfo(false);
+		getUserInfo(true);
 	}
 
 	@Override
@@ -139,6 +142,7 @@ public class PersonActivity extends Activity {
 		mPersonArticleNumber = (TextView) findViewById(R.id.person_article_number);
 		mPersonLoginNumber = (TextView) findViewById(R.id.person_login_number);
 		mPersonLoginTime = (TextView) findViewById(R.id.person_login_time);
+		mPersonUserMode = (TextView) findViewById(R.id.person_user_mode);
 		mPersonSign = (TextView) findViewById(R.id.person_sign);
 	}
 
@@ -226,6 +230,8 @@ public class PersonActivity extends Activity {
 		mPersonArticleNumber.setText(userInfo.getNumposts());
 		mPersonLoginNumber.setText(userInfo.getNumlogins());
 		mPersonLoginTime.setText(userInfo.getLastlogin());
-		mPersonSign.setText("");
+		mPersonUserMode.setText(userInfo.getUsermode());
+		mPersonSign.setText(Html.fromHtml(Html.fromHtml(
+				userInfo.getSigcontent()).toString()));
 	}
 }

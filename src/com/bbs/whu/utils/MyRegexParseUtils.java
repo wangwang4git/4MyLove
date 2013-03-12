@@ -290,4 +290,17 @@ public class MyRegexParseUtils {
 		source = source.replaceAll("\n", "<br>");
 		return source;
 	}
+	
+	// 在文本中提取用户当前状态的正则表达式
+	final static private String USERMODE_REGEX_STRING = "&lt;span class='blue'&gt;(.*?)&lt;/span&gt;.*";
+
+	static public String getUserModeString(String content) {
+		Pattern pattern = Pattern.compile(USERMODE_REGEX_STRING);
+		Matcher matcher = pattern.matcher(content);
+		// 输出第一个匹配项的第一个分组
+		while (matcher.find()) {
+			return "目前在站上：" + matcher.group(1).replaceAll("\\\\/", "/");
+		}
+		return "目前不在站上";
+	}
 }

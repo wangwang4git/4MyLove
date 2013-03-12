@@ -46,17 +46,20 @@ public class UserInfoBean {
 	private String usermode;
 	// 用户最后来访IP
 	private String lasthostIP;
+	// 签名档
+	private String sigcontent;
 
 	public UserInfoBean() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
+	
 	public UserInfoBean(String userface_img, String photo_url, String nickname,
 			String sex, String oICQ, String iCQ, String mSN, String homepage,
 			String userlevel, String numposts, String menpai, String numlogins,
 			String userexp, String explevel, String uservalue,
-			String lastlogin, String usermode, String lasthostIP) {
+			String lastlogin, String usermode, String lasthostIP,
+			String sigcontent) {
 		super();
 		this.userface_img = userface_img;
 		this.photo_url = photo_url;
@@ -76,6 +79,7 @@ public class UserInfoBean {
 		this.lastlogin = lastlogin;
 		this.usermode = usermode;
 		this.lasthostIP = lasthostIP;
+		this.setSigcontent(sigcontent);
 	}
 
 	public String getUserface_img() {
@@ -222,6 +226,14 @@ public class UserInfoBean {
 		this.lasthostIP = lasthostIP;
 	}
 
+	public void setSigcontent(String sigcontent) {
+		this.sigcontent = sigcontent;
+	}
+
+	public String getSigcontent() {
+		return sigcontent;
+	}
+	
 	@Override
 	public String toString() {
 		return "UserInfoBean [userface_img=" + userface_img + ", photo_url="
@@ -232,6 +244,7 @@ public class UserInfoBean {
 				+ ", numlogins=" + numlogins + ", userexp=" + userexp
 				+ ", explevel=" + explevel + ", uservalue=" + uservalue
 				+ ", lastlogin=" + lastlogin + ", usermode=" + usermode
-				+ ", lasthostIP=" + lasthostIP + "]";
+				+ ", lasthostIP=" + lasthostIP + ", sigcontent=" + sigcontent
+				+ "]";
 	}
 }

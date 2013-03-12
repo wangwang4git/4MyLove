@@ -25,7 +25,9 @@ public class TopicBean {
 	private String lastReplyAuthor;
 	// 最新回复时间
 	private String lastReplyTime;
-	
+	// 帖子属性
+	private String flag;
+
 	public TopicBean() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -33,7 +35,7 @@ public class TopicBean {
 
 	public TopicBean(String number, String gID, String title, String author,
 			String posttime, String replyNum, String lastReplyID,
-			String lastReplyAuthor, String lastReplyTime) {
+			String lastReplyAuthor, String lastReplyTime, String flag) {
 		super();
 		this.number = number;
 		GID = gID;
@@ -44,6 +46,7 @@ public class TopicBean {
 		this.lastReplyID = lastReplyID;
 		this.lastReplyAuthor = lastReplyAuthor;
 		this.lastReplyTime = lastReplyTime;
+		this.flag = flag;
 	}
 
 	public String getNumber() {
@@ -118,12 +121,20 @@ public class TopicBean {
 		this.lastReplyTime = lastReplyTime;
 	}
 
+	public String getFlag() {
+		return flag;
+	}
+
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+	
 	@Override
 	public String toString() {
-		return "Topic [number=" + number + ", GID=" + GID + ", title=" + title
-				+ ", author=" + author + ", posttime=" + posttime
+		return "TopicBean [number=" + number + ", GID=" + GID + ", title="
+				+ title + ", author=" + author + ", posttime=" + posttime
 				+ ", replyNum=" + replyNum + ", lastReplyID=" + lastReplyID
 				+ ", lastReplyAuthor=" + lastReplyAuthor + ", lastReplyTime="
-				+ lastReplyTime + "]";
+				+ lastReplyTime + ", flag=" + flag + "]";
 	}
 }

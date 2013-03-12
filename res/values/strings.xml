@@ -41,6 +41,7 @@
     <string name="person_article_number_text">帖子总数：</string>
     <string name="person_login_number_text">登录次数：</string>
     <string name="person_login_time_text">上次登录：</string>
+    <string name="person_user_mode_text">用户状态：</string>
     <string name="person_sign_text">个性签名：</string>
     <string name="collect_board_new_article_text">新帖：</string>
     <string name="online_friend_message_text">消 息</string>

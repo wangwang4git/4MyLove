@@ -220,7 +220,10 @@ public class MyXMLParseUtils {
 		xstream.alias("user", UserInfoBean.class);
 		// 加入异常处理
 		try {
-			return (UserInfoBean) xstream.fromXML(XMLStream);
+			UserInfoBean userInfo = (UserInfoBean) xstream.fromXML(XMLStream);
+			userInfo.setUsermode(MyRegexParseUtils.getUserModeString(userInfo
+					.getUsermode()));
+			return userInfo;
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

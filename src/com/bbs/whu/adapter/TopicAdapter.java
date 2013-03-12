@@ -30,6 +30,14 @@ import com.bbs.whu.utils.MyFileUtils;
  * 
  */
 public class TopicAdapter extends MyBaseAdapter {
+	// TOP，HOT，LOCK，NORMAL，DIGEST
+	// 置顶，热帖，锁定（合集），普通，精华
+	final static private String TOP = "TOP"; 
+	final static private String HOT = "HOT"; 
+	final static private String LOCK = "LOCK"; 
+	final static private String NORMAL = "NORMAL";
+	final static private String DIGEST = "DIGEST"; 
+	
 	// 帖子英文名
 	private String board;
 
@@ -70,6 +78,8 @@ public class TopicAdapter extends MyBaseAdapter {
 		String datetime = ((TopicBean) mItems.get(position)).getPosttime();
 		// 帖子回复数
 		String number = ((TopicBean) mItems.get(position)).getReplyNum();
+		// 帖子属性
+		String flag = ((TopicBean) mItems.get(position)).getFlag();
 		// 帖子ID
 		final String groupid = ((TopicBean) mItems.get(position)).getGID();
 
@@ -93,11 +103,25 @@ public class TopicAdapter extends MyBaseAdapter {
 		}
 		
 		// 填充控件
-		if (isNewTopic(datetime)) {
+		if (flag.equals(NORMAL)) {
+			if (isNewTopic(datetime)) {
+				holder.holderTopicTag.setVisibility(View.VISIBLE);
+				holder.holderTopicTag.setImageResource(R.drawable.topic_new);
+			} else {
+				holder.holderTopicTag.setVisibility(View.INVISIBLE);
+			}
+		} else if (flag.equals(TOP)) {
 			holder.holderTopicTag.setVisibility(View.VISIBLE);
-			holder.holderTopicTag.setImageResource(R.drawable.new_topic);
-		} else {
-			holder.holderTopicTag.setVisibility(View.INVISIBLE);
+			holder.holderTopicTag.setImageResource(R.drawable.topic_top);
+		} else if (flag.equals(HOT)) {
+			holder.holderTopicTag.setVisibility(View.VISIBLE);
+			holder.holderTopicTag.setImageResource(R.drawable.topic_hot);
+		} else if (flag.equals(LOCK)) {
+			holder.holderTopicTag.setVisibility(View.VISIBLE);
+			holder.holderTopicTag.setImageResource(R.drawable.topic_lock);
+		} else if (flag.equals(DIGEST)) {
+			holder.holderTopicTag.setVisibility(View.VISIBLE);
+			holder.holderTopicTag.setImageResource(R.drawable.topic_digest);
 		}
 		holder.holderTopicTitle.setText(title);
 		holder.holderTopicAuthor.setText(author);

@@ -13,133 +13,162 @@
 			android:textSize="20sp" />
 	</LinearLayout>
 
-	<LinearLayout android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:layout_marginTop="10dip"
-		android:layout_gravity="center_horizontal">
-		<ImageView android:id="@+id/person_head_portrait"
-			android:layout_width="60dip" android:layout_height="60dip"
-			android:layout_centerVertical="true" android:scaleType="centerInside"
-			android:src="@drawable/person_head_portrait" />
-		<TextView android:id="@+id/person_name" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:layout_marginLeft="10dip"
-			android:text="" android:textSize="25sp" android:textStyle="bold"
-			android:textColor="#ffff9933" android:layout_gravity="center_vertical" />
-	</LinearLayout>
+	<ScrollView android:layout_width="fill_parent"
+		android:layout_height="wrap_content">
+		<LinearLayout android:orientation="vertical"
+			android:layout_width="fill_parent" android:layout_height="match_parent"
+			android:layout_gravity="top" android:gravity="center_horizontal">
 
-	<TableLayout android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:layout_marginTop="10dip"
-		android:layout_marginLeft="15dip" android:layout_marginRight="15dip"
-		android:orientation="vertical" android:stretchColumns="2"
-		android:layout_gravity="center_horizontal">
-		<TableRow android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:orientation="horizontal">
-			<TextView android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:text="@string/person_post_text"
-				android:textColor="#ff996633" android:textSize="15sp"
-				android:gravity="right" android:layout_weight="1" />
-			<TextView android:id="@+id/person_post"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:textSize="15sp" android:textColor="#ff1A1A1A" android:text=""
-				android:layout_weight="1" />
-		</TableRow>
-		<TableRow android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:layout_marginTop="5dip"
-			android:orientation="horizontal">
-			<TextView android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:text="@string/person_sect_text"
-				android:textColor="#ff996633" android:textSize="15sp"
-				android:gravity="right" android:layout_weight="1" />
-			<TextView android:id="@+id/person_sect"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:textSize="15sp" android:textColor="#ff1A1A1A" android:text=""
-				android:layout_weight="1" />
-		</TableRow>
-		<TableRow android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:layout_marginTop="5dip"
-			android:orientation="horizontal">
-			<TextView android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:text="@string/person_life_text"
-				android:textColor="#ff996633" android:textSize="15sp"
-				android:gravity="right" android:layout_weight="1" />
-			<TextView android:id="@+id/person_life"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:textSize="15sp" android:textColor="#ff1A1A1A" android:text=""
-				android:layout_weight="1" />
-		</TableRow>
-		<TableRow android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:layout_marginTop="5dip"
-			android:orientation="horizontal">
-			<TextView android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:text="@string/person_level_text"
-				android:textColor="#ff996633" android:textSize="15sp"
-				android:gravity="right" android:layout_weight="1" />
-			<TextView android:id="@+id/person_level"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:textSize="15sp" android:textColor="#ff1A1A1A" android:text=""
-				android:layout_weight="1" />
-		</TableRow>
-		<TableRow android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:layout_marginTop="5dip"
-			android:orientation="horizontal">
-			<TextView android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:text="@string/person_experience_text"
-				android:textColor="#ff996633" android:textSize="15sp"
-				android:gravity="right" android:layout_weight="1" />
-			<TextView android:id="@+id/person_experience"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:textSize="15sp" android:textColor="#ff1A1A1A" android:text=""
-				android:layout_weight="1" />
-		</TableRow>
-		<TableRow android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:layout_marginTop="5dip"
-			android:orientation="horizontal">
-			<TextView android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:text="@string/person_article_number_text"
-				android:textColor="#ff996633" android:textSize="15sp"
-				android:gravity="right" android:layout_weight="1" />
-			<TextView android:id="@+id/person_article_number"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:textSize="15sp" android:textColor="#ff1A1A1A" android:text=""
-				android:layout_weight="1" />
-		</TableRow>
-		<TableRow android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:layout_marginTop="5dip"
-			android:orientation="horizontal">
-			<TextView android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:text="@string/person_login_number_text"
-				android:textColor="#ff996633" android:textSize="15sp"
-				android:gravity="right" android:layout_weight="1" />
-			<TextView android:id="@+id/person_login_number"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:textSize="15sp" android:textColor="#ff1A1A1A" android:text=""
-				android:layout_weight="1" />
-		</TableRow>
-		<TableRow android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:layout_marginTop="5dip"
-			android:orientation="horizontal">
-			<TextView android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:text="@string/person_login_time_text"
-				android:textColor="#ff996633" android:textSize="15sp"
-				android:gravity="right" android:layout_weight="1" />
-			<TextView android:id="@+id/person_login_time"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:textSize="15sp" android:textColor="#ff1A1A1A" android:text=""
-				android:layout_weight="1" />
-		</TableRow>
-		<TableRow android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:layout_marginTop="5dip"
-			android:orientation="horizontal">
-			<TextView android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:text="@string/person_sign_text"
-				android:textColor="#ff996633" android:textSize="15sp"
-				android:gravity="right" android:layout_weight="1" />
+			<LinearLayout android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_marginTop="10dip"
+				android:layout_gravity="center_horizontal">
+				<ImageView android:id="@+id/person_head_portrait"
+					android:layout_width="60dip" android:layout_height="60dip"
+					android:layout_centerVertical="true" android:scaleType="centerInside"
+					android:src="@drawable/person_head_portrait" />
+				<TextView android:id="@+id/person_name"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:layout_marginLeft="10dip" android:text="" android:textSize="25sp"
+					android:textStyle="bold" android:textColor="#ffff9933"
+					android:layout_gravity="center_vertical" />
+			</LinearLayout>
+
+			<TableLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_marginTop="10dip"
+				android:layout_marginLeft="15dip" android:layout_marginRight="15dip"
+				android:orientation="vertical" android:shrinkColumns="0"
+				android:stretchColumns="1" android:layout_gravity="center_horizontal">
+				<TableRow android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:orientation="horizontal">
+					<TextView android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:text="@string/person_post_text"
+						android:textColor="#ff996633" android:textSize="15sp"
+						android:gravity="right" android:layout_weight="1" />
+					<TextView android:id="@+id/person_post"
+						android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:textSize="15sp" android:textColor="#ff1A1A1A"
+						android:text="" android:layout_weight="1" />
+				</TableRow>
+				<TableRow android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:layout_marginTop="5dip"
+					android:orientation="horizontal">
+					<TextView android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:text="@string/person_sect_text"
+						android:textColor="#ff996633" android:textSize="15sp"
+						android:gravity="right" android:layout_weight="1" />
+					<TextView android:id="@+id/person_sect"
+						android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:textSize="15sp" android:textColor="#ff1A1A1A"
+						android:text="" android:layout_weight="1" />
+				</TableRow>
+				<TableRow android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:layout_marginTop="5dip"
+					android:orientation="horizontal">
+					<TextView android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:text="@string/person_life_text"
+						android:textColor="#ff996633" android:textSize="15sp"
+						android:gravity="right" android:layout_weight="1" />
+					<TextView android:id="@+id/person_life"
+						android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:textSize="15sp" android:textColor="#ff1A1A1A"
+						android:text="" android:layout_weight="1" />
+				</TableRow>
+				<TableRow android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:layout_marginTop="5dip"
+					android:orientation="horizontal">
+					<TextView android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:text="@string/person_level_text"
+						android:textColor="#ff996633" android:textSize="15sp"
+						android:gravity="right" android:layout_weight="1" />
+					<TextView android:id="@+id/person_level"
+						android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:textSize="15sp" android:textColor="#ff1A1A1A"
+						android:text="" android:layout_weight="1" />
+				</TableRow>
+				<TableRow android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:layout_marginTop="5dip"
+					android:orientation="horizontal">
+					<TextView android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:text="@string/person_experience_text"
+						android:textColor="#ff996633" android:textSize="15sp"
+						android:gravity="right" android:layout_weight="1" />
+					<TextView android:id="@+id/person_experience"
+						android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:textSize="15sp" android:textColor="#ff1A1A1A"
+						android:text="" android:layout_weight="1" />
+				</TableRow>
+				<TableRow android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:layout_marginTop="5dip"
+					android:orientation="horizontal">
+					<TextView android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:text="@string/person_article_number_text"
+						android:textColor="#ff996633" android:textSize="15sp"
+						android:gravity="right" android:layout_weight="1" />
+					<TextView android:id="@+id/person_article_number"
+						android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:textSize="15sp" android:textColor="#ff1A1A1A"
+						android:text="" android:layout_weight="1" />
+				</TableRow>
+				<TableRow android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:layout_marginTop="5dip"
+					android:orientation="horizontal">
+					<TextView android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:text="@string/person_login_number_text"
+						android:textColor="#ff996633" android:textSize="15sp"
+						android:gravity="right" android:layout_weight="1" />
+					<TextView android:id="@+id/person_login_number"
+						android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:textSize="15sp" android:textColor="#ff1A1A1A"
+						android:text="" android:layout_weight="1" />
+				</TableRow>
+				<TableRow android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:layout_marginTop="5dip"
+					android:orientation="horizontal">
+					<TextView android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:text="@string/person_login_time_text"
+						android:textColor="#ff996633" android:textSize="15sp"
+						android:gravity="right" android:layout_weight="1" />
+					<TextView android:id="@+id/person_login_time"
+						android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:textSize="15sp" android:textColor="#ff1A1A1A"
+						android:text="" android:layout_weight="1" />
+				</TableRow>
+				<TableRow android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:layout_marginTop="5dip"
+					android:orientation="horizontal">
+					<TextView android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:text="@string/person_user_mode_text"
+						android:textColor="#ff996633" android:textSize="15sp"
+						android:gravity="right" android:layout_weight="1" />
+					<TextView android:id="@+id/person_user_mode"
+						android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:textSize="15sp" android:textColor="#ff1A1A1A"
+						android:text="" android:layout_weight="1" />
+				</TableRow>
+				<TableRow android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:layout_marginTop="5dip"
+					android:orientation="horizontal">
+					<TextView android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:text="@string/person_sign_text"
+						android:textColor="#ff996633" android:textSize="15sp"
+						android:gravity="right" android:layout_weight="1" />
+					<TextView android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:textSize="15sp"
+						android:textColor="#ff1A1A1A" android:text=""
+						android:layout_weight="1" />
+				</TableRow>
+			</TableLayout>
+
 			<TextView android:id="@+id/person_sign"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:textSize="15sp" android:textColor="#ff1A1A1A" android:text=""
-				android:layout_weight="1" />
-		</TableRow>
-	</TableLayout>
+				android:layout_marginLeft="15dip" android:layout_marginRight="15dip"
+				android:textSize="15sp" android:textColor="#ff1A1A1A" android:text="" />
 
+			<TextView android:layout_width="fill_parent"
+				android:layout_height="15dip" />
 
+		</LinearLayout>
+	</ScrollView>
+	
 </LinearLayout>
 

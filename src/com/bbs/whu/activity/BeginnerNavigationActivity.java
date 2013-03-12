@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import com.bbs.whu.R;
 import com.bbs.whu.beginnernavigation.MyScrollLayout;
 import com.bbs.whu.beginnernavigation.OnViewChangeListener;
+import com.bbs.whu.utils.MyFontManager;
 
 public class BeginnerNavigationActivity extends Activity implements
 		OnViewChangeListener {
@@ -33,13 +34,14 @@ public class BeginnerNavigationActivity extends Activity implements
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState); 
 		// 隐藏状态栏
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		// 隐藏标题栏
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_beginner_navigation);
+		MyFontManager.changeFontType(this);//设置当前Activity的字体
 		initView();
 	}
 

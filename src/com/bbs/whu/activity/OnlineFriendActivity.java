@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.bbs.whu.R;
 import com.bbs.whu.adapter.OnlineFriendAdapter;
+import com.bbs.whu.utils.MyFontManager;
 import com.bbs.whu.xlistview.XListView;
 
 /**
@@ -36,7 +37,8 @@ public class OnlineFriendActivity extends Activity {
 		// 取消显示title栏
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_online_friend);
-
+		MyFontManager.changeFontType(this);//设置当前Activity的字体
+		
 		// 初始化控件
 		initView();
 		// 初始化适配器

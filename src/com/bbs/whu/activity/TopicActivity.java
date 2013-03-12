@@ -29,6 +29,7 @@ import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
+import com.bbs.whu.utils.MyFontManager;
 import com.bbs.whu.utils.MyXMLParseUtils;
 import com.bbs.whu.xlistview.XListView;
 import com.bbs.whu.xlistview.XListView.IXListViewListener;
@@ -85,6 +86,8 @@ public class TopicActivity extends Activity implements IXListViewListener,
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_topic);
+		MyFontManager.changeFontType(this);//设置当前Activity的字体
+		
 		// 获取传入的参数
 		board = getIntent().getStringExtra("board");
 		name = getIntent().getStringExtra("name");

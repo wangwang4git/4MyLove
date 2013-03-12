@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bbs.whu.R;
+import com.bbs.whu.utils.MyFontManager;
 
 public class HomeActivity extends ActivityGroup {
 
@@ -39,6 +40,8 @@ public class HomeActivity extends ActivityGroup {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_home);
+		MyFontManager.changeFontType(this);//设置当前Activity的字体
+		
 		initImageView();
 		initTextView();
 		initViewPager();

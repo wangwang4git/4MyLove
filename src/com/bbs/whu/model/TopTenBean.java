@@ -13,6 +13,8 @@ public class TopTenBean {
 	private String author;
 	// 版面英文名
 	private String board;
+	// 版面ID
+	private String bid;
 	// 版面中文名
 	private String boardname;
 	// 版面ID
@@ -22,11 +24,11 @@ public class TopTenBean {
 	// 回帖数
 	private long number;
 
-	public String getTilte() {
+	public String getTitle() {
 		return title;
 	}
 
-	public void setTilte(String tilte) {
+	public void setTitle(String tilte) {
 		this.title = tilte;
 	}
 
@@ -46,6 +48,14 @@ public class TopTenBean {
 		this.board = board;
 	}
 
+	public void setBid(String bid) {
+		this.bid = bid;
+	}
+
+	public String getBid() {
+		return bid;
+	}
+	
 	public String getBoardname() {
 		return boardname;
 	}
@@ -80,8 +90,9 @@ public class TopTenBean {
 
 	@Override
 	public String toString() {
-		return this.title + "/" + this.author + "/" + this.board + "/"
-				+ this.boardname + "/" + this.groupid + "/" + this.lasttime
-				+ "/" + this.number;
+		return "TopTenBean [title=" + title + ", author=" + author + ", board="
+				+ board + ", bid=" + bid + ", boardname=" + boardname
+				+ ", groupid=" + groupid + ", lasttime=" + lasttime
+				+ ", number=" + number + "]";
 	}
 }

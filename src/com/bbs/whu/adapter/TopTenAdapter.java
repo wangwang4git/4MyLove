@@ -55,7 +55,7 @@ public class TopTenAdapter extends MyBaseAdapter {
 		}
 		TopTenBean mItem = (TopTenBean) mItems.get(position);
 		// 帖子标题
-		String title = mItem.getTilte();
+		String title = mItem.getTitle();
 		// 帖子回复数
 		Long number = mItem.getNumber();
 		// 帖子作者

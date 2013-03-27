@@ -9,6 +9,7 @@ import org.apache.http.util.EncodingUtils;
 import android.content.Context;
 
 import com.bbs.whu.model.BoardBean;
+import com.bbs.whu.model.MailBean;
 import com.bbs.whu.model.PlaybillBean;
 import com.bbs.whu.model.RecommendBean;
 import com.bbs.whu.model.TopTenBean;
@@ -20,6 +21,13 @@ import com.bbs.whu.model.board.nameConverter;
 import com.bbs.whu.model.bulletin.Page;
 import com.bbs.whu.model.bulletin.numConverter;
 import com.bbs.whu.model.bulletin.totalConverter;
+import com.bbs.whu.model.mail.Mails;
+import com.bbs.whu.model.mail.PageConverter;
+import com.bbs.whu.model.mail.TotalPageConverter;
+import com.bbs.whu.model.mail.isnewConverter;
+import com.bbs.whu.model.mail.senderConverter;
+import com.bbs.whu.model.mail.sizeConverter;
+import com.bbs.whu.model.mail.timeConverter;
 import com.bbs.whu.model.topic.Topics;
 import com.bbs.whu.model.topic.boardConverter;
 import com.bbs.whu.model.topic.pageConverter;
@@ -317,5 +325,45 @@ public class MyXMLParseUtils {
 			System.out.println(XMLStream);
 			return null;
 		}
+	}
+	
+	/**
+	 * 反序列化邮件列表
+	 * 
+	 * @param XMLStream
+	 * @return Mails
+	 */
+	public static Mails readXml2Mails(String XMLStream) {
+		if (null == XMLStream) {
+			return null;
+		}
+		XMLStream = XMLStream.trim();
+		XMLStream = XMLStream.replaceAll("&", "&amp;");
+		// 插入<mails>标签
+		XMLStream = XMLStream.replaceFirst("(<Mails[^<>]*?>)(<Mail)",
+				"$1<mails>$2");
+		// 插入</mails>标签
+		XMLStream = XMLStream.replace("</Mail></Mails>",
+				"</Mail></mails></Mails>");
+		// 插入<title>...</title>标签
+		XMLStream = XMLStream.replaceAll("(time=\".*?\">)(.*?)(</Mail>)",
+				"$1<title>$2</title>$3");
+		System.out.println(XMLStream);
+		XStream xstream = new XStream();
+		xstream.alias("Mails", Mails.class);
+		xstream.alias("Mail", MailBean.class);
+		xstream.useAttributeFor(Mails.class, "Page");
+		xstream.useAttributeFor(Mails.class, "TotalPage");
+		xstream.registerConverter(new PageConverter());
+		xstream.registerConverter(new TotalPageConverter());
+		xstream.useAttributeFor(MailBean.class, "sender");
+		xstream.useAttributeFor(MailBean.class, "isnew");
+		xstream.useAttributeFor(MailBean.class, "size");
+		xstream.useAttributeFor(MailBean.class, "time");
+		xstream.registerConverter(new senderConverter());
+		xstream.registerConverter(new isnewConverter());
+		xstream.registerConverter(new sizeConverter());
+		xstream.registerConverter(new timeConverter());
+		return (Mails) xstream.fromXML(XMLStream);
 	}
 }

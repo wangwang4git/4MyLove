@@ -48,9 +48,8 @@
         <activity android:name="com.bbs.whu.activity.OnlineFriendActivity" />
         <activity android:name="com.bbs.whu.activity.RecommendActivity" />
         <activity android:name="com.bbs.whu.activity.PlaybillActivity" />
-        <activity
-            android:name="com.bbs.whu.activity.MailSendActivity"
-            android:windowSoftInputMode="adjustResize" />
+		<activity android:name="com.bbs.whu.activity.MailSendActivity"
+			android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

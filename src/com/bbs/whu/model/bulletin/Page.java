@@ -3,6 +3,8 @@ package com.bbs.whu.model.bulletin;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bbs.whu.model.attr.num;
+
 public class Page {
 	private num num;
 	private total total;

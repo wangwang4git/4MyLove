@@ -1,4 +1,4 @@
-package com.bbs.whu.model.bulletin;
+package com.bbs.whu.model.attr;
 
 public class num {
 	private String attributeValue;

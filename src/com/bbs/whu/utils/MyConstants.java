@@ -25,6 +25,8 @@ public class MyConstants {
 	public static final int LOGIN_DELETE_USER = 8;
 	// µÇÂ½URL
 	public static final String LOGIN_URL = "http://bbs.whu.edu.cn/bbslogin.php";
+	// µÇÂ¼URL 2.0
+	public static final String LOGIN_URL_2 = "http://bbs.whu.edu.cn/mobile.php";
 	// ÍË³öµÇÂ¼URL
 	public static final String LOG_OUT_URL = "http://bbs.whu.edu.cn/bbslogout.php";
 	// getÇëÇóURL

@@ -1,6 +1,6 @@
 package com.bbs.whu.model.board;
 
-import com.bbs.whu.model.bulletin.num;
+import com.bbs.whu.model.attr.num;
 
 /**
  * 二级版块元素结构定义

@@ -57,7 +57,7 @@ public class TopTenAdapter extends MyBaseAdapter {
 		// 帖子标题
 		String title = mItem.getTitle();
 		// 帖子回复数
-		Long number = mItem.getNumber();
+		String number = mItem.getNumber();
 		// 帖子作者
 		String author = mItem.getAuthor();
 		// 帖子版面中文名
@@ -65,12 +65,12 @@ public class TopTenAdapter extends MyBaseAdapter {
 		// 帖子版面英文名
 		final String board = mItem.getBoard();
 		// 帖子ID
-		final Long groupid = mItem.getGroupid();
+		final String groupid = mItem.getGroupid();
 
 		// 读取已读标记
 		HashMap<String, Byte> readedTagMap = MyApplication.getInstance()
 				.getReadedTag();
-		String key = groupid.toString();
+		String key = groupid;
 		if (readedTagMap.containsKey(key)) {
 			Byte tag = (Byte) readedTagMap.get(key);
 			if ((byte) 0 == tag) {
@@ -88,7 +88,7 @@ public class TopTenAdapter extends MyBaseAdapter {
 		
 		// 填充控件
 		holder.holderTopTenTitle.setText(title);
-		holder.holderTopTenNumber.setText(number.toString());
+		holder.holderTopTenNumber.setText(number);
 		holder.holderTopTenAuthor.setText(author);
 		holder.holderTopTenBoardName.setText(boardName);
 
@@ -100,7 +100,7 @@ public class TopTenAdapter extends MyBaseAdapter {
 				// 更新已读标记
 				HashMap<String, Byte> readedTagMap = MyApplication
 						.getInstance().getReadedTag();
-				String key = groupid.toString();
+				String key = groupid;
 				// 如果该条目未读，需要标记为已读
 				readedTagMap.put(key, (byte) 1);
 				MyApplication.getInstance().setReadedTag(readedTagMap);
@@ -112,7 +112,7 @@ public class TopTenAdapter extends MyBaseAdapter {
 				Intent mIntent = new Intent(context, BulletinActivity.class);
 				// 添加参数
 				mIntent.putExtra("board", board);
-				mIntent.putExtra("groupid", groupid.toString());
+				mIntent.putExtra("groupid", groupid);
 				context.startActivity(mIntent);
 			}
 		});

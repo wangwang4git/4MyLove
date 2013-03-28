@@ -18,11 +18,11 @@ public class TopTenBean {
 	// 版面中文名
 	private String boardname;
 	// 版面ID
-	private long groupid;
+	private String groupid;
 	// 最后更新时间
 	private String lasttime;
 	// 回帖数
-	private long number;
+	private String number;
 
 	public String getTitle() {
 		return title;
@@ -64,11 +64,11 @@ public class TopTenBean {
 		this.boardname = boardname;
 	}
 
-	public long getGroupid() {
+	public String getGroupid() {
 		return groupid;
 	}
 
-	public void setGroupid(long groupid) {
+	public void setGroupid(String groupid) {
 		this.groupid = groupid;
 	}
 
@@ -80,11 +80,11 @@ public class TopTenBean {
 		this.lasttime = lasttime;
 	}
 
-	public long getNumber() {
+	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(long number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 

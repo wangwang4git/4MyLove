@@ -1,4 +1,4 @@
-package com.bbs.whu.model.bulletin;
+package com.bbs.whu.model.attr;
 
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 
@@ -13,7 +13,7 @@ public class numConverter implements SingleValueConverter {
 		return new num(attributeValue);
 	}
 
-	public String toString(Object name) {
-		return ((num) name).getAttributeValue();
+	public String toString(Object obj) {
+		return ((num) obj).getAttributeValue();
 	}
 }

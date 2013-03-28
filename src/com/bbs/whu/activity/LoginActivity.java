@@ -360,6 +360,16 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// post请求
 		MyBBSRequest.mPost(MyConstants.LOGIN_URL, keys, values,
 				"LoginActivity", this);
+		// 采用登录URL 2.0接口登录
+		// keys.add("app");
+		// values.add("login");
+		// keys.add("id");
+		// values.add(userNameEditText.getText().toString());
+		// keys.add("passwd");
+		// values.add(passwordEditText.getText().toString());
+		// // post请求
+		// MyBBSRequest.mPost(MyConstants.LOGIN_URL_2, keys, values,
+		// "LoginActivity", this);
 	}
 
 	/**

@@ -32,8 +32,8 @@ public class MineActivity extends Activity implements View.OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mine);
-		MyFontManager.changeFontType(this);//设置当前Activity的字体
-		
+		MyFontManager.changeFontType(this);// 设置当前Activity的字体
+
 		// 初始化控件
 		initView();
 	}
@@ -78,6 +78,7 @@ public class MineActivity extends Activity implements View.OnClickListener {
 			break;
 		case 2:
 			// 跳转到站内信件页面
+			this.startActivity(new Intent(this, MailListActivity.class));
 			break;
 		case 3:
 			// 跳转到收藏版面页面

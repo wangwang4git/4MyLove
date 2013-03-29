@@ -1,19 +1,19 @@
-package com.bbs.whu.model.mail;
+package com.bbs.whu.model.friend;
 
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 
-public class isnewConverter implements SingleValueConverter {
+public class IDConverter implements SingleValueConverter {
 
 	@SuppressWarnings("rawtypes")
 	public boolean canConvert(Class type) {
-		return type.equals(isnew.class);
+		return type.equals(ID.class);
 	}
 
 	public Object fromString(String attributeValue) {
-		return new isnew(attributeValue);
+		return new ID(attributeValue);
 	}
 
 	public String toString(Object obj) {
-		return ((isnew) obj).getAttributeValue();
+		return ((ID) obj).getAttributeValue();
 	}
 }

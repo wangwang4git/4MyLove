@@ -6,14 +6,14 @@ public class sizeConverter implements SingleValueConverter {
 
 	@SuppressWarnings("rawtypes")
 	public boolean canConvert(Class type) {
-		return type.equals(isnew.class);
+		return type.equals(size.class);
 	}
 
 	public Object fromString(String attributeValue) {
-		return new isnew(attributeValue);
+		return new size(attributeValue);
 	}
 
 	public String toString(Object obj) {
-		return ((isnew) obj).getAttributeValue();
+		return ((size) obj).getAttributeValue();
 	}
 }

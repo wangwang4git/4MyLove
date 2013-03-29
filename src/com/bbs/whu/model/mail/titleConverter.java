@@ -2,18 +2,18 @@ package com.bbs.whu.model.mail;
 
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 
-public class isnewConverter implements SingleValueConverter {
+public class titleConverter implements SingleValueConverter {
 
 	@SuppressWarnings("rawtypes")
 	public boolean canConvert(Class type) {
-		return type.equals(isnew.class);
+		return type.equals(title.class);
 	}
 
 	public Object fromString(String attributeValue) {
-		return new isnew(attributeValue);
+		return new title(attributeValue);
 	}
 
 	public String toString(Object obj) {
-		return ((isnew) obj).getAttributeValue();
+		return ((title) obj).getAttributeValue();
 	}
 }

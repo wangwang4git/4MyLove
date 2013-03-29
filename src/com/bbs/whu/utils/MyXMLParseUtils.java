@@ -9,7 +9,10 @@ import org.apache.http.util.EncodingUtils;
 import android.content.Context;
 
 import com.bbs.whu.model.BoardBean;
+import com.bbs.whu.model.FriendsAllBean;
+import com.bbs.whu.model.FriendsOnlineBean;
 import com.bbs.whu.model.MailBean;
+import com.bbs.whu.model.MailContentBean;
 import com.bbs.whu.model.PlaybillBean;
 import com.bbs.whu.model.RecommendBean;
 import com.bbs.whu.model.TopTenBean;
@@ -21,6 +24,17 @@ import com.bbs.whu.model.board.idConverter;
 import com.bbs.whu.model.board.nameConverter;
 import com.bbs.whu.model.bulletin.Page;
 import com.bbs.whu.model.bulletin.totalConverter;
+import com.bbs.whu.model.friend.FriendsAll;
+import com.bbs.whu.model.friend.FriendsOnline;
+import com.bbs.whu.model.friend.IDConverter;
+import com.bbs.whu.model.friend.TypeConverter;
+import com.bbs.whu.model.friend.experienceConverter;
+import com.bbs.whu.model.friend.idleConverter;
+import com.bbs.whu.model.friend.modeConverter;
+import com.bbs.whu.model.friend.userfromConverter;
+import com.bbs.whu.model.friend.useridConverter;
+import com.bbs.whu.model.friend.usernameConverter;
+import com.bbs.whu.model.mail.MailContent;
 import com.bbs.whu.model.mail.Mails;
 import com.bbs.whu.model.mail.PageConverter;
 import com.bbs.whu.model.mail.TotalPageConverter;
@@ -28,6 +42,7 @@ import com.bbs.whu.model.mail.isnewConverter;
 import com.bbs.whu.model.mail.senderConverter;
 import com.bbs.whu.model.mail.sizeConverter;
 import com.bbs.whu.model.mail.timeConverter;
+import com.bbs.whu.model.mail.titleConverter;
 import com.bbs.whu.model.topic.Topics;
 import com.bbs.whu.model.topic.boardConverter;
 import com.bbs.whu.model.topic.pageConverter;
@@ -348,7 +363,6 @@ public class MyXMLParseUtils {
 		// 插入<title>...</title>标签
 		XMLStream = XMLStream.replaceAll("(time=\".*?\">)(.*?)(</Mail>)",
 				"$1<title>$2</title>$3");
-		System.out.println(XMLStream);
 		XStream xstream = new XStream();
 		xstream.alias("Mails", Mails.class);
 		xstream.alias("Mail", MailBean.class);
@@ -367,5 +381,100 @@ public class MyXMLParseUtils {
 		xstream.registerConverter(new sizeConverter());
 		xstream.registerConverter(new timeConverter());
 		return (Mails) xstream.fromXML(XMLStream);
+	}
+	
+	/**
+	 * 反序列化邮件内容
+	 * 
+	 * @param XMLStream
+	 * @return MailContentBean
+	 */
+	public static MailContentBean readXml2MailContentBean(String XMLStream) {
+		if (null == XMLStream) {
+			return null;
+		}
+		XMLStream = XMLStream.trim();
+		XMLStream = XMLStream.replaceAll("&", "&amp;");
+		// 插入<content>...</content>标签
+		XMLStream = XMLStream.replaceAll("(<Mail.*?>)(.*?)(</Mail>)",
+				"$1<content>$2</content>$3");
+		XStream xstream = new XStream();
+		xstream.alias("Mail", MailContent.class);
+		xstream.useAttributeFor(MailContent.class, "num");
+		xstream.useAttributeFor(MailContent.class, "sender");
+		xstream.useAttributeFor(MailContent.class, "isnew");
+		xstream.useAttributeFor(MailContent.class, "title");
+		xstream.useAttributeFor(MailContent.class, "size");
+		xstream.useAttributeFor(MailContent.class, "time");
+		xstream.registerConverter(new numConverter());
+		xstream.registerConverter(new senderConverter());
+		xstream.registerConverter(new isnewConverter());
+		xstream.registerConverter(new titleConverter());
+		xstream.registerConverter(new sizeConverter());
+		xstream.registerConverter(new timeConverter());
+		MailContent mailContent = (MailContent) xstream.fromXML(XMLStream);
+		
+		return new MailContentBean(mailContent.getNum().toString(), mailContent
+				.getSender().toString(), mailContent.getIsnew().toString(),
+				mailContent.getTitle().toString(), mailContent.getSize()
+						.toString(), mailContent.getTime().toString(),
+				MyRegexParseUtils.getMailText(mailContent.getContent()));
+	}
+	
+
+	/**
+	 * 反序列化全部好友列表
+	 * 
+	 * @param XMLStream
+	 * @return FriendsAll
+	 */
+	public static FriendsAll readXml2FriendsAll(String XMLStream) {
+		if (null == XMLStream) {
+			return null;
+		}
+		XMLStream = XMLStream.trim();
+		XMLStream = XMLStream.replaceAll("&", "&amp;");
+		XStream xstream = new XStream();
+		xstream.alias("Friends", FriendsAll.class);
+		xstream.alias("Friend", FriendsAllBean.class);
+		xstream.addImplicitCollection(FriendsAll.class, "friends");
+		xstream.useAttributeFor(FriendsAll.class, "Type");
+		xstream.registerConverter(new TypeConverter());
+		xstream.useAttributeFor(FriendsAllBean.class, "experience");
+		xstream.registerConverter(new experienceConverter());
+		xstream.useAttributeFor(FriendsAllBean.class, "ID");
+		xstream.registerConverter(new IDConverter());
+		return (FriendsAll) xstream.fromXML(XMLStream);
+	}
+
+	/**
+	 * 反序列化在线好友列表
+	 * 
+	 * @param XMLStream
+	 * @return FriendsOnline
+	 */
+	public static FriendsOnline readXml2FriendsOnline(String XMLStream) {
+		if (null == XMLStream) {
+			return null;
+		}
+		XMLStream = XMLStream.trim();
+		XMLStream = XMLStream.replaceAll("&", "&amp;");
+		XStream xstream = new XStream();
+		xstream.alias("Friends", FriendsOnline.class);
+		xstream.alias("Friend", FriendsOnlineBean.class);
+		xstream.addImplicitCollection(FriendsOnline.class, "friends");
+		xstream.useAttributeFor(FriendsOnline.class, "Type");
+		xstream.registerConverter(new TypeConverter());
+		xstream.useAttributeFor(FriendsOnlineBean.class, "userid");
+		xstream.registerConverter(new useridConverter());
+		xstream.useAttributeFor(FriendsOnlineBean.class, "username");
+		xstream.registerConverter(new usernameConverter());
+		xstream.useAttributeFor(FriendsOnlineBean.class, "userfrom");
+		xstream.registerConverter(new userfromConverter());
+		xstream.useAttributeFor(FriendsOnlineBean.class, "idle");
+		xstream.registerConverter(new idleConverter());
+		xstream.useAttributeFor(FriendsOnlineBean.class, "mode");
+		xstream.registerConverter(new modeConverter());
+		return (FriendsOnline) xstream.fromXML(XMLStream);
 	}
 }

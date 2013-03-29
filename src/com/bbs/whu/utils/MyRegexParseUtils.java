@@ -303,4 +303,17 @@ public class MyRegexParseUtils {
 		}
 		return "目前不在站上";
 	}
+	
+	// 获取邮件正文
+	final static private String MAIL_TEXT_REGEX_STRING = "(来  源: .*?\\\\n\\\\n)(.*)(?='\\);)";
+
+	static public String getMailText(String content) {
+		Pattern pattern = Pattern.compile(MAIL_TEXT_REGEX_STRING);
+		Matcher matcher = pattern.matcher(content);
+		// 输出第一个匹配项
+		while (matcher.find()) {
+			return matcher.group(2);
+		}
+		return "null";
+	}
 }

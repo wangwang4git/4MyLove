@@ -1,19 +1,19 @@
-package com.bbs.whu.model.mail;
+package com.bbs.whu.model.friend;
 
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 
-public class isnewConverter implements SingleValueConverter {
+public class experienceConverter implements SingleValueConverter {
 
 	@SuppressWarnings("rawtypes")
 	public boolean canConvert(Class type) {
-		return type.equals(isnew.class);
+		return type.equals(experience.class);
 	}
 
 	public Object fromString(String attributeValue) {
-		return new isnew(attributeValue);
+		return new experience(attributeValue);
 	}
 
 	public String toString(Object obj) {
-		return ((isnew) obj).getAttributeValue();
+		return ((experience) obj).getAttributeValue();
 	}
 }

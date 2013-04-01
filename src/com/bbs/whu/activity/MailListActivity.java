@@ -20,12 +20,14 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bbs.whu.R;
 import com.bbs.whu.adapter.MailAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.MailBean;
 import com.bbs.whu.model.mail.Mails;
+import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyFontManager;
@@ -71,9 +73,12 @@ public class MailListActivity extends Activity implements IXListViewListener,
 	// 邮箱类型
 	private int mailBoxType = MAIL_BOX_IN;
 
-	private static final int MAIL_BOX_IN = 1;
-	private static final int MAIL_BOX_SEND = 2;
-	private static final int MAIL_BOX_DELETE = 3;
+	public static final int MAIL_BOX_IN = 1;
+	public static final int MAIL_BOX_SEND = 2;
+	public static final int MAIL_BOX_DELETE = 3;
+
+	/*打开新activity的请求码*/
+	public static final int REQUEST_CODE_NEW_MAIL = 1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -98,7 +103,9 @@ public class MailListActivity extends Activity implements IXListViewListener,
 		switch (v.getId()) {
 		case R.id.mail_list_new_mail_button:
 			// 进入写信界面
-			startActivity(new Intent(this, MailSendActivity.class));
+			Intent mIntent = new Intent(this, MailSendActivity.class);
+			mIntent.putExtra("head", MyConstants.NEW_MAIL);
+			startActivityForResult(mIntent, REQUEST_CODE_NEW_MAIL);
 			break;
 		case R.id.mail_list_back_icon:
 			// 退出
@@ -157,6 +164,16 @@ public class MailListActivity extends Activity implements IXListViewListener,
 		return onTouchEvent(event);
 	}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_CODE_NEW_MAIL
+				&& resultCode == Activity.RESULT_OK) {
+			// 如果当前处于发件箱，需要刷新
+			if (mailBoxType == MAIL_BOX_SEND)
+				onRefresh();
+		}
+	}
+
 	/**
 	 * 初始化控件
 	 */
@@ -190,6 +207,7 @@ public class MailListActivity extends Activity implements IXListViewListener,
 	private void initAdapter() {
 		// 创建适配器
 		mAdapter = new MailAdapter(this, items, R.layout.mail_item);
+		mAdapter.setMailBoxType(mailBoxType);
 		mListView.setAdapter(mAdapter);
 	}
 
@@ -277,6 +295,23 @@ public class MailListActivity extends Activity implements IXListViewListener,
 	private void refreshMailList(String res) {
 		// XML反序列化
 		Mails mails = MyXMLParseUtils.readXml2Mails(res);
+
+		// 邮箱为空
+		if (mails == null) {
+			// 禁用“下拉刷新”
+			mListView.setPullRefreshEnable(false);
+			// 禁用“显示更多”
+			mListView.setPullLoadEnable(false);
+			// 删除指定Cache文件
+			MyBBSCache.delCacheFile(MyBBSCache.getCacheFileName(
+					MyConstants.GET_URL, keys, values));
+			// toast提醒
+			Toast.makeText(this, R.string.mail_box_empty_text,
+					Toast.LENGTH_SHORT).show();
+
+			return;
+		}
+
 		// 获取当前页号
 		currentList = Integer.parseInt(mails.getPage().toString());
 		// 获得总页数
@@ -288,6 +323,7 @@ public class MailListActivity extends Activity implements IXListViewListener,
 
 		// 获取邮件列表并添加
 		items.addAll(mails.getMails());
+		mAdapter.setMailBoxType(mailBoxType);
 		// 刷新ListView
 		mAdapter.notifyDataSetChanged();
 		// 当前页增加一页，便于下次申请
@@ -321,14 +357,19 @@ public class MailListActivity extends Activity implements IXListViewListener,
 		switch (which) {
 		case 0:
 			mailBoxType = MAIL_BOX_IN;
+			title.setText("收件箱");
 			break;
 		case 1:
 			mailBoxType = MAIL_BOX_SEND;
+			title.setText("发件箱");
 			break;
 		case 2:
 			mailBoxType = MAIL_BOX_DELETE;
+			title.setText("废件箱");
 			break;
 		}
+		// 启用“下拉刷新”
+		mListView.setPullRefreshEnable(true);
 		// 刷新
 		onRefresh();
 	}

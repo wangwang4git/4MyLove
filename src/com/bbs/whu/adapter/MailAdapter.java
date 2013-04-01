@@ -3,6 +3,7 @@ package com.bbs.whu.adapter;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,16 +12,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bbs.whu.R;
+import com.bbs.whu.activity.MailSendActivity;
 import com.bbs.whu.model.MailBean;
+import com.bbs.whu.utils.MyConstants;
 
 public class MailAdapter extends MyBaseAdapter {
+	// 邮箱类型
+	private int mailBoxType;
+
+	public void setMailBoxType(int mailBoxType) {
+		this.mailBoxType = mailBoxType;
+	}
+
 	public MailAdapter(Context context, ArrayList<MailBean> items,
 			int rLayoutList) {
 		super(context, items, rLayoutList);
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		final MailViewHolder holder;
 		if (convertView == null) {
 			holder = new MailViewHolder();
@@ -50,9 +60,6 @@ public class MailAdapter extends MyBaseAdapter {
 				.toString();
 		// 邮件属性
 		// String flag = ((TopicBean) mItems.get(position)).getFlag();
-		// 帖子ID
-		final String size = ((MailBean) mItems.get(position)).getSize()
-				.toString();
 
 		// 填充控件
 		holder.holderMailTitle.setText(title);
@@ -75,12 +82,13 @@ public class MailAdapter extends MyBaseAdapter {
 				// MyBBSCache.setReadedTagMap(MyApplication.getInstance()
 				// .getReadedTag(), MyFileUtils.READEDTAGNAME);
 				//
-				// // 跳转到帖子详情界面
-				// Intent mIntent = new Intent(context, BulletinActivity.class);
-				// // 添加参数
-				// mIntent.putExtra("board", board);
-				// mIntent.putExtra("groupid", groupid);
-				// context.startActivity(mIntent);
+				// // 跳转到新建内容界面
+				Intent mIntent = new Intent(context, MailSendActivity.class);
+				// 添加参数
+				mIntent.putExtra("head", MyConstants.READ_MAIL);
+				mIntent.putExtra("boxname", mailBoxType);
+				mIntent.putExtra("read", position);
+				context.startActivity(mIntent);
 			}
 		});
 		return convertView;

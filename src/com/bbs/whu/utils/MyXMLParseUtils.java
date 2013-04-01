@@ -112,8 +112,7 @@ public class MyXMLParseUtils {
 		// 类重命名
 		xstream.alias("hot", TopTenBean.class);
 		// 加入异常处理
-		try
-		{
+		try {
 			// 反序列化
 			@SuppressWarnings("unchecked")
 			List<TopTenBean> topTenList = (List<TopTenBean>) xstream
@@ -133,7 +132,7 @@ public class MyXMLParseUtils {
 	 * @param XMLStream
 	 * @return Page
 	 */
-	public static Page readXml2Page(String XMLStream) {		
+	public static Page readXml2Page(String XMLStream) {
 		if (null == XMLStream) {
 			return null;
 		}
@@ -160,7 +159,7 @@ public class MyXMLParseUtils {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 反序列化推荐文章列表
 	 * 
@@ -193,7 +192,7 @@ public class MyXMLParseUtils {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 反序列化校园海报列表
 	 * 
@@ -226,7 +225,7 @@ public class MyXMLParseUtils {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 反序列化个人信息
 	 * 
@@ -254,7 +253,7 @@ public class MyXMLParseUtils {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 反序列化版块列表
 	 * 
@@ -302,7 +301,7 @@ public class MyXMLParseUtils {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 反序列化版面帖子列表
 	 * 
@@ -341,7 +340,7 @@ public class MyXMLParseUtils {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 反序列化邮件列表
 	 * 
@@ -380,7 +379,16 @@ public class MyXMLParseUtils {
 		xstream.registerConverter(new isnewConverter());
 		xstream.registerConverter(new sizeConverter());
 		xstream.registerConverter(new timeConverter());
-		return (Mails) xstream.fromXML(XMLStream);
+
+		// 加入异常处理
+		try {
+			// 反序列化
+			return (Mails) xstream.fromXML(XMLStream);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(XMLStream);
+			return null;
+		}
 	}
 	
 	/**

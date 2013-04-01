@@ -57,5 +57,6 @@
     <string name="about_app_feedback">反馈及合作请联系：\n微博：@Wwang汪汪\n邮箱：double0291@126.com</string>
     <string name="about_app_copyright">Copyright © 2013 BBS 珞珈山水站.\n武汉大学.\nAll rights reserved.</string>
     <string name="new_mail">写信</string>
+    <string name="mail_box_empty_text">邮箱为空</string>
 
 </resources>

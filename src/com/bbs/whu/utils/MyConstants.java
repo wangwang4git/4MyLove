@@ -33,6 +33,8 @@ public class MyConstants {
 	public static final String GET_URL = "http://bbs.whu.edu.cn/mobile.php";
 	// post提交回复帖子的数据
 	public static final String POST_BULLETIN_REPLY_URL = "http://bbs.whu.edu.cn/wForum/dopostarticle.php";
+	// post提交发信
+	public static final String POST_NEW_MAIL_URL = "http://bbs.whu.edu.cn/wForum/dosendmail.php";
 	// 用户头像URL前缀
 	public static final String HEAD_URL = "http://bbs.whu.edu.cn/";
 	// 帖子内容中图片URL前缀
@@ -50,4 +52,9 @@ public class MyConstants {
 
 	// 客户端更新URL
 	public static final String UPDATE_CLIENT_URL = "http://192.168.1.118:8080/update/update.xml";
+
+	// 发信
+	public static final int NEW_MAIL = 1;
+	// 读信
+	public static final int READ_MAIL = 2;
 }

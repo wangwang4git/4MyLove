@@ -201,7 +201,8 @@ public class MyBBSRequest {
 						public void onSuccess(String response) {
 							// 发送成功内容
 							MessageHandlerManager.getInstance().sendMessage(
-									MyConstants.REQUEST_SUCCESS, activityName);
+									MyConstants.REQUEST_SUCCESS, response,
+									activityName);
 						}
 
 						@Override

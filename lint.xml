@@ -2,4 +2,7 @@
 <lint>
     <issue id="ContentDescription" severity="ignore" />
     <issue id="HandlerLeak" severity="ignore" />
+    <issue id="HardcodedText">
+        <ignore path="res\layout\activity_mail_send.xml" />
+    </issue>
 </lint>

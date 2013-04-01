@@ -73,9 +73,9 @@ public class MailListActivity extends Activity implements IXListViewListener,
 	// 邮箱类型
 	private int mailBoxType = MAIL_BOX_IN;
 
-	private static final int MAIL_BOX_IN = 1;
-	private static final int MAIL_BOX_SEND = 2;
-	private static final int MAIL_BOX_DELETE = 3;
+	public static final int MAIL_BOX_IN = 1;
+	public static final int MAIL_BOX_SEND = 2;
+	public static final int MAIL_BOX_DELETE = 3;
 
 	/*打开新activity的请求码*/
 	public static final int REQUEST_CODE_NEW_MAIL = 1;
@@ -103,8 +103,9 @@ public class MailListActivity extends Activity implements IXListViewListener,
 		switch (v.getId()) {
 		case R.id.mail_list_new_mail_button:
 			// 进入写信界面
-			startActivityForResult(new Intent(this, MailSendActivity.class),
-					REQUEST_CODE_NEW_MAIL);
+			Intent mIntent = new Intent(this, MailSendActivity.class);
+			mIntent.putExtra("head", MyConstants.NEW_MAIL);
+			startActivityForResult(mIntent, REQUEST_CODE_NEW_MAIL);
 			break;
 		case R.id.mail_list_back_icon:
 			// 退出
@@ -206,6 +207,7 @@ public class MailListActivity extends Activity implements IXListViewListener,
 	private void initAdapter() {
 		// 创建适配器
 		mAdapter = new MailAdapter(this, items, R.layout.mail_item);
+		mAdapter.setMailBoxType(mailBoxType);
 		mListView.setAdapter(mAdapter);
 	}
 
@@ -321,6 +323,7 @@ public class MailListActivity extends Activity implements IXListViewListener,
 
 		// 获取邮件列表并添加
 		items.addAll(mails.getMails());
+		mAdapter.setMailBoxType(mailBoxType);
 		// 刷新ListView
 		mAdapter.notifyDataSetChanged();
 		// 当前页增加一页，便于下次申请

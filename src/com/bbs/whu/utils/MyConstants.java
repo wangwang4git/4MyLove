@@ -52,4 +52,9 @@ public class MyConstants {
 
 	// 客户端更新URL
 	public static final String UPDATE_CLIENT_URL = "http://192.168.1.118:8080/update/update.xml";
+
+	// 发信
+	public static final int NEW_MAIL = 1;
+	// 读信
+	public static final int READ_MAIL = 2;
 }

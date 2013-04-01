@@ -38,9 +38,18 @@ import com.bbs.whu.utils.MyFontManager;
  * 
  */
 public class MailSendActivity extends Activity {
-	// 收件人
-	private EditText mAddress;
+	// 发信还是看信
+	private int head;
+	// 信箱
+	private int boxName;
+	// 信件编号
+	private int read;
+
 	// 标题
+	private TextView mActivityTitle;
+	// 邮件收件人
+	private EditText mAddress;
+	// 邮件标题
 	private EditText mTitle;
 	// 邮件正文
 	private EditText mContent;
@@ -73,10 +82,17 @@ public class MailSendActivity extends Activity {
 		setContentView(R.layout.activity_mail_send);
 		MyFontManager.changeFontType(this);// 设置当前Activity的字体
 
+		// 获取传入的参数
+		Intent mIntent = getIntent();
+		head = mIntent.getIntExtra("head", -1);
+
 		// 初始化控件
 		initView();
+
 		// 初始化适配器
-		initAdapter();
+		if (head == MyConstants.NEW_MAIL) {
+			initAdapter();
+		}
 		// 初始化handler
 		initHandler();
 	}
@@ -85,46 +101,58 @@ public class MailSendActivity extends Activity {
 	 * 初始化控件
 	 */
 	private void initView() {
-		mAddress = (EditText) findViewById(R.id.mail_send_address);
-		// 设置输入框焦点变更统一监听器
-		mAddress.setOnFocusChangeListener(mailSendEditFocusListener);
-
-		mTitle = (EditText) findViewById(R.id.mail_send_title);
-		// 设置输入框焦点变更统一监听器
-		mTitle.setOnFocusChangeListener(mailSendEditFocusListener);
-
-		mContent = (EditText) findViewById(R.id.mail_send_content);
-		// 设置输入框焦点变更统一监听器
-		mContent.setOnFocusChangeListener(mailSendEditFocusListener);
-
+		mActivityTitle = (TextView) findViewById(R.id.mail_send_activity_title);	// 界面标题
+		mAddress = (EditText) findViewById(R.id.mail_send_address);	// 收件人
+		mTitle = (EditText) findViewById(R.id.mail_send_title);				// 邮件标题
+		mContent = (EditText) findViewById(R.id.mail_send_content);	// 邮件内容
+		// 发送按钮
 		mSendSubmit = (TextView) findViewById(R.id.mail_send_submit);
 		// 设置按钮统一监听器
 		mSendSubmit.setOnClickListener(mailSendClickListener);
-
+		// 表情按钮
 		mBtnFace = (ImageButton) findViewById(R.id.mail_send_face);
-		// 设置按钮统一监听器
-		mBtnFace.setOnClickListener(mailSendClickListener);
-		mBtnFace.setEnabled(false);
-
+		// 键盘按钮
 		mBtnKeyboard = (ImageButton) findViewById(R.id.mail_send_keyboard);
-		// 设置按钮统一监听器
-		mBtnKeyboard.setOnClickListener(mailSendClickListener);
-		mBtnKeyboard.setEnabled(false);
-
-		mBBSFacesGridView = (GridView) findViewById(R.id.mail_send_grid_face);
-		// 设置监听器
-		mBBSFacesGridView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				// 插入表情名称
-				mContent.append(BBSFacesList.get(arg2).getName());
-			}
-		});
-
 		// 返回按钮
 		backButton = (ImageView) findViewById(R.id.mail_send_back_icon);
 		backButton.setOnClickListener(mailSendClickListener);
+
+		if (head == MyConstants.NEW_MAIL) {
+			mActivityTitle.setText("发送信件");
+			mSendSubmit.setText("发送");
+			// 设置输入框焦点变更统一监听器
+			mAddress.setOnFocusChangeListener(mailSendEditFocusListener);
+			// 设置输入框焦点变更统一监听器
+			mTitle.setOnFocusChangeListener(mailSendEditFocusListener);
+			// 设置输入框焦点变更统一监听器
+			mContent.setOnFocusChangeListener(mailSendEditFocusListener);
+			// 设置按钮统一监听器
+			mBtnFace.setOnClickListener(mailSendClickListener);
+			mBtnFace.setEnabled(false);
+			// 设置按钮统一监听器
+			mBtnKeyboard.setOnClickListener(mailSendClickListener);
+			mBtnKeyboard.setEnabled(false);
+
+			mBBSFacesGridView = (GridView) findViewById(R.id.mail_send_grid_face);
+			// 设置监听器
+			mBBSFacesGridView.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
+					// 插入表情名称
+					mContent.append(BBSFacesList.get(arg2).getName());
+				}
+			});
+		} else if (head == MyConstants.READ_MAIL) {
+			mActivityTitle.setText("信件");
+			mSendSubmit.setText("回复");
+			mAddress.setEnabled(false);
+			mTitle.setEnabled(false);
+			mContent.setEnabled(false);
+			mBtnFace.setVisibility(View.GONE);
+			mBtnKeyboard.setVisibility(View.GONE);
+		}
+
 	}
 
 	/**

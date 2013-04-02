@@ -12,9 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bbs.whu.R;
-import com.bbs.whu.activity.MailSendActivity;
+import com.bbs.whu.activity.MailContentActivity;
 import com.bbs.whu.model.MailBean;
-import com.bbs.whu.utils.MyConstants;
 
 public class MailAdapter extends MyBaseAdapter {
 	// 邮箱类型
@@ -83,9 +82,8 @@ public class MailAdapter extends MyBaseAdapter {
 				// .getReadedTag(), MyFileUtils.READEDTAGNAME);
 				//
 				// // 跳转到新建内容界面
-				Intent mIntent = new Intent(context, MailSendActivity.class);
+				Intent mIntent = new Intent(context, MailContentActivity.class);
 				// 添加参数
-				mIntent.putExtra("head", MyConstants.READ_MAIL);
 				mIntent.putExtra("boxname", mailBoxType);
 				mIntent.putExtra("read", position);
 				context.startActivity(mIntent);

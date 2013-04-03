@@ -2,6 +2,7 @@ package com.bbs.whu.model;
 
 import com.bbs.whu.model.friend.ID;
 import com.bbs.whu.model.friend.experience;
+import com.bbs.whu.model.friend.userface_img;
 
 
 /**
@@ -15,6 +16,8 @@ public class FriendsAllBean {
 	private experience experience;
 	// BBS用户ID，即用户名
 	private ID ID;
+	// 头像url
+	private userface_img userface_img;
 	
 	public FriendsAllBean() {
 		super();
@@ -22,10 +25,12 @@ public class FriendsAllBean {
 	}
 
 	public FriendsAllBean(com.bbs.whu.model.friend.experience experience,
-			com.bbs.whu.model.friend.ID iD) {
+			com.bbs.whu.model.friend.ID iD,
+			com.bbs.whu.model.friend.userface_img userface_img) {
 		super();
 		this.experience = experience;
 		ID = iD;
+		this.userface_img = userface_img;
 	}
 
 	public experience getExperience() {
@@ -44,8 +49,17 @@ public class FriendsAllBean {
 		ID = iD;
 	}
 
+	public userface_img getUserface_img() {
+		return userface_img;
+	}
+
+	public void setUserface_img(userface_img userface_img) {
+		this.userface_img = userface_img;
+	}
+
 	@Override
 	public String toString() {
-		return "FriendsAllBean [experience=" + experience + ", ID=" + ID + "]";
+		return "FriendsAllBean [experience=" + experience + ", ID=" + ID
+				+ ", userface_img=" + userface_img + "]";
 	}
 }

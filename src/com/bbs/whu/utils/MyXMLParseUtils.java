@@ -31,6 +31,7 @@ import com.bbs.whu.model.friend.TypeConverter;
 import com.bbs.whu.model.friend.experienceConverter;
 import com.bbs.whu.model.friend.idleConverter;
 import com.bbs.whu.model.friend.modeConverter;
+import com.bbs.whu.model.friend.userface_imgConverter;
 import com.bbs.whu.model.friend.userfromConverter;
 import com.bbs.whu.model.friend.useridConverter;
 import com.bbs.whu.model.friend.usernameConverter;
@@ -443,6 +444,8 @@ public class MyXMLParseUtils {
 		xstream.registerConverter(new experienceConverter());
 		xstream.useAttributeFor(FriendsAllBean.class, "ID");
 		xstream.registerConverter(new IDConverter());
+		xstream.useAttributeFor(FriendsAllBean.class, "userface_img");
+		xstream.registerConverter(new userface_imgConverter());
 		try {
 			return (FriendsAll) xstream.fromXML(XMLStream);
 		} catch (Exception e) {
@@ -479,6 +482,8 @@ public class MyXMLParseUtils {
 		xstream.registerConverter(new idleConverter());
 		xstream.useAttributeFor(FriendsOnlineBean.class, "mode");
 		xstream.registerConverter(new modeConverter());
+		xstream.useAttributeFor(FriendsOnlineBean.class, "userface_img");
+		xstream.registerConverter(new userface_imgConverter());
 		try {
 			return (FriendsOnline) xstream.fromXML(XMLStream);
 		} catch (Exception e) {

@@ -45,7 +45,10 @@
             android:name="com.bbs.whu.activity.BulletinReplyActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name="com.bbs.whu.activity.PersonActivity" />
-        <activity android:name="com.bbs.whu.activity.MailListActivity" />
+        <activity
+            android:name="com.bbs.whu.activity.MailListActivity"
+            android:launchMode="singleTask" />
+        <activity android:name="com.bbs.whu.activity.MailContentActivity" />
         <activity android:name="com.bbs.whu.activity.CollectBoardActivity" />
         <activity android:name="com.bbs.whu.activity.OnlineFriendActivity" />
         <activity android:name="com.bbs.whu.activity.RecommendActivity" />

@@ -121,7 +121,6 @@ public class MyXMLParseUtils {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			System.out.println(XMLStream);
 			return null;
 		}
 	}
@@ -155,7 +154,6 @@ public class MyXMLParseUtils {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			System.out.println(XMLStream);
 			return null;
 		}
 	}
@@ -188,7 +186,6 @@ public class MyXMLParseUtils {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			System.out.println(XMLStream);
 			return null;
 		}
 	}
@@ -221,7 +218,6 @@ public class MyXMLParseUtils {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			System.out.println(XMLStream);
 			return null;
 		}
 	}
@@ -249,7 +245,6 @@ public class MyXMLParseUtils {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			System.out.println(XMLStream);
 			return null;
 		}
 	}
@@ -297,7 +292,6 @@ public class MyXMLParseUtils {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			System.out.println(XMLStream);
 			return null;
 		}
 	}
@@ -336,7 +330,6 @@ public class MyXMLParseUtils {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			System.out.println(XMLStream);
 			return null;
 		}
 	}
@@ -386,11 +379,10 @@ public class MyXMLParseUtils {
 			return (Mails) xstream.fromXML(XMLStream);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println(XMLStream);
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 反序列化邮件内容
 	 * 
@@ -421,14 +413,13 @@ public class MyXMLParseUtils {
 		xstream.registerConverter(new sizeConverter());
 		xstream.registerConverter(new timeConverter());
 		MailContent mailContent = (MailContent) xstream.fromXML(XMLStream);
-		
+
 		return new MailContentBean(mailContent.getNum().toString(), mailContent
 				.getSender().toString(), mailContent.getIsnew().toString(),
 				mailContent.getTitle().toString(), mailContent.getSize()
 						.toString(), mailContent.getTime().toString(),
 				MyRegexParseUtils.getMailText(mailContent.getContent()));
 	}
-	
 
 	/**
 	 * 反序列化全部好友列表
@@ -452,7 +443,12 @@ public class MyXMLParseUtils {
 		xstream.registerConverter(new experienceConverter());
 		xstream.useAttributeFor(FriendsAllBean.class, "ID");
 		xstream.registerConverter(new IDConverter());
-		return (FriendsAll) xstream.fromXML(XMLStream);
+		try {
+			return (FriendsAll) xstream.fromXML(XMLStream);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
@@ -483,6 +479,11 @@ public class MyXMLParseUtils {
 		xstream.registerConverter(new idleConverter());
 		xstream.useAttributeFor(FriendsOnlineBean.class, "mode");
 		xstream.registerConverter(new modeConverter());
-		return (FriendsOnline) xstream.fromXML(XMLStream);
+		try {
+			return (FriendsOnline) xstream.fromXML(XMLStream);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

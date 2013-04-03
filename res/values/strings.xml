@@ -52,11 +52,13 @@
     <string name="recommend_time_text">时间：</string>
     <string name="mail_send_text">发送信件</string>
     <string name="mail_send_submit_text">发 送</string>
+    <string name="mail_content_text">信件内容</string>
+    <string name="new_mail">写 信</string>
+    <string name="mail_reply">回 信</string>
+    <string name="mail_box_empty_text">邮箱为空</string>
     <string name="bbs_exception_text">论坛错误:\t\t\t\t\t\n\t\t1.无登录权限\n\t\t2.原文不存在</string>
     <string name="about_app_description">本软件为珞珈山水BBS的Android手机客户端，集看帖，发帖，回帖，信件等基本功能于一身，为你打造完美的移动山水体验！</string>
     <string name="about_app_feedback">反馈及合作请联系：\n微博：@Wwang汪汪\n邮箱：double0291@126.com</string>
     <string name="about_app_copyright">Copyright © 2013 BBS 珞珈山水站.\n武汉大学.\nAll rights reserved.</string>
-    <string name="new_mail">写信</string>
-    <string name="mail_box_empty_text">邮箱为空</string>
 
 </resources>

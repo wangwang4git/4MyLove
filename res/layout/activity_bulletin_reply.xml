@@ -129,7 +129,6 @@
 			android:columnWidth="35dip"
 			android:stretchMode="columnWidth"
 			android:layout_weight="1"
-			android:layout_alignParentBottom="true"
 			android:visibility="gone" />
 			
 	</LinearLayout>

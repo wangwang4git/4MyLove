@@ -10,10 +10,10 @@ import android.widget.TextView;
  * 
  */
 public class OnlineFriendViewHolder {
-	// 好友编号
-	public TextView holderOnlineFriendNumber;
 	// 好友头像
 	public ImageView holderOnlineFriendHeadPortrait;
 	// 好友名称
 	public TextView holderOnlineFriendName;
+	// 发件按钮
+	public ImageView holderOnlineFriendMail;
 }

@@ -37,16 +37,13 @@ import com.bbs.whu.utils.MyFontManager;
  * @author WWang
  * 
  */
-public class MailSendActivity extends Activity {
-	// 发信还是看信
-	private int head;
-	// 信箱
-	private int boxName;
-	// 信件编号
-	private int read;
+public class MailSendActivity extends Activity implements OnClickListener,
+		OnFocusChangeListener {
+	// 发件人
+	private String sender;
+	// 邮件标题
+	private String title;
 
-	// 标题
-	private TextView mActivityTitle;
 	// 邮件收件人
 	private EditText mAddress;
 	// 邮件标题
@@ -84,74 +81,110 @@ public class MailSendActivity extends Activity {
 
 		// 获取传入的参数
 		Intent mIntent = getIntent();
-		head = mIntent.getIntExtra("head", -1);
+		sender = mIntent.getStringExtra("sender");
+		title = mIntent.getStringExtra("title");
 
 		// 初始化控件
 		initView();
 
-		// 初始化适配器
-		if (head == MyConstants.NEW_MAIL) {
-			initAdapter();
-		}
 		// 初始化handler
 		initHandler();
+
+		// 初始化适配器
+		initAdapter();
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.mail_send_submit:
+			// 发信
+			sendNewMail();
+			break;
+		case R.id.mail_send_face:
+			// 表情选择器显示
+			facesGridViewShow(true);
+			break;
+		case R.id.mail_send_keyboard:
+			// 表情选择器隐藏
+			facesGridViewShow(false);
+			break;
+		case R.id.mail_send_back_icon:
+			onBackPressed();
+			break;
+		}
+	}
+
+	@Override
+	public void onFocusChange(View v, boolean hasFocus) {
+		switch (v.getId()) {
+		case R.id.mail_send_address:
+			// 焦点切入切出收件人EditText，都置表情切换按钮、键盘切换按钮处于不能点击状态
+			mBtnFace.setEnabled(false);
+			mBtnKeyboard.setEnabled(false);
+			break;
+		case R.id.mail_send_title:
+			// 焦点切入切出标题EditText，都置表情切换按钮、键盘切换按钮处于不能点击状态
+			mBtnFace.setEnabled(false);
+			mBtnKeyboard.setEnabled(false);
+			break;
+		case R.id.mail_send_content:
+			if (hasFocus) {
+				// 焦点切入正文EditText，置表情切换按钮、键盘切换按钮处于可以点击状态
+				mBtnFace.setEnabled(true);
+				mBtnKeyboard.setEnabled(true);
+			} else {
+				// 取消表情选择器显示
+				facesGridViewShow(false);
+				// 焦点切出正文EditText，置表情切换按钮、键盘切换按钮处于不能点击状态
+				mBtnFace.setEnabled(false);
+				mBtnKeyboard.setEnabled(false);
+			}
+			break;
+		}
 	}
 
 	/**
 	 * 初始化控件
 	 */
 	private void initView() {
-		mActivityTitle = (TextView) findViewById(R.id.mail_send_activity_title);	// 界面标题
-		mAddress = (EditText) findViewById(R.id.mail_send_address);	// 收件人
-		mTitle = (EditText) findViewById(R.id.mail_send_title);				// 邮件标题
-		mContent = (EditText) findViewById(R.id.mail_send_content);	// 邮件内容
+		// 邮件收件人
+		mAddress = (EditText) findViewById(R.id.mail_send_address);
+		mAddress.setText(sender);
+		mAddress.setOnFocusChangeListener(this);
+		// 邮件标题
+		mTitle = (EditText) findViewById(R.id.mail_send_title);
+		if (title != null)
+			mTitle.setText("Re：" + title);
+		mTitle.setOnFocusChangeListener(this);
+		// 邮件内容
+		mContent = (EditText) findViewById(R.id.mail_send_content);
+		mContent.setOnFocusChangeListener(this);
 		// 发送按钮
 		mSendSubmit = (TextView) findViewById(R.id.mail_send_submit);
-		// 设置按钮统一监听器
-		mSendSubmit.setOnClickListener(mailSendClickListener);
+		mSendSubmit.setOnClickListener(this);
 		// 表情按钮
 		mBtnFace = (ImageButton) findViewById(R.id.mail_send_face);
+		mBtnFace.setOnClickListener(this);
+		mBtnFace.setEnabled(false);
 		// 键盘按钮
 		mBtnKeyboard = (ImageButton) findViewById(R.id.mail_send_keyboard);
+		mBtnKeyboard.setOnClickListener(this);
+		mBtnKeyboard.setEnabled(false);
 		// 返回按钮
 		backButton = (ImageView) findViewById(R.id.mail_send_back_icon);
-		backButton.setOnClickListener(mailSendClickListener);
+		backButton.setOnClickListener(this);
 
-		if (head == MyConstants.NEW_MAIL) {
-			mActivityTitle.setText("发送信件");
-			mSendSubmit.setText("发送");
-			// 设置输入框焦点变更统一监听器
-			mAddress.setOnFocusChangeListener(mailSendEditFocusListener);
-			// 设置输入框焦点变更统一监听器
-			mTitle.setOnFocusChangeListener(mailSendEditFocusListener);
-			// 设置输入框焦点变更统一监听器
-			mContent.setOnFocusChangeListener(mailSendEditFocusListener);
-			// 设置按钮统一监听器
-			mBtnFace.setOnClickListener(mailSendClickListener);
-			mBtnFace.setEnabled(false);
-			// 设置按钮统一监听器
-			mBtnKeyboard.setOnClickListener(mailSendClickListener);
-			mBtnKeyboard.setEnabled(false);
-
-			mBBSFacesGridView = (GridView) findViewById(R.id.mail_send_grid_face);
-			// 设置监听器
-			mBBSFacesGridView.setOnItemClickListener(new OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1,
-						int arg2, long arg3) {
-					// 插入表情名称
-					mContent.append(BBSFacesList.get(arg2).getName());
-				}
-			});
-		} else if (head == MyConstants.READ_MAIL) {
-			mActivityTitle.setText("信件");
-			mSendSubmit.setText("回复");
-			mAddress.setEnabled(false);
-			mTitle.setEnabled(false);
-			mContent.setEnabled(false);
-			mBtnFace.setVisibility(View.GONE);
-			mBtnKeyboard.setVisibility(View.GONE);
-		}
+		mBBSFacesGridView = (GridView) findViewById(R.id.mail_send_grid_face);
+		// 设置监听器
+		mBBSFacesGridView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				// 插入表情名称
+				mContent.append(BBSFacesList.get(arg2).getName());
+			}
+		});
 
 	}
 
@@ -166,71 +199,6 @@ public class MailSendActivity extends Activity {
 		// 设置适配器
 		mBBSFacesGridView.setAdapter(mAdapter);
 	}
-
-	/**
-	 * 按钮单击统一监听器
-	 */
-	private OnClickListener mailSendClickListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			switch (v.getId()) {
-			case R.id.mail_send_submit:
-				// 发信
-				sendNewMail();
-				break;
-			case R.id.mail_send_face:
-				// 表情选择器显示
-				facesGridViewShow(true);
-				break;
-			case R.id.mail_send_keyboard:
-				// 表情选择器隐藏
-				facesGridViewShow(false);
-				break;
-			case R.id.mail_send_back_icon:
-				onBackPressed();
-				break;
-			default:
-				break;
-			}
-		}
-	};
-
-	/**
-	 * 输入框焦点变更统一监听器
-	 */
-	private OnFocusChangeListener mailSendEditFocusListener = new OnFocusChangeListener() {
-		@Override
-		public void onFocusChange(View v, boolean hasFocus) {
-			// TODO Auto-generated method stub
-			switch (v.getId()) {
-			case R.id.mail_send_address:
-				// 焦点切入切出收件人EditText，都置表情切换按钮、键盘切换按钮处于不能点击状态
-				mBtnFace.setEnabled(false);
-				mBtnKeyboard.setEnabled(false);
-				break;
-			case R.id.mail_send_title:
-				// 焦点切入切出标题EditText，都置表情切换按钮、键盘切换按钮处于不能点击状态
-				mBtnFace.setEnabled(false);
-				mBtnKeyboard.setEnabled(false);
-				break;
-			case R.id.mail_send_content:
-				if (hasFocus) {
-					// 焦点切入正文EditText，置表情切换按钮、键盘切换按钮处于可以点击状态
-					mBtnFace.setEnabled(true);
-					mBtnKeyboard.setEnabled(true);
-				} else {
-					// 取消表情选择器显示
-					facesGridViewShow(false);
-					// 焦点切出正文EditText，置表情切换按钮、键盘切换按钮处于不能点击状态
-					mBtnFace.setEnabled(false);
-					mBtnKeyboard.setEnabled(false);
-				}
-				break;
-			default:
-				break;
-			}
-		}
-	};
 
 	/**
 	 * 表情选择器显示与隐藏切换
@@ -271,11 +239,7 @@ public class MailSendActivity extends Activity {
 					mProgress.dismiss();
 					mProgress = null;
 				}
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+
 				switch (msg.what) {
 				case MyConstants.REQUEST_SUCCESS:
 					// 返回结果
@@ -338,4 +302,5 @@ public class MailSendActivity extends Activity {
 			mProgress.execute();
 		}
 	}
+
 }

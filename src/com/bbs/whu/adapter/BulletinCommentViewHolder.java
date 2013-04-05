@@ -1,5 +1,6 @@
 package com.bbs.whu.adapter;
 
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -12,6 +13,8 @@ import android.widget.TextView;
 public class BulletinCommentViewHolder {
 	// 评论作者
 	TextView holderBulletinCommentAuthor;
+	// 评论作者头像
+	ImageView holderBulletinCommentAuthorIcon;
 	// 评论内容
 	TextView holderBulletinCommentContent;
 	// 评论的“评论自”部分的框架

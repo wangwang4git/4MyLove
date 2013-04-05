@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -303,4 +304,15 @@ public class MailSendActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (mBBSFacesGridView.isShown()) {
+			// ²¶»ñ·µ»Ø¼ü
+			if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+				mBBSFacesGridView.setVisibility(View.GONE);
+			}
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 }

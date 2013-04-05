@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,6 +26,8 @@ import com.bbs.whu.model.BulletinBean;
 import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyRegexParseUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
  * 帖子详情列表数据适配器，
@@ -36,13 +39,21 @@ import com.bbs.whu.utils.MyRegexParseUtils;
 
 public class BulletinAdapter extends MyBaseAdapter {
 
+	// 图片异步下载下载器
+	private ImageLoader imageLoader;
+	// 图片异步下载缓存设置变量
+	private DisplayImageOptions options;
+	
 	// 定义不同Item视图的标志
 	public static final int AUTHOR_ITEM = 0;
 	public static final int COMMENT_ITEM = 1;
 
 	public BulletinAdapter(Context context, ArrayList<BulletinBean> items,
-			int rLayoutList) {
+			int rLayoutList, ImageLoader imageLoader,
+			DisplayImageOptions options) {
 		super(context, items, rLayoutList);
+		this.imageLoader = imageLoader;
+		this.options = options;
 	}
 
 	@Override
@@ -70,6 +81,8 @@ public class BulletinAdapter extends MyBaseAdapter {
 		String title = ((BulletinBean) mItems.get(position)).getTitle();
 		// 作者
 		String author = ((BulletinBean) mItems.get(position)).getAuthor();
+		// 作者头像
+		String userfaceImg = ((BulletinBean) mItems.get(position)).getUserfaceImg();
 		// 时间
 		String datetime = ((BulletinBean) mItems.get(position)).getTime();
 
@@ -140,6 +153,8 @@ public class BulletinAdapter extends MyBaseAdapter {
 						.findViewById(R.id.bulletin_author_title);
 				holder.holderBulletinAuthorAuthor = (TextView) convertView
 						.findViewById(R.id.bulletin_author_author);
+				holder.holderBulletinAuthorIcon = (ImageView) convertView
+						.findViewById(R.id.bulletin_author_icon);
 				holder.holderBulletinAuthorDateTime = (TextView) convertView
 						.findViewById(R.id.bulletin_author_datetime);
 				holder.holderBulletinAuthorText = (TextView) convertView
@@ -156,6 +171,8 @@ public class BulletinAdapter extends MyBaseAdapter {
 			// 填充控件
 			holder.holderBulletinAuthorTitle.setText(title);
 			holder.holderBulletinAuthorAuthor.setText(author);
+			imageLoader.displayImage(MyConstants.HEAD_URL + userfaceImg,
+					holder.holderBulletinAuthorIcon, options);
 			holder.holderBulletinAuthorDateTime.setText(datetime);
 
 			// holder.holderBulletinAuthorText.setText(text);
@@ -174,6 +191,8 @@ public class BulletinAdapter extends MyBaseAdapter {
 						R.layout.bulletin_comment_item, null);
 				holder.holderBulletinCommentAuthor = (TextView) convertView
 						.findViewById(R.id.bulletin_comment_author);
+				holder.holderBulletinCommentAuthorIcon = (ImageView) convertView
+						.findViewById(R.id.bulletin_comment_author_icon);
 				holder.holderBulletinCommentContent = (TextView) convertView
 						.findViewById(R.id.bulletin_comment_content);
 				holder.holderBulletinCommentContent
@@ -191,6 +210,8 @@ public class BulletinAdapter extends MyBaseAdapter {
 			}
 			// 填充控件
 			holder.holderBulletinCommentAuthor.setText(author);
+			imageLoader.displayImage(MyConstants.HEAD_URL + userfaceImg,
+					holder.holderBulletinCommentAuthorIcon, options);
 			// if (reply.equals("null"))
 			// holder.holderCommentReplyLinearLayout.setVisibility(View.GONE);
 			// else

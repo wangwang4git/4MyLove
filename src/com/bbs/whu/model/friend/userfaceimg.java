@@ -1,14 +1,14 @@
 package com.bbs.whu.model.friend;
 
-public class userface_img {
+public class userfaceimg {
 	private String attributeValue;
 
-	public userface_img() {
+	public userfaceimg() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public userface_img(String attributeValue) {
+	public userfaceimg(String attributeValue) {
 		super();
 		this.attributeValue = attributeValue;
 	}

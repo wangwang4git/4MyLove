@@ -26,6 +26,9 @@ import com.bbs.whu.utils.MyFontManager;
 import com.bbs.whu.utils.MyXMLParseUtils;
 import com.bbs.whu.xlistview.XListView;
 import com.bbs.whu.xlistview.XListView.IXListViewListener;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 /**
  * 我的好友界面， 列表形式显示用户的好友， 点击列表项无操作， 长按列表项弹出菜单，选择向该好友发送即时消息或者邮件。
@@ -60,6 +63,15 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 	// get参数
 	ArrayList<String> keys = new ArrayList<String>();
 	ArrayList<String> values = new ArrayList<String>();
+	
+	// 图片异步下载下载器
+	private ImageLoader imageLoader = ImageLoader.getInstance();
+	// 清空内存缓存调用方法
+	// imageLoader.clearMemoryCache();
+	// 清空文件缓存调用方法
+	// imageLoader.clearDiscCache();
+	// 图片异步下载缓存设置变量
+	private DisplayImageOptions options;
 
 	// 进行手势动作时候的坐标
 	float x_temp1 = 0, y_temp1 = 0, x_temp2, y_temp2;
@@ -73,6 +85,12 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 		setContentView(R.layout.activity_online_friend);
 		MyFontManager.changeFontType(this);// 设置当前Activity的字体
 
+		options = new DisplayImageOptions.Builder()
+				.showStubImage(R.drawable.person_head_portrait)
+				.showImageForEmptyUri(R.drawable.person_head_portrait)
+				.cacheInMemory().cacheOnDisc()
+				.displayer(new RoundedBitmapDisplayer(5)).build();
+		
 		// 初始化控件
 		initView();
 		// 初始化适配器
@@ -159,7 +177,7 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 	private void initAdapter() {
 		// 创建适配器
 		mAdapter = new OnlineFriendAdapter(this, items,
-				R.layout.online_friend_item);
+				R.layout.online_friend_item, imageLoader, options);
 		mListView.setAdapter(mAdapter);
 	}
 
@@ -241,7 +259,7 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 		// 添加在线好友
 		for (FriendsOnlineBean onlineFriend : onlineFriends) {
 			items.add(new FriendBean(onlineFriend.getUserid().toString(),
-					onlineFriend.getUserface_img().toString(), true));
+					onlineFriend.getUserfaceimg().toString(), true));
 		}
 
 		// 添加不在线好友
@@ -255,9 +273,10 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 					break;
 				}
 			}
-			if (!isOnline)
+			if (!isOnline) {
 				items.add(new FriendBean(allFriend.getID().toString(),
-						allFriend.getUserface_img().toString(), false));
+						allFriend.getUserfaceimg().toString(), false));
+			}
 		}
 		// 刷新ListView
 		mAdapter.notifyDataSetChanged();

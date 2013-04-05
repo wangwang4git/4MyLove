@@ -203,6 +203,7 @@ public class MyRegexParseUtils {
 			content.setContent(temp);
 			content.setId(articles.get(i).getId());
 			content.setAuthor(getAuthor(temp));
+			content.setUserfaceImg(articles.get(i).getUserface_img());
 			content.setBoard(getBoard(temp));
 			content.setTitle(getTitle(temp));
 			content.setSite(getSite(temp));
@@ -312,7 +313,8 @@ public class MyRegexParseUtils {
 		Matcher matcher = pattern.matcher(content);
 		// 输出第一个匹配项
 		while (matcher.find()) {
-			return matcher.group(2);
+			return matcher.group(2).replaceAll("\\\\n", "\n")
+					.replaceAll("\\\\/", "/");
 		}
 		return "null";
 	}

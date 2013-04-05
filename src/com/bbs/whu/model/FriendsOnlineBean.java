@@ -2,7 +2,7 @@ package com.bbs.whu.model;
 
 import com.bbs.whu.model.friend.idle;
 import com.bbs.whu.model.friend.mode;
-import com.bbs.whu.model.friend.userface_img;
+import com.bbs.whu.model.friend.userfaceimg;
 import com.bbs.whu.model.friend.userfrom;
 import com.bbs.whu.model.friend.userid;
 import com.bbs.whu.model.friend.username;
@@ -26,7 +26,7 @@ public class FriendsOnlineBean {
 	// BBS在线用户当前浏览状态
 	private mode mode;
 	// 头像url
-	private userface_img userface_img;
+	private userfaceimg userfaceimg;
 	
 	public FriendsOnlineBean() {
 		super();
@@ -38,14 +38,14 @@ public class FriendsOnlineBean {
 			com.bbs.whu.model.friend.userfrom userfrom,
 			com.bbs.whu.model.friend.idle idle,
 			com.bbs.whu.model.friend.mode mode,
-			com.bbs.whu.model.friend.userface_img userface_img) {
+			com.bbs.whu.model.friend.userfaceimg userfaceimg) {
 		super();
 		this.userid = userid;
 		this.username = username;
 		this.userfrom = userfrom;
 		this.idle = idle;
 		this.mode = mode;
-		this.userface_img = userface_img;
+		this.userfaceimg = userfaceimg;
 	}
 
 	public userid getUserid() {
@@ -88,18 +88,18 @@ public class FriendsOnlineBean {
 		this.mode = mode;
 	}
 
-	public userface_img getUserface_img() {
-		return userface_img;
+	public userfaceimg getUserfaceimg() {
+		return userfaceimg;
 	}
 
-	public void setUserface_img(userface_img userface_img) {
-		this.userface_img = userface_img;
+	public void setUserfaceimg(userfaceimg userfaceimg) {
+		this.userfaceimg = userfaceimg;
 	}
 
 	@Override
 	public String toString() {
 		return "FriendsOnlineBean [userid=" + userid + ", username=" + username
 				+ ", userfrom=" + userfrom + ", idle=" + idle + ", mode="
-				+ mode + ", userface_img=" + userface_img + "]";
+				+ mode + ", userfaceimg=" + userfaceimg + "]";
 	}
 }

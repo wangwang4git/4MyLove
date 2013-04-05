@@ -2,7 +2,7 @@ package com.bbs.whu.model;
 
 import com.bbs.whu.model.friend.ID;
 import com.bbs.whu.model.friend.experience;
-import com.bbs.whu.model.friend.userface_img;
+import com.bbs.whu.model.friend.userfaceimg;
 
 
 /**
@@ -17,7 +17,7 @@ public class FriendsAllBean {
 	// BBS用户ID，即用户名
 	private ID ID;
 	// 头像url
-	private userface_img userface_img;
+	private userfaceimg userfaceimg;
 	
 	public FriendsAllBean() {
 		super();
@@ -26,11 +26,11 @@ public class FriendsAllBean {
 
 	public FriendsAllBean(com.bbs.whu.model.friend.experience experience,
 			com.bbs.whu.model.friend.ID iD,
-			com.bbs.whu.model.friend.userface_img userface_img) {
+			com.bbs.whu.model.friend.userfaceimg userfaceimg) {
 		super();
 		this.experience = experience;
 		ID = iD;
-		this.userface_img = userface_img;
+		this.userfaceimg = userfaceimg;
 	}
 
 	public experience getExperience() {
@@ -49,17 +49,17 @@ public class FriendsAllBean {
 		ID = iD;
 	}
 
-	public userface_img getUserface_img() {
-		return userface_img;
+	public userfaceimg getUserfaceimg() {
+		return userfaceimg;
 	}
 
-	public void setUserface_img(userface_img userface_img) {
-		this.userface_img = userface_img;
+	public void setUserfaceimg(userfaceimg userfaceimg) {
+		this.userfaceimg = userfaceimg;
 	}
 
 	@Override
 	public String toString() {
 		return "FriendsAllBean [experience=" + experience + ", ID=" + ID
-				+ ", userface_img=" + userface_img + "]";
+				+ ", userfaceimg=" + userfaceimg + "]";
 	}
 }

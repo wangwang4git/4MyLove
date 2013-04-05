@@ -11,6 +11,7 @@ import android.os.Message;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import android.widget.Toast;
@@ -52,6 +54,8 @@ public class BulletinReplyActivity extends Activity {
 	EditText replyContent;
 	// 发表按钮
 	Button publishButton;
+	// 返回按钮
+	private ImageView backButton;
 	// 接收请求数据的handler
 	Handler mHandler;
 
@@ -129,6 +133,10 @@ public class BulletinReplyActivity extends Activity {
 		publishButton = (Button) findViewById(R.id.bulletin_reply_publish_button);
 		// 设置按钮统一监听器
 		publishButton.setOnClickListener(bulletinReplyClickListener);
+		// 返回按钮
+		backButton = (ImageView) findViewById(R.id.bulletin_reply_back_icon);
+		backButton.setOnClickListener(bulletinReplyClickListener);
+		
 
 		mBtnFace = (ImageButton) findViewById(R.id.bulletin_reply_bottom_face);
 		// 设置按钮统一监听器
@@ -315,6 +323,9 @@ public class BulletinReplyActivity extends Activity {
 					mBtnKeyboard.setVisibility(View.GONE);
 				}
 				break;
+			case R.id.bulletin_reply_back_icon:
+				onBackPressed();
+				break;
 			default:
 				break;
 			}
@@ -391,5 +402,17 @@ public class BulletinReplyActivity extends Activity {
 	 */
 	private void insertText(EditText mEditText, String mText) {
 		mEditText.getText().insert(getEditTextCursorIndex(mEditText), mText);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (mBBSFacesGridView.isShown()) {
+			// 捕获返回键
+			if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+				mBBSFacesGridView.setVisibility(View.GONE);
+			}
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

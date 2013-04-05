@@ -34,6 +34,9 @@ import com.bbs.whu.utils.MyRegexParseUtils;
 import com.bbs.whu.utils.MyXMLParseUtils;
 import com.bbs.whu.xlistview.XListView;
 import com.bbs.whu.xlistview.XListView.IXListViewListener;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 /**
  * 帖子详情界面， 可通过点击“刷新”，刷新帖子， 可通过点击“显示更多”加载更多，按页加载
@@ -83,6 +86,15 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 
 	// 请求响应一一对应布尔变量
 	private boolean mRequestResponse = false;
+	
+	// 图片异步下载下载器
+	private ImageLoader imageLoader = ImageLoader.getInstance();
+	// 清空内存缓存调用方法
+	// imageLoader.clearMemoryCache();
+	// 清空文件缓存调用方法
+	// imageLoader.clearDiscCache();
+	// 图片异步下载缓存设置变量
+	private DisplayImageOptions options;
 
 	// 进行手势动作时候的坐标
 	float x_temp1 = 0, y_temp1 = 0, x_temp2, y_temp2;
@@ -97,6 +109,13 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		// 获取传入的参数
 		board = getIntent().getStringExtra("board");
 		groupid = getIntent().getStringExtra("groupid");
+		
+		options = new DisplayImageOptions.Builder()
+				.showStubImage(R.drawable.person_head_portrait)
+				.showImageForEmptyUri(R.drawable.person_head_portrait)
+				.cacheInMemory().cacheOnDisc()
+				.displayer(new RoundedBitmapDisplayer(5)).build();
+		
 		// 初始化控件
 		initView();
 		// 初始化适配器
@@ -217,7 +236,7 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 	private void initAdapter() {
 		// 创建适配器
 		mAdapter = new BulletinAdapter(this, items,
-				R.layout.bulletin_comment_item);
+				R.layout.bulletin_comment_item, imageLoader, options);
 		mListView.setAdapter(mAdapter);
 	}
 

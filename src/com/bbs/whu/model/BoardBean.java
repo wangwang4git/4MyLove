@@ -2,8 +2,9 @@ package com.bbs.whu.model;
 
 import java.util.ArrayList;
 import java.util.List;
- 
-import com.bbs.whu.model.board.*;
+
+import com.bbs.whu.model.attr.name;
+import com.bbs.whu.model.board.Board;
 
 /**
  * 一级版块元素结构定义

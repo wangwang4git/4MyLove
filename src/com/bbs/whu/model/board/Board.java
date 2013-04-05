@@ -1,5 +1,6 @@
 package com.bbs.whu.model.board;
 
+import com.bbs.whu.model.attr.name;
 import com.bbs.whu.model.attr.num;
 
 /**

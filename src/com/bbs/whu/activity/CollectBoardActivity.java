@@ -26,8 +26,9 @@ public class CollectBoardActivity extends Activity {
 	private XListView mListView;
 	// 收藏版块列表适配器
 	private CollectBoardAdapter mAdapter;
+	
 	// 收藏版块列表数据源
-	final private ArrayList<String> items = new ArrayList<String>();
+	private ArrayList<String> items = new ArrayList<String>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

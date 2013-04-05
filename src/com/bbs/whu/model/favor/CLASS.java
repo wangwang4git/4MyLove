@@ -1,14 +1,14 @@
-package com.bbs.whu.model.board;
+package com.bbs.whu.model.favor;
 
-public class name {
+public class CLASS {
 	private String attributeValue;
 
-	public name() {
+	public CLASS() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public name(String attributeValue) {
+	public CLASS(String attributeValue) {
 		super();
 		this.attributeValue = attributeValue;
 	}

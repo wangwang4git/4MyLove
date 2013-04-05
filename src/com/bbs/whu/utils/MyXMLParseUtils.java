@@ -9,6 +9,7 @@ import org.apache.http.util.EncodingUtils;
 import android.content.Context;
 
 import com.bbs.whu.model.BoardBean;
+import com.bbs.whu.model.FavBrdBean;
 import com.bbs.whu.model.FriendsAllBean;
 import com.bbs.whu.model.FriendsOnlineBean;
 import com.bbs.whu.model.MailBean;
@@ -18,12 +19,20 @@ import com.bbs.whu.model.RecommendBean;
 import com.bbs.whu.model.TopTenBean;
 import com.bbs.whu.model.TopicBean;
 import com.bbs.whu.model.UserInfoBean;
+import com.bbs.whu.model.attr.nameConverter;
 import com.bbs.whu.model.attr.numConverter;
 import com.bbs.whu.model.board.Board;
 import com.bbs.whu.model.board.idConverter;
-import com.bbs.whu.model.board.nameConverter;
 import com.bbs.whu.model.bulletin.Page;
 import com.bbs.whu.model.bulletin.totalConverter;
+import com.bbs.whu.model.favor.CLASSConverter;
+import com.bbs.whu.model.favor.articlesConverter;
+import com.bbs.whu.model.favor.bidConverter;
+import com.bbs.whu.model.favor.bmConverter;
+import com.bbs.whu.model.favor.descConverter;
+import com.bbs.whu.model.favor.flagConverter;
+import com.bbs.whu.model.favor.selectConverter;
+import com.bbs.whu.model.favor.usersConverter;
 import com.bbs.whu.model.friend.FriendsAll;
 import com.bbs.whu.model.friend.FriendsOnline;
 import com.bbs.whu.model.friend.IDConverter;
@@ -488,6 +497,58 @@ public class MyXMLParseUtils {
 		xstream.registerConverter(new userfaceimgConverter());
 		try {
 			return (FriendsOnline) xstream.fromXML(XMLStream);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * 反序列化收藏版块列表
+	 * 
+	 * @param XMLStream
+	 * @return List<FavBrdBean>
+	 */
+	public static List<FavBrdBean> readXml2FavBrdList(String XMLStream) {
+		if (null == XMLStream) {
+			return null;
+		}
+		XMLStream = XMLStream.trim();
+		XMLStream = XMLStream.replaceAll("&", "&amp;");
+		// 替换<FavDir>标签为<list>标签
+		XMLStream = XMLStream.replace("<FavDir>", "<list>");
+		XMLStream = XMLStream.replace("</FavDir>", "</list>");
+		// 替换<FavDir />标签为<FavBrd />标签，并添加属性
+		XMLStream = XMLStream.replaceAll("<FavDir([^>]*?)(/>)", "<FavBrd$1 bid=\"\" bm=\"\" articles=\"\" users=\"\"$2");
+		// 替换class属性为CLASS属性
+		XMLStream = XMLStream.replaceAll("class=\"", "CLASS=\"");
+		XStream xstream = new XStream();
+		// 类重命名
+		xstream.alias("FavBrd", FavBrdBean.class);
+		xstream.useAttributeFor(FavBrdBean.class, "select");
+		xstream.registerConverter(new selectConverter());
+		xstream.useAttributeFor(FavBrdBean.class, "name");
+		xstream.registerConverter(new nameConverter());
+		xstream.useAttributeFor(FavBrdBean.class, "desc");
+		xstream.registerConverter(new descConverter());
+		xstream.useAttributeFor(FavBrdBean.class, "flag");
+		xstream.registerConverter(new flagConverter());
+		xstream.useAttributeFor(FavBrdBean.class, "CLASS");
+		xstream.registerConverter(new CLASSConverter());
+		xstream.useAttributeFor(FavBrdBean.class, "bid");
+		xstream.registerConverter(new bidConverter());
+		xstream.useAttributeFor(FavBrdBean.class, "bm");
+		xstream.registerConverter(new bmConverter());
+		xstream.useAttributeFor(FavBrdBean.class, "articles");
+		xstream.registerConverter(new articlesConverter());
+		xstream.useAttributeFor(FavBrdBean.class, "users");
+		xstream.registerConverter(new usersConverter());
+		try {
+			// 反序列化
+			@SuppressWarnings("unchecked")
+			List<FavBrdBean> favBrdList = (List<FavBrdBean>) xstream
+					.fromXML(XMLStream);
+			return favBrdList;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

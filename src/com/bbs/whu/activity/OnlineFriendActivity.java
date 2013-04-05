@@ -55,8 +55,8 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 	private ImageView refreshImageView;
 	// 刷新动作
 	private AnimationDrawable refreshAnimationDrawable;
-	// 是否进行在线好友请求
-	private boolean isRequestOnlineFriends = false;
+	// 请求的次数
+	private int requestTime = 0;
 	// get参数
 	ArrayList<String> keys = new ArrayList<String>();
 	ArrayList<String> values = new ArrayList<String>();
@@ -179,15 +179,15 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 					// 获取数据后停止刷新
 					mListView.stopRefresh();
 
-					if (!isRequestOnlineFriends) {
+					if (requestTime == 0) {
 						allFriends.clear();
 						allFriends.addAll(MyXMLParseUtils.readXml2FriendsAll(
 								res).getFriends());
 						// 请求在线好友
-						isRequestOnlineFriends = true;
+						requestTime++;
 						getFriends();
-					} else {
-						isRequestOnlineFriends = false;
+					} else if (requestTime == 1) {
+						requestTime++;
 						onlineFriends.clear();
 						onlineFriends.addAll(MyXMLParseUtils
 								.readXml2FriendsOnline(res).getFriends());
@@ -223,10 +223,10 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 		keys.add("app");
 		values.add("friend");
 		keys.add("list");
-		if (isRequestOnlineFriends)
-			values.add("online");
-		else
+		if (requestTime == 0)
 			values.add("all");
+		else
+			values.add("online");
 
 		// 请求数据
 		MyBBSRequest.mGet(MyConstants.GET_URL, keys, values,
@@ -240,7 +240,8 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 		items.clear();
 		// 添加在线好友
 		for (FriendsOnlineBean onlineFriend : onlineFriends) {
-			items.add(new FriendBean(onlineFriend.getUserid().toString(), true));
+			items.add(new FriendBean(onlineFriend.getUserid().toString(),
+					onlineFriend.getUserface_img().toString(), true));
 		}
 
 		// 添加不在线好友
@@ -255,7 +256,8 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 				}
 			}
 			if (!isOnline)
-				items.add(new FriendBean(allFriend.getID().toString(), false));
+				items.add(new FriendBean(allFriend.getID().toString(),
+						allFriend.getUserface_img().toString(), false));
 		}
 		// 刷新ListView
 		mAdapter.notifyDataSetChanged();
@@ -263,6 +265,7 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onRefresh() {
+		requestTime = 0;
 		// 获取好友列表
 		getFriends();
 	}

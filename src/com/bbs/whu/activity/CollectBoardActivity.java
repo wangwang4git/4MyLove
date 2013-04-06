@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.bbs.whu.R;
 import com.bbs.whu.adapter.CollectBoardAdapter;
+import com.bbs.whu.handler.MessageHandlerManager;
+import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyFontManager;
 import com.bbs.whu.xlistview.XListView;
 
@@ -45,6 +47,16 @@ public class CollectBoardActivity extends Activity {
 		initAdapter();
 		// 添加数据
 		addData();
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// 注销handler
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_SUCCESS, "CollectBoardActivity");
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_FAIL, "CollectBoardActivity");
 	}
 
 	/**

@@ -37,11 +37,11 @@ public class RecommendActivity extends Activity implements IXListViewListener {
 	private ArrayList<RecommendBean> items = new ArrayList<RecommendBean>();
 	// 接收请求数据的handler
 	Handler mHandler;
-	
+
 	// get参数
 	ArrayList<String> keys = new ArrayList<String>();
 	ArrayList<String> values = new ArrayList<String>();
-	
+
 	// 请求响应一一对应布尔变量
 	private boolean mRequestResponse = false;
 
@@ -49,8 +49,8 @@ public class RecommendActivity extends Activity implements IXListViewListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recommend);
-		MyFontManager.changeFontType(this);//设置当前Activity的字体
-		
+		MyFontManager.changeFontType(this);// 设置当前Activity的字体
+
 		// 初始化控件
 		initView();
 		// 初始化适配器
@@ -59,6 +59,16 @@ public class RecommendActivity extends Activity implements IXListViewListener {
 		initHandler();
 		// 请求推荐文章数据
 		getRecommend(false);
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// 注销handler
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_SUCCESS, "RecommendActivity");
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_FAIL, "RecommendActivity");
 	}
 
 	@Override
@@ -118,7 +128,7 @@ public class RecommendActivity extends Activity implements IXListViewListener {
 		MessageHandlerManager.getInstance().register(mHandler,
 				MyConstants.REQUEST_FAIL, "RecommendActivity");
 	}
-	
+
 	/**
 	 * 请求推荐文章数据
 	 * 
@@ -137,10 +147,10 @@ public class RecommendActivity extends Activity implements IXListViewListener {
 		// 需要传入父Activity的context，即使用this.getParent()而不是this
 		// 参考链接：http://iandroiddev.com/post/2011-07-11/2817890
 		mRequestResponse = true;
-		MyBBSRequest.mGet(MyConstants.GET_URL, keys, values, "RecommendActivity",
-				isForcingWebGet, this.getParent());
+		MyBBSRequest.mGet(MyConstants.GET_URL, keys, values,
+				"RecommendActivity", isForcingWebGet, this.getParent());
 	}
-	
+
 	/**
 	 * 刷新列表
 	 * 
@@ -174,7 +184,7 @@ public class RecommendActivity extends Activity implements IXListViewListener {
 		// 刷新ListView
 		mAdapter.notifyDataSetChanged();
 	}
-	
+
 	@Override
 	public void onRefresh() {
 		// 强制从网络请求推荐文章数据

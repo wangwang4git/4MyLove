@@ -77,6 +77,16 @@ public class MailContentActivity extends Activity implements OnClickListener {
 		// 获取信件数据
 		getMail();
 	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// 注销handler
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_SUCCESS, "MailContentActivity");
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_FAIL, "MailContentActivity");
+	}
 
 	@Override
 	public void onClick(View v) {

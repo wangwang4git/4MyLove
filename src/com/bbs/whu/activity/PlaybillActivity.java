@@ -37,11 +37,11 @@ public class PlaybillActivity extends Activity implements IXListViewListener {
 	private ArrayList<PlaybillBean> items = new ArrayList<PlaybillBean>();
 	// 接收请求数据的handler
 	Handler mHandler;
-	
+
 	// get参数
 	ArrayList<String> keys = new ArrayList<String>();
 	ArrayList<String> values = new ArrayList<String>();
-	
+
 	// 请求响应一一对应布尔变量
 	private boolean mRequestResponse = false;
 
@@ -49,8 +49,8 @@ public class PlaybillActivity extends Activity implements IXListViewListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_playbill);
-		MyFontManager.changeFontType(this);//设置当前Activity的字体
-		
+		MyFontManager.changeFontType(this);// 设置当前Activity的字体
+
 		// 初始化控件
 		initView();
 		// 初始化适配器
@@ -60,6 +60,16 @@ public class PlaybillActivity extends Activity implements IXListViewListener {
 		// 请求校园海报数据
 		getPlaybill(false);
 		mAdapter.notifyDataSetChanged();
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// 注销handler
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_SUCCESS, "PlaybillActivity");
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_FAIL, "PlaybillActivity");
 	}
 
 	@Override

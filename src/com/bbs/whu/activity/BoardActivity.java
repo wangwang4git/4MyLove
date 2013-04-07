@@ -72,7 +72,7 @@ public class BoardActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_board);
-		MyFontManager.changeFontType(this);//设置当前Activity的字体
+		MyFontManager.changeFontType(this);// 设置当前Activity的字体
 		// 初始化控件
 		initView();
 		// 初始化适配器
@@ -81,6 +81,16 @@ public class BoardActivity extends Activity {
 		initHandler();
 		// 获取列表数据
 		getBoardList(false);
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// 注销handler
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_SUCCESS, "BoardActivity");
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_FAIL, "BoardActivity");
 	}
 
 	@Override

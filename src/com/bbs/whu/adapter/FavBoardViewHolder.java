@@ -8,9 +8,7 @@ import android.widget.TextView;
  * @author wwang
  * 
  */
-public class CollectBoardViewHolder {
+public class FavBoardViewHolder {
 	// 收藏版块标题
-	public TextView holderCollectBoardName;
-	// 收藏版块新帖数目
-	public TextView holderCollectBoardNewArticleNumber;
+	public TextView holderFavBoardName;
 }

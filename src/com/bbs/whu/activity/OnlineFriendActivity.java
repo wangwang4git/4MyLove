@@ -3,6 +3,8 @@ package com.bbs.whu.activity;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,9 +12,12 @@ import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bbs.whu.R;
 import com.bbs.whu.adapter.OnlineFriendAdapter;
@@ -52,18 +57,25 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 	Handler mHandler;
 	// 返回按钮
 	private ImageView backButton;
+	// 新增好友按钮
+	private ImageView addButton;
 	// 刷新按钮
 	private Button refreshButton;
 	// 刷新动态图
 	private ImageView refreshImageView;
 	// 刷新动作
 	private AnimationDrawable refreshAnimationDrawable;
-	// 请求的次数
-	private int requestTime = 0;
+	// 请求码
+	private static int requestCode = 0;
+	private static final int SERVER_REQUEST_ALL_FRIEND = 1;
+	private static final int SERVER_REQUEST_ONLINE_FRIEND = 2;
+	private static final int SERVER_REQUEST_ADD_FRIEND = 3;
+	public static final int SERVER_REQUEST_DELETE_FRIEND = 4;
+
 	// get参数
 	ArrayList<String> keys = new ArrayList<String>();
 	ArrayList<String> values = new ArrayList<String>();
-	
+
 	// 图片异步下载下载器
 	private ImageLoader imageLoader = ImageLoader.getInstance();
 	// 清空内存缓存调用方法
@@ -90,7 +102,7 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 				.showImageForEmptyUri(R.drawable.person_head_portrait)
 				.cacheInMemory().cacheOnDisc()
 				.displayer(new RoundedBitmapDisplayer(5)).build();
-		
+
 		// 初始化控件
 		initView();
 		// 初始化适配器
@@ -98,7 +110,18 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 		// 初始化handler
 		initHandler();
 		// 获取好友列表
+		requestCode = SERVER_REQUEST_ALL_FRIEND;
 		getFriends();
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// 注销handler
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_SUCCESS, "OnlineFriendActivity");
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_FAIL, "OnlineFriendActivity");
 	}
 
 	@Override
@@ -106,6 +129,10 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 		switch (v.getId()) {
 		case R.id.online_friend_back_icon:
 			onBackPressed();
+			break;
+		case R.id.online_friend_add_icon:
+			// 显示新增好友对话框
+			showAddFriendDialog();
 			break;
 		case R.id.online_friend_refresh_button:
 			// 刷新
@@ -161,6 +188,9 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 		// 返回按钮
 		backButton = (ImageView) findViewById(R.id.online_friend_back_icon);
 		backButton.setOnClickListener(this);
+		// 新增好友按钮
+		addButton = (ImageView) findViewById(R.id.online_friend_add_icon);
+		addButton.setOnClickListener(this);
 		// 刷新按钮
 		refreshButton = (Button) findViewById(R.id.online_friend_refresh_button);
 		refreshButton.setOnClickListener(this);
@@ -196,27 +226,59 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 					String res = (String) msg.obj;
 					// 获取数据后停止刷新
 					mListView.stopRefresh();
+					switch (requestCode) {
+					case SERVER_REQUEST_ALL_FRIEND:
+						if (res == null) {
+							// 请求码归零，防止垃圾数据
+							requestCode = 0;
+							Toast.makeText(OnlineFriendActivity.this,
+									"获取信息失败！", Toast.LENGTH_SHORT).show();
+						} else {
+							// 添加数据
+							allFriends.clear();
+							allFriends.addAll(MyXMLParseUtils
+									.readXml2FriendsAll(res).getFriends());
+							// 请求在线好友
+							requestCode = SERVER_REQUEST_ONLINE_FRIEND;
+							getFriends();
+						}
+						break;
 
-					if (requestTime == 0) {
-						allFriends.clear();
-						allFriends.addAll(MyXMLParseUtils.readXml2FriendsAll(
-								res).getFriends());
-						// 请求在线好友
-						requestTime++;
-						getFriends();
-					} else if (requestTime == 1) {
-						requestTime++;
-						onlineFriends.clear();
-						onlineFriends.addAll(MyXMLParseUtils
-								.readXml2FriendsOnline(res).getFriends());
+					case SERVER_REQUEST_ONLINE_FRIEND:
+						// 请求码归零，防止垃圾数据
+						requestCode = 0;
+						if (res == null)
+							Toast.makeText(OnlineFriendActivity.this,
+									"获取信息失败！", Toast.LENGTH_SHORT).show();
+						else {
+							// 添加数据
+							onlineFriends.clear();
+							onlineFriends.addAll(MyXMLParseUtils
+									.readXml2FriendsOnline(res).getFriends());
+							// 刷新列表
+							refreshList();
+						}
+						break;
+
+					case SERVER_REQUEST_DELETE_FRIEND:
+						// 请求码归零，防止垃圾数据
+						requestCode = 0;
 						// 刷新列表
-						refreshList();
+						onRefresh();
+						break;
+					case SERVER_REQUEST_ADD_FRIEND:
+						// 请求码归零，防止垃圾数据
+						requestCode = 0;
+						// 刷新列表
+						onRefresh();
+						// 提示用户
+						Toast.makeText(OnlineFriendActivity.this, res,
+								Toast.LENGTH_SHORT).show();
+
 					}
-					break;
 				case MyConstants.REQUEST_FAIL:
 					break;
 				}
-				return;
 			}
 		};
 		// 注册handler
@@ -241,9 +303,9 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 		keys.add("app");
 		values.add("friend");
 		keys.add("list");
-		if (requestTime == 0)
+		if (requestCode == SERVER_REQUEST_ALL_FRIEND)
 			values.add("all");
-		else
+		else if (requestCode == SERVER_REQUEST_ONLINE_FRIEND)
 			values.add("online");
 
 		// 请求数据
@@ -258,8 +320,9 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 		items.clear();
 		// 添加在线好友
 		for (FriendsOnlineBean onlineFriend : onlineFriends) {
-			items.add(new FriendBean(onlineFriend.getUserid().toString(),
-					onlineFriend.getUserfaceimg().toString(), true));
+			if (onlineFriend.getUserid() != null)
+				items.add(new FriendBean(onlineFriend.getUserid().toString(),
+						onlineFriend.getUserfaceimg().toString(), true));
 		}
 
 		// 添加不在线好友
@@ -282,9 +345,52 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 		mAdapter.notifyDataSetChanged();
 	}
 
+	/**
+	 * 显示新增好友对话框
+	 */
+	private void showAddFriendDialog() {
+		View dialog = getLayoutInflater().inflate(R.layout.add_friend_dialog,
+				(ViewGroup) findViewById(R.id.add_friend_dialog));
+		final EditText addFriendName = (EditText) dialog
+				.findViewById(R.id.add_friend_name_editText);
+		// 弹出回复对话框
+		new AlertDialog.Builder(this)
+				.setTitle("新增好友")
+				.setView(dialog)
+				.setPositiveButton("确定",
+						new android.content.DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								String name = addFriendName.getText()
+										.toString();
+
+								keys.clear();
+								values.clear();
+								// 添加get参数
+								keys.add("app");
+								values.add("friend");
+								keys.add("add");
+								values.add(name);
+
+								// 设置请求码
+								requestCode = SERVER_REQUEST_ADD_FRIEND;
+								// 请求数据
+								MyBBSRequest.mGet(MyConstants.GET_URL, keys,
+										values, "OnlineFriendActivity", true,
+										OnlineFriendActivity.this);
+
+							}
+						}).setNegativeButton("取消", null).show();
+	}
+
+	public static void setRequestCode(int requestCode) {
+		OnlineFriendActivity.requestCode = requestCode;
+	}
+
 	@Override
 	public void onRefresh() {
-		requestTime = 0;
+		requestCode = SERVER_REQUEST_ALL_FRIEND;
 		// 获取好友列表
 		getFriends();
 	}

@@ -97,6 +97,16 @@ public class BulletinReplyActivity extends Activity {
 		// 初始化handler
 		initHandler();
 	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// 注销handler
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_SUCCESS, "BulletinReplyActivity");
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_FAIL, "BulletinReplyActivity");
+	}
 
 	/**
 	 * 初始化控件

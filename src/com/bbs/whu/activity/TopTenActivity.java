@@ -37,11 +37,11 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 	private ArrayList<TopTenBean> items = new ArrayList<TopTenBean>();
 	// 接收请求数据的handler
 	Handler mHandler;
-	
+
 	// get参数
 	ArrayList<String> keys = new ArrayList<String>();
 	ArrayList<String> values = new ArrayList<String>();
-	
+
 	// 请求响应一一对应布尔变量
 	private boolean mRequestResponse = false;
 
@@ -49,8 +49,8 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_top_ten);
-		MyFontManager.changeFontType(this);//设置当前Activity的字体
-		
+		MyFontManager.changeFontType(this);// 设置当前Activity的字体
+
 		// 初始化控件
 		initView();
 		// 初始化适配器
@@ -59,6 +59,16 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 		initHandler();
 		// 请求“十大”数据
 		getTopTen(false);
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// 注销handler
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_SUCCESS, "TopTenActivity");
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_FAIL, "TopTenActivity");
 	}
 
 	@Override

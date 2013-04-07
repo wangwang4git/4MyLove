@@ -100,6 +100,16 @@ public class TopicActivity extends Activity implements IXListViewListener,
 		// 请求帖子列表数据
 		getTopic();
 	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// 注销handler
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_SUCCESS, "TopicActivity");
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_FAIL, "TopicActivity");
+	}
 
 	@Override
 	public void onClick(View view) {

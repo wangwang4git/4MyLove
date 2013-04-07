@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="#fffafaf7" >
+    android:background="@drawable/list_item" >
 
     <ImageView
         android:id="@+id/online_friend_head"

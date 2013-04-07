@@ -86,7 +86,7 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 
 	// 请求响应一一对应布尔变量
 	private boolean mRequestResponse = false;
-	
+
 	// 图片异步下载下载器
 	private ImageLoader imageLoader = ImageLoader.getInstance();
 	// 清空内存缓存调用方法
@@ -104,18 +104,18 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_bulletin);
-		MyFontManager.changeFontType(this);//设置当前Activity的字体
-		
+		MyFontManager.changeFontType(this);// 设置当前Activity的字体
+
 		// 获取传入的参数
 		board = getIntent().getStringExtra("board");
 		groupid = getIntent().getStringExtra("groupid");
-		
+
 		options = new DisplayImageOptions.Builder()
 				.showStubImage(R.drawable.person_head_portrait)
 				.showImageForEmptyUri(R.drawable.person_head_portrait)
 				.cacheInMemory().cacheOnDisc()
 				.displayer(new RoundedBitmapDisplayer(5)).build();
-		
+
 		// 初始化控件
 		initView();
 		// 初始化适配器
@@ -140,6 +140,16 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		// } catch (Exception e) {
 		// throw new RuntimeException(e);
 		// }
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// 注销handler
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_SUCCESS, "BulletinReplyActivity");
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_FAIL, "BulletinReplyActivity");
 	}
 
 	@Override

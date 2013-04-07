@@ -49,7 +49,7 @@
             android:name="com.bbs.whu.activity.MailListActivity"
             android:launchMode="singleTask" />
         <activity android:name="com.bbs.whu.activity.MailContentActivity" />
-        <activity android:name="com.bbs.whu.activity.CollectBoardActivity" />
+        <activity android:name="com.bbs.whu.activity.FavBoardActivity" />
         <activity android:name="com.bbs.whu.activity.OnlineFriendActivity" />
         <activity android:name="com.bbs.whu.activity.RecommendActivity" />
         <activity android:name="com.bbs.whu.activity.PlaybillActivity" />

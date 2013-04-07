@@ -94,6 +94,16 @@ public class MailSendActivity extends Activity implements OnClickListener,
 		// ³õÊ¼»¯ÊÊÅäÆ÷
 		initAdapter();
 	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// ×¢Ïúhandler
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_SUCCESS, "MailSendActivity");
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_FAIL, "MailSendActivity");
+	}
 
 	@Override
 	public void onClick(View v) {

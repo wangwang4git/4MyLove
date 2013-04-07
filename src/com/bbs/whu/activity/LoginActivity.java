@@ -143,6 +143,16 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// ×¢Ïúhandler
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_SUCCESS, "LoginActivity");
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_FAIL, "LoginActivity");
+	}
+	
+	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.login_button:

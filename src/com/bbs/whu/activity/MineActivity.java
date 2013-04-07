@@ -82,7 +82,7 @@ public class MineActivity extends Activity implements View.OnClickListener {
 			break;
 		case 3:
 			// 跳转到收藏版面页面
-			this.startActivity(new Intent(this, CollectBoardActivity.class));
+			this.startActivity(new Intent(this, FavBoardActivity.class));
 			break;
 		case 4:
 			// 跳转到在线好友页面

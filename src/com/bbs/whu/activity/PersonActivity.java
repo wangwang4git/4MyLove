@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
+import android.view.MotionEvent;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -70,14 +71,17 @@ public class PersonActivity extends Activity {
 	private DisplayImageOptions options;
 	//
 	private boolean instanceStateSaved;
-	
+
 	// 原帖作者
 	private String originAuthor;
-	
+
 	// get参数
 	ArrayList<String> keys = new ArrayList<String>();
 	ArrayList<String> values = new ArrayList<String>();
-	
+
+	// 进行手势动作时候的坐标
+	float x_temp1 = 0, y_temp1 = 0, x_temp2, y_temp2;
+
 	// 等待对话框
 	private ProgressHUDTask mProgress;
 	// 请求响应一一对应布尔变量
@@ -89,17 +93,17 @@ public class PersonActivity extends Activity {
 		// 取消显示title栏
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_person);
-		MyFontManager.changeFontType(this);//设置当前Activity的字体
-		
+		MyFontManager.changeFontType(this);// 设置当前Activity的字体
+
 		// 显示等待对话框
 		mProgress = new ProgressHUDTask(this);
 		mProgress.execute();
-		
+
 		// 获取传过来的数据，加载到界面上
 		Intent postInfoIntent = getIntent();
 		// 作者
 		originAuthor = postInfoIntent.getStringExtra("author");
-		
+
 		options = new DisplayImageOptions.Builder()
 				.showStubImage(R.drawable.person_head_portrait)
 				.showImageForEmptyUri(R.drawable.person_head_portrait)
@@ -128,7 +132,49 @@ public class PersonActivity extends Activity {
 			// imageLoader.clearDiscCache();
 			imageLoader.stop();
 		}
+
+		// 注销handler
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_SUCCESS, "PersonActivity");
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_FAIL, "PersonActivity");
+
 		super.onDestroy();
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// 获得当前坐标
+		float x = event.getX();
+		float y = event.getY();
+
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			x_temp1 = x;
+			y_temp1 = y;
+			break;
+
+		case MotionEvent.ACTION_UP: {
+			x_temp2 = x;
+			y_temp2 = y;
+			// 右滑
+			if (x_temp1 != 0 && x_temp2 - x_temp1 > MyConstants.MIN_GAP_X
+					&& Math.abs(y_temp2 - y_temp1) < MyConstants.MAX_GAP_Y) {
+				onBackPressed();
+			}
+		}
+			break;
+		}
+		return super.onTouchEvent(event);
+	}
+
+	/**
+	 * 最先响应触屏事件，因为ListView会屏蔽掉Activity的onTouchEvent事件，所以需要重写此方法
+	 */
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		super.dispatchTouchEvent(event);
+		return onTouchEvent(event);
 	}
 
 	/**
@@ -220,7 +266,7 @@ public class PersonActivity extends Activity {
 			}
 			return;
 		}
-		
+
 		imageLoader.displayImage(
 				MyConstants.HEAD_URL + userInfo.getUserface_img(),
 				mPersonHeadPortrait, options);

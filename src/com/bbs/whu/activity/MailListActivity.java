@@ -97,6 +97,16 @@ public class MailListActivity extends Activity implements IXListViewListener,
 		// 请求邮件列表数据
 		getMail();
 	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// 注销handler
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_SUCCESS, "MailListActivity");
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_FAIL, "MailListActivity");
+	}
 
 	@Override
 	public void onClick(View v) {

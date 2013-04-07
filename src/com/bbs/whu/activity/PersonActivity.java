@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyFontManager;
+import com.bbs.whu.utils.MyRegexParseUtils;
 import com.bbs.whu.utils.MyXMLParseUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -58,6 +60,8 @@ public class PersonActivity extends Activity {
 	private TextView mPersonUserMode;
 	// 个性签名
 	private TextView mPersonSign;
+	// 个性签名图片（部分bbs用户，个性签名为图片）
+	private ImageView mPersonSignView;
 	// 接收请求数据的handler
 	private Handler mHandler;
 
@@ -193,6 +197,7 @@ public class PersonActivity extends Activity {
 		mPersonLoginTime = (TextView) findViewById(R.id.person_login_time);
 		mPersonUserMode = (TextView) findViewById(R.id.person_user_mode);
 		mPersonSign = (TextView) findViewById(R.id.person_sign);
+		mPersonSignView = (ImageView) findViewById(R.id.person_sign_image);
 	}
 
 	/**
@@ -281,7 +286,14 @@ public class PersonActivity extends Activity {
 		mPersonLoginNumber.setText(userInfo.getNumlogins());
 		mPersonLoginTime.setText(userInfo.getLastlogin());
 		mPersonUserMode.setText(userInfo.getUsermode());
-		mPersonSign.setText(Html.fromHtml(Html.fromHtml(
-				userInfo.getSigcontent()).toString()));
+		String signText = Html.fromHtml(
+				Html.fromHtml(userInfo.getSigcontent()).toString()).toString();
+		mPersonSign.setText(signText.replaceAll("\\[IMG\\](.*?)\\[/IMG\\]",
+				"$1"));
+		String signImageUrl = MyRegexParseUtils.getSignView(signText);
+		if (!signImageUrl.equals("null")) {
+			mPersonSignView.setVisibility(View.VISIBLE);
+			imageLoader.displayImage(signImageUrl, mPersonSignView, options);
+		}
 	}
 }

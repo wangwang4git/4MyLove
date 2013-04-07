@@ -165,7 +165,16 @@
 				android:textSize="15sp" android:textColor="#ff1A1A1A" android:text="" />
 
 			<TextView android:layout_width="fill_parent"
-				android:layout_height="15dip" />
+				android:layout_height="5dip" />
+
+			<ImageView android:id="@+id/person_sign_image"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_centerVertical="true" android:layout_marginLeft="2dip"
+				android:layout_marginRight="2dip" android:scaleType="centerInside"
+				android:visibility="gone" />
+			
+			<TextView android:layout_width="fill_parent"
+				android:layout_height="10dip" />
 
 		</LinearLayout>
 	</ScrollView>

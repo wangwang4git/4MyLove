@@ -295,6 +295,17 @@ public class MyRegexParseUtils {
 		return source;
 	}
 	
+	// 获取用户信息签名档中的图片部分
+	static public String getSignView(String content) {
+		Pattern pattern = Pattern.compile(DEL_IMG_REGEX_STRING);
+		Matcher matcher = pattern.matcher(content);
+		// 输出第一个匹配项
+		while (matcher.find()) {
+			return matcher.group(1);
+		}
+		return "null";
+	}
+	
 	// 在文本中提取用户当前状态的正则表达式
 	final static private String USERMODE_REGEX_STRING = "&lt;span class='blue'&gt;(.*?)&lt;/span&gt;.*";
 

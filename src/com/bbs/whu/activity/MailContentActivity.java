@@ -1,12 +1,17 @@
 package com.bbs.whu.activity;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
+import android.text.Html.ImageGetter;
+import android.text.method.LinkMovementMethod;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,6 +27,7 @@ import com.bbs.whu.progresshud.ProgressHUDTask;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyFontManager;
+import com.bbs.whu.utils.MyRegexParseUtils;
 import com.bbs.whu.utils.MyXMLParseUtils;
 
 public class MailContentActivity extends Activity implements OnClickListener {
@@ -178,7 +184,27 @@ public class MailContentActivity extends Activity implements OnClickListener {
 					mSender.setText(sender);
 					mTitle.setText(title);
 					mTime.setText(mMailContentBean.getTime());
-					mText.setText(mMailContentBean.getText());
+					// 内容
+					String text = mMailContentBean.getText();
+					// 富文本显示
+					String newText = MyRegexParseUtils.getRichTextString(text);
+					CharSequence textCharSequence = Html.fromHtml(newText,
+							new ImageGetter() {
+								@Override
+								public Drawable getDrawable(String source) {
+									Drawable drawable = getApplicationContext()
+											.getResources().getDrawable(
+													getResourceId(source));
+									// 这句话必写，不然图片是有了 不过显示的面积为0.
+									drawable.setBounds(0, 0,
+											drawable.getIntrinsicWidth(),
+											drawable.getIntrinsicHeight());
+									return drawable;
+								}
+							}, null);
+					mText.setText(textCharSequence);
+					// 该语句在设置后必加，不然没有任何效果
+					mText.setMovementMethod(LinkMovementMethod.getInstance());
 					break;
 				case MyConstants.REQUEST_FAIL:
 					break;
@@ -224,5 +250,19 @@ public class MailContentActivity extends Activity implements OnClickListener {
 		// 显示等待对话框
 		mProgress.execute();
 	}
-
+	
+	/**
+	 * 由于无法直接使用文件名来引用res/drawable中的图像资源， 我们利用反射技术 从R.drawable类中通过图像资源文件名，
+	 * 去获得相应的图像资源ID，实现代码如下：
+	 */
+	public static int getResourceId(String name) {
+		int id = 0;
+		try {
+			Field field = R.drawable.class.getField(name);
+			id = Integer.parseInt(field.get(null).toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return id;
+	}
 }

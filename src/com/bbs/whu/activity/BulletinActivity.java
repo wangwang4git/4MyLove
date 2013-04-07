@@ -336,6 +336,7 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 				// toastÃ·–—
 				Toast.makeText(this, R.string.bbs_exception_text,
 						Toast.LENGTH_SHORT).show();
+				System.out.println(this.getString(R.string.bbs_exception_text));
 			}
 			return;
 		}

@@ -268,7 +268,9 @@ public class MyRegexParseUtils {
 	// 删除[URL=...](...)[/URL]标签
 	final static private String DEL_URL_REGEX_STRING = "\\[URL=.*?\\](.*?)\\[/URL\\]";
 	// 删除[IMG]...[/IMG]标签
-	final static private String DEL_IMGL_REGEX_STRING = "\\[IMG\\](.*?)\\[/IMG\\]";
+	final static private String DEL_IMG_REGEX_STRING = "\\[IMG\\](.*?)\\[/IMG\\]";
+	// 删除\r[4m...\r[m标签，插入下划线便签
+	final static private String DEL_UNDERLINE_REGEX_STRING = "\\\\r\\[4m(.*?)\\\\r\\[m";
 
 	// TextView富文本（表情、URL等）显示替换操作
 	// 替换规则，参见http://blog.csdn.net/a_mean/article/details/6930968
@@ -276,7 +278,7 @@ public class MyRegexParseUtils {
 		source = source.replaceAll(EXPRESSION_REGEX_STRING, "<img src='$1' />");
 		source = source.replaceAll(DEL_URL_REGEX_STRING, "$1");
 		source = source
-				.replaceAll(DEL_IMGL_REGEX_STRING, "<img src='img' />$1");
+				.replaceAll(DEL_IMG_REGEX_STRING, "<img src='img' />$1");
 		source = source.replaceAll(URL_REGEX_STRING,
 				"<img src='url' /><a href='$1'>$1</a>");
 		source = source.replaceAll(COLOR_REGEX_STRING,
@@ -288,6 +290,7 @@ public class MyRegexParseUtils {
 		source = source.replaceAll(BOLD_REGEX_STRING, "<big><b>$1</b></big>");
 		source = source.replaceAll(ITALIC_REGEX_STRING, "<i>$1</i>");
 		source = source.replaceAll(UNDERLINE_REGEX_STRING, "<u>$1</u>");
+		source = source.replaceAll(DEL_UNDERLINE_REGEX_STRING, "<u>$1</u>");
 		source = source.replaceAll("\n", "<br>");
 		return source;
 	}

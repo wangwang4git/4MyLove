@@ -3,6 +3,7 @@ package com.bbs.whu.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.bbs.whu.utils.MyFontManager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class MoreActivity extends Activity implements OnClickListener {
+	private Context context = this;
 	private ViewGroup mNewGuid = null;
 	private ViewGroup mCleanCache = null;
 	private ViewGroup mCheckUpdate = null;
@@ -90,8 +92,10 @@ public class MoreActivity extends Activity implements OnClickListener {
 		mLogout = (ViewGroup) findViewById(R.id.more_list_logout);
 		mLogout.setOnClickListener(this);
 		// 匿名用户没有注销功能
-		if (MyApplication.getInstance().getName().equals("4MyLove"))
+		if (MyApplication.getInstance().getName().equals("4MyLove")){
+			mAbout.setBackgroundResource(R.drawable.more_list_below);
 			mLogout.setVisibility(View.GONE);
+		}
 	}
 
 	private void cleanCache() {
@@ -122,9 +126,21 @@ public class MoreActivity extends Activity implements OnClickListener {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// 退出登陆
-				MyBBSRequest.mGet(MyConstants.LOG_OUT_URL, "MainActivity");
+				MyBBSRequest.mGet(MyConstants.LOG_OUT_URL, "MainActivity",
+						context);
+				
+				// 延时，留时间给请求BBS后台用户退出
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
 				// 清理Cookie
 				MyApplication.getInstance().clearCookieStore();
+				// 清理全局变量
+				MyApplication.getInstance().setName("4MyLove");
+				MyApplication.getInstance().setPassword("4MyLove");
 				// 对话框退出
 				dialog.dismiss();
 				// 跳转到登陆界面

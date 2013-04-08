@@ -3,6 +3,7 @@ package com.bbs.whu.activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.bbs.whu.utils.MyFontManager;
  */
 public class MainActivity extends TabActivity {
 	TabHost tabHost;
+	private Context context = this;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,7 +101,16 @@ public class MainActivity extends TabActivity {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// 退出登陆
-				MyBBSRequest.mGet(MyConstants.LOG_OUT_URL, "MainActivity");
+				MyBBSRequest.mGet(MyConstants.LOG_OUT_URL, "MainActivity",
+						context);
+				
+				// 延时，留时间给请求BBS后台用户退出
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
 				// 清理Cookie
 				MyApplication.getInstance().clearCookieStore();
 				// 设置程序退出

@@ -96,9 +96,6 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 	// 图片异步下载缓存设置变量
 	private DisplayImageOptions options;
 
-	// 进行手势动作时候的坐标
-	float x_temp1 = 0, y_temp1 = 0, x_temp2, y_temp2;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -175,32 +172,6 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		super.onBackPressed();
 		// 设置切换动画，从左边进入，右边退出
 		overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
-	}
-
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		// 获得当前坐标
-		float x = event.getX();
-		float y = event.getY();
-
-		switch (event.getAction()) {
-		case MotionEvent.ACTION_DOWN:
-			x_temp1 = x;
-			y_temp1 = y;
-			break;
-
-		case MotionEvent.ACTION_UP: {
-			x_temp2 = x;
-			y_temp2 = y;
-			// 右滑
-			if (x_temp1 != 0 && x_temp2 - x_temp1 > MyConstants.MIN_GAP_X
-					&& Math.abs(y_temp2 - y_temp1) < MyConstants.MAX_GAP_Y) {
-				onBackPressed();
-			}
-		}
-			break;
-		}
-		return super.onTouchEvent(event);
 	}
 
 	/**

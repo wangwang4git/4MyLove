@@ -390,18 +390,18 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 添加post请求参数
 		ArrayList<String> keys = new ArrayList<String>();
 		ArrayList<String> values = new ArrayList<String>();
-//		keys.add("id");
-//		values.add(userNameEditText.getText().toString());
-//		keys.add("passwd");
-//		values.add(passwordEditText.getText().toString());
-//		keys.add("webtype");
-//		values.add("wforum");
-//		// 添加支持多次登录参数
-//		keys.add("kick_multi");
-//		values.add("1");
-//		// post请求
-//		MyBBSRequest.mPost(MyConstants.LOGIN_URL, keys, values,
-//				"LoginActivity", this);
+		// keys.add("id");
+		// values.add(userNameEditText.getText().toString());
+		// keys.add("passwd");
+		// values.add(passwordEditText.getText().toString());
+		// keys.add("webtype");
+		// values.add("wforum");
+		// // 添加支持多次登录参数
+		// keys.add("kick_multi");
+		// values.add("1");
+		// // post请求
+		// MyBBSRequest.mPost(MyConstants.LOGIN_URL, keys, values,
+		// "LoginActivity", this);
 		// 采用登录URL 2.0接口登录
 		keys.add("app");
 		values.add("login");

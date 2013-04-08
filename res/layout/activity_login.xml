@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/login_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/login_background" >
@@ -82,7 +83,8 @@
             android:layout_marginBottom="30dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@color/login_center" >
+            android:background="@color/login_center" 
+            android:id="@+id/login_RelativeLayout_edit">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -184,6 +186,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/remember_user_LinearLayout"
                     android:layout_width="230dip"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -238,6 +241,7 @@
             android:src="@drawable/login_logo_text" />
 
         <ImageView
+            android:id="@+id/logo_img"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_alignBottom="@+id/logo_text"

@@ -21,6 +21,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -69,6 +71,17 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private Button anonymousButton;
 	// 记住密码checkbox
 	private CheckBox rememberUserCheckBox;
+	// 顶部标题
+	private LinearLayout titleLayout;
+	// 登录标题
+	private ImageView login_head;
+	private ImageView login_head_text;
+	// 底部logo
+	private ImageView logo_text;
+	private ImageView logo_img;
+	// 记住密码的线性布局id
+	private LinearLayout remember_user_LinearLayout;
+
 	// 记住密码标志
 	private boolean rememberUserFlag = true;
 	// 接收请求数据的handler
@@ -104,6 +117,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private SharedPreferences firstUseSP;
 	private SharedPreferences.Editor firstUseEditor;
 	private String firstUseSPKey = "isUsed";
+	private static int changeTimes = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -111,8 +125,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 取出Activity的title
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
-		MyFontManager.changeFontType(this);//设置当前Activity的字体
-		
+		MyFontManager.changeFontType(this);// 设置当前Activity的字体
+
 		// 判断是否为第一次使用
 		firstUseSP = this.getSharedPreferences("firstUse", MODE_WORLD_READABLE);
 
@@ -132,6 +146,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		loginBefore();
 		// 初始化控件
 		init();
+
 		// 初始化handler
 		initHandler();
 
@@ -151,7 +166,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		MessageHandlerManager.getInstance().unregister(
 				MyConstants.REQUEST_FAIL, "LoginActivity");
 	}
-	
+
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
@@ -173,6 +188,38 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	/**
+	 * 重新布局控件
+	 */
+	private void controlView(boolean isVisible) {
+		int control = 0;
+
+		if (isVisible == true)
+			control = View.VISIBLE;
+		else
+			control = View.GONE;
+
+		// 控制顶部标题
+		titleLayout.setVisibility(control);
+
+		// 控制登录标题
+		login_head.setVisibility(control);
+		login_head_text.setVisibility(control);
+
+		// 控制记住密码的CheckBox控件
+		remember_user_LinearLayout.setVisibility(control);
+
+		// 控制确定按钮
+		loginButton.setVisibility(control);
+
+		// 控制匿名按钮
+		anonymousButton.setVisibility(control);
+
+		// 控制底部logo
+		logo_text.setVisibility(control);
+		logo_img.setVisibility(control);
+	}
+
+	/**
 	 * 初始化控件
 	 */
 	private void init() {
@@ -182,6 +229,20 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 设置用户名、密码初始值
 		// userNameEditText.setText(MyConstants.MY_USER_NAME);
 		// passwordEditText.setText(MyConstants.MY_PASSWORD);
+
+		// 初始化顶部标题
+		titleLayout = (LinearLayout) findViewById(R.id.title_linearLayout);
+
+		// 初始化登录标题
+		login_head = (ImageView) findViewById(R.id.login_head);
+		login_head_text = (ImageView) findViewById(R.id.login_head_text);
+
+		// 初始化底部logo
+		logo_text = (ImageView) findViewById(R.id.logo_text);
+		logo_img = (ImageView) findViewById(R.id.logo_img);
+
+		// 初始化记住密码的CheckBox控件
+		remember_user_LinearLayout = (LinearLayout) findViewById(R.id.remember_user_LinearLayout);
 
 		// 设置userNameEditText适配器
 		mAdapter = new AdvancedAutoCompleteAdapter(this, userPasswords, 10);
@@ -195,6 +256,34 @@ public class LoginActivity extends Activity implements OnClickListener {
 				passwordEditText.setText(userPasswords.get(arg2).getPassword());
 			}
 		});
+
+		final View activityRootView = findViewById(R.id.login_RelativeLayout_edit);
+		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
+				new OnGlobalLayoutListener() {
+					@Override
+					public void onGlobalLayout() {
+						int rootHeight = activityRootView.getRootView()
+								.getHeight();
+						int acHeight = activityRootView.getHeight();
+						int heightDiff = rootHeight - acHeight;
+						if (acHeight < 0 && changeTimes == 0) {
+							changeTimes++;
+//							Toast.makeText(LoginActivity.this, "开启软键盘！",
+//									Toast.LENGTH_SHORT).show();
+
+							// 隐藏控件
+							LoginActivity.this.controlView(false);
+
+						} else if (acHeight > 152 && changeTimes == 1) {
+							changeTimes--;
+//							Toast.makeText(LoginActivity.this, "关闭软键盘！",
+//									Toast.LENGTH_SHORT).show();
+
+							// 显示控件
+							LoginActivity.this.controlView(true);
+						}
+					}
+				});
 
 		// 确定按钮
 		loginButton = (Button) findViewById(R.id.login_button);

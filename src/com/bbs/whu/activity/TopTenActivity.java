@@ -10,13 +10,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.bbs.whu.R;
-import com.bbs.whu.adapter.TopTenListAdapter;
+import com.bbs.whu.adapter.TopTenAdapter;
 import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.TopTenBean;
+import com.bbs.whu.utils.MyBBSCache;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
+import com.bbs.whu.utils.MyFontManager;
 import com.bbs.whu.utils.MyXMLParseUtils;
 import com.bbs.whu.xlistview.XListView;
 import com.bbs.whu.xlistview.XListView.IXListViewListener;
@@ -30,15 +33,24 @@ import com.bbs.whu.xlistview.XListView.IXListViewListener;
  */
 public class TopTenActivity extends Activity implements IXListViewListener {
 	private XListView mListView;
-	private TopTenListAdapter mAdapter;
+	private TopTenAdapter mAdapter;
 	private ArrayList<TopTenBean> items = new ArrayList<TopTenBean>();
 	// 接收请求数据的handler
 	Handler mHandler;
+
+	// get参数
+	ArrayList<String> keys = new ArrayList<String>();
+	ArrayList<String> values = new ArrayList<String>();
+
+	// 请求响应一一对应布尔变量
+	private boolean mRequestResponse = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_top_ten);
+		MyFontManager.changeFontType(this);// 设置当前Activity的字体
+
 		// 初始化控件
 		initView();
 		// 初始化适配器
@@ -47,6 +59,16 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 		initHandler();
 		// 请求“十大”数据
 		getTopTen(false);
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// 注销handler
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_SUCCESS, "TopTenActivity");
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.REQUEST_FAIL, "TopTenActivity");
 	}
 
 	@Override
@@ -73,7 +95,7 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 	 */
 	private void initAdapter() {
 		// 创建适配器
-		mAdapter = new TopTenListAdapter(this, items, R.layout.top_ten_item);
+		mAdapter = new TopTenAdapter(this, items, R.layout.top_ten_item);
 		mListView.setAdapter(mAdapter);
 	}
 
@@ -114,15 +136,16 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 	 */
 
 	private void getTopTen(boolean isForcingWebGet) {
+		keys.clear();
+		values.clear();
 		// 添加get参数
-		ArrayList<String> keys = new ArrayList<String>();
-		ArrayList<String> values = new ArrayList<String>();
 		keys.add("app");
 		values.add("hot");
 		// 请求数据
 		// 注意，因为涉及到tab的嵌套，所以直接传本Activity的context，构造对话框时会出错，
 		// 需要传入父Activity的context，即使用this.getParent()而不是this
 		// 参考链接：http://iandroiddev.com/post/2011-07-11/2817890
+		mRequestResponse = true;
 		MyBBSRequest.mGet(MyConstants.GET_URL, keys, values, "TopTenActivity",
 				isForcingWebGet, this.getParent());
 	}
@@ -137,7 +160,27 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 		// 清空原有数据
 		items.clear();
 		// XML反序列化
-		items.addAll(MyXMLParseUtils.readXml2TopTenList(res));
+		ArrayList<TopTenBean> topTens = (ArrayList<TopTenBean>) MyXMLParseUtils
+				.readXml2TopTenList(res);
+		// 论坛错误，无正确数据返回，显示错误提示
+		if (null == topTens) {
+			if (mRequestResponse == true) {
+				mRequestResponse = false;
+				// 禁用“下拉刷新”
+				mListView.setPullRefreshEnable(false);
+				// 禁用“显示更多”
+				mListView.setPullLoadEnable(false);
+				// 删除指定Cache文件
+				MyBBSCache.delCacheFile(MyBBSCache.getCacheFileName(
+						MyConstants.GET_URL, keys, values));
+				// toast提醒
+				Toast.makeText(this, R.string.bbs_exception_text,
+						Toast.LENGTH_SHORT).show();
+				System.out.println(this.getString(R.string.bbs_exception_text));
+			}
+			return;
+		}
+		items.addAll(topTens);
 		// 刷新ListView
 		mAdapter.notifyDataSetChanged();
 	}

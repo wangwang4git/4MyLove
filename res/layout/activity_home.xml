@@ -12,7 +12,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#EBEBEB" >
+        android:background="#EFEFE8" >
 
         <TextView
             android:id="@+id/topten"
@@ -21,7 +21,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="@string/top_ten_text"
-            android:textColor="#A0A0A0"
+            android:textColor="#999999"
             android:textSize="20sp" />
 
         <ImageView
@@ -36,7 +36,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="@string/recommend_text"
-            android:textColor="#A0A0A0"
+            android:textColor="#999999"
             android:textSize="20sp" />
 
         <ImageView
@@ -51,7 +51,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="@string/playbill_text"
-            android:textColor="#A0A0A0"
+            android:textColor="#999999"
             android:textSize="20sp" />
     </LinearLayout>
 

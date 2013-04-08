@@ -15,6 +15,8 @@ public class BulletinBean {
 	private String id;
 	// 发信人名称
 	private String author;
+	// 发信人头像url
+	private String userfaceImg;
 	// 信区（板块）
 	private String board;
 	// 标题
@@ -42,13 +44,15 @@ public class BulletinBean {
 	}
 
 	public BulletinBean(String floor, String content, String id, String author,
-			String board, String title, String site, String time, String head,
-			String body, String reply, String text, String sign, String from) {
+			String userfaceImg, String board, String title, String site,
+			String time, String head, String body, String reply, String text,
+			String sign, String from) {
 		super();
 		this.floor = floor;
 		this.content = content;
 		this.id = id;
 		this.author = author;
+		this.userfaceImg = userfaceImg;
 		this.board = board;
 		this.title = title;
 		this.site = site;
@@ -91,6 +95,14 @@ public class BulletinBean {
 
 	public void setAuthor(String author) {
 		this.author = author;
+	}
+	
+	public String getUserfaceImg() {
+		return userfaceImg;
+	}
+
+	public void setUserfaceImg(String userfaceImg) {
+		this.userfaceImg = userfaceImg;
 	}
 
 	public String getBoard() {
@@ -175,11 +187,11 @@ public class BulletinBean {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return this.floor + "/" + this.content + "/" + this.id + "/"
-				+ this.author + "/" + this.board + "/" + this.title + "/"
-				+ this.site + "/" + this.time + "/" + this.head + "/"
-				+ this.body + "/" + this.reply + "/" + this.text + "/"
-				+ this.sign + "/" + this.from;
+		return "BulletinBean [floor=" + floor + ", content=" + content
+				+ ", id=" + id + ", author=" + author + ", userfaceImg="
+				+ userfaceImg + ", board=" + board + ", title=" + title
+				+ ", site=" + site + ", time=" + time + ", head=" + head
+				+ ", body=" + body + ", reply=" + reply + ", text=" + text
+				+ ", sign=" + sign + ", from=" + from + "]";
 	}
 }

@@ -16,11 +16,13 @@
     <application
         android:name="com.bbs.whu.utils.MyApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/app_logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.bbs.whu.activity.LoginActivity"
+			android:windowSoftInputMode = "adjustResize"
+            android:launchMode="singleTask"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,14 +30,34 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.bbs.whu.activity.MainActivity" />
+        <activity android:name="com.bbs.whu.activity.BeginnerNavigationActivity" />
+        <activity
+            android:name="com.bbs.whu.activity.MainActivity"
+            android:launchMode="singleTask" />
         <activity android:name="com.bbs.whu.activity.HomeActivity" />
+        <activity android:name="com.bbs.whu.activity.AboutActivity" />
         <activity android:name="com.bbs.whu.activity.BoardActivity" />
         <activity android:name="com.bbs.whu.activity.MineActivity" />
         <activity android:name="com.bbs.whu.activity.MessageActivity" />
         <activity android:name="com.bbs.whu.activity.MoreActivity" />
         <activity android:name="com.bbs.whu.activity.TopTenActivity" />
+        <activity android:name="com.bbs.whu.activity.TopicActivity" />
         <activity android:name="com.bbs.whu.activity.BulletinActivity" />
+        <activity
+            android:name="com.bbs.whu.activity.BulletinReplyActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.bbs.whu.activity.PersonActivity" />
+        <activity
+            android:name="com.bbs.whu.activity.MailListActivity"
+            android:launchMode="singleTask" />
+        <activity android:name="com.bbs.whu.activity.MailContentActivity" />
+        <activity android:name="com.bbs.whu.activity.FavBoardActivity" />
+        <activity android:name="com.bbs.whu.activity.OnlineFriendActivity" />
+        <activity android:name="com.bbs.whu.activity.RecommendActivity" />
+        <activity android:name="com.bbs.whu.activity.PlaybillActivity" />
+        <activity
+            android:name="com.bbs.whu.activity.MailSendActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

@@ -13,20 +13,22 @@ public class TopTenBean {
 	private String author;
 	// 版面英文名
 	private String board;
+	// 版面ID
+	private String bid;
 	// 版面中文名
 	private String boardname;
 	// 版面ID
-	private long groupid;
+	private String groupid;
 	// 最后更新时间
 	private String lasttime;
 	// 回帖数
-	private long number;
+	private String number;
 
-	public String getTilte() {
+	public String getTitle() {
 		return title;
 	}
 
-	public void setTilte(String tilte) {
+	public void setTitle(String tilte) {
 		this.title = tilte;
 	}
 
@@ -46,6 +48,14 @@ public class TopTenBean {
 		this.board = board;
 	}
 
+	public void setBid(String bid) {
+		this.bid = bid;
+	}
+
+	public String getBid() {
+		return bid;
+	}
+	
 	public String getBoardname() {
 		return boardname;
 	}
@@ -54,11 +64,11 @@ public class TopTenBean {
 		this.boardname = boardname;
 	}
 
-	public long getGroupid() {
+	public String getGroupid() {
 		return groupid;
 	}
 
-	public void setGroupid(long groupid) {
+	public void setGroupid(String groupid) {
 		this.groupid = groupid;
 	}
 
@@ -70,18 +80,19 @@ public class TopTenBean {
 		this.lasttime = lasttime;
 	}
 
-	public long getNumber() {
+	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(long number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 
 	@Override
 	public String toString() {
-		return this.title + "/" + this.author + "/" + this.board + "/"
-				+ this.boardname + "/" + this.groupid + "/" + this.lasttime
-				+ "/" + this.number;
+		return "TopTenBean [title=" + title + ", author=" + author + ", board="
+				+ board + ", bid=" + bid + ", boardname=" + boardname
+				+ ", groupid=" + groupid + ", lasttime=" + lasttime
+				+ ", number=" + number + "]";
 	}
 }

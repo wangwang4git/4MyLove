@@ -3,6 +3,8 @@ package com.bbs.whu.model.bulletin;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bbs.whu.model.attr.num;
+
 public class Page {
 	private num num;
 	private total total;
@@ -61,6 +63,10 @@ public class Page {
 		private String floor;
 		// 文章id（每层楼都是一篇文章，每篇文章都有一个id）
 		private String id;
+		// 作者
+		private String author;
+		// 头像url
+		private String userface_img;
 		// 内容
 		private String content;
 
@@ -69,10 +75,13 @@ public class Page {
 			// TODO Auto-generated constructor stub
 		}
 
-		public Article(String floor, String id, String content) {
+		public Article(String floor, String id, String author,
+				String userface_img, String content) {
 			super();
 			this.floor = floor;
 			this.id = id;
+			this.author = author;
+			this.userface_img = userface_img;
 			this.content = content;
 		}
 
@@ -92,6 +101,22 @@ public class Page {
 			this.id = id;
 		}
 
+		public String getAuthor() {
+			return author;
+		}
+
+		public void setAuthor(String author) {
+			this.author = author;
+		}
+
+		public String getUserface_img() {
+			return userface_img;
+		}
+
+		public void setUserface_img(String userface_img) {
+			this.userface_img = userface_img;
+		}
+
 		public String getContent() {
 			return content;
 		}
@@ -102,9 +127,9 @@ public class Page {
 
 		@Override
 		public String toString() {
-			// TODO Auto-generated method stub
-			return this.floor + "/" + this.id + "/" + this.content;
+			return "Article [floor=" + floor + ", id=" + id + ", author="
+					+ author + ", userface_img=" + userface_img + ", content="
+					+ content + "]";
 		}
 	}
-
 }

@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<!-- 深灰 -->
-	<color name="tabMedium">#2B2B2B</color>
-	<!-- 黑 -->
-	<color name="tabDark">#000000</color>
-	<!-- 透明白 -->
-	<color name="tabTransparent">#10ffffff</color>
+    <!-- 深灰 -->
+    <color name="tabMedium">#2B2B2B</color>
+    <!-- 黑 -->
+    <color name="tabDark">#000000</color>
+    <!-- 透明白 -->
+    <color name="tabTransparent">#10ffffff</color>
+    <color name="login_center">#88FAE9CD</color>
+    <color name="login_background">#FFF7D0</color>
+    <color name="list_item_background">#00FAFAF7</color>
+    <color name="list_item_background_on_click">#BFC2BA</color>
+    <color name="TextColor">#FFFFFF</color>
+    <color name="bgColor">#000000</color>
+    <color name="online_friend_text_color">#ffff9933</color>
 
 </resources>

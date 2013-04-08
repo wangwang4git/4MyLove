@@ -1,6 +1,13 @@
 package com.bbs.whu.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.content.Context;
 
@@ -24,7 +31,10 @@ public class MyBBSRequest {
 	 * @param activityName
 	 *            消息发往的activity
 	 */
-	public static void mGet(String url, final String activityName) {
+	public static void mGet(String url, final String activityName, Context context) {
+		// 获取Cookie
+		PersistentCookieStore cookieStore = getCookieStore(context);
+		MyHttpClient.setCookieStore(cookieStore);
 		// get请求
 		MyHttpClient.get(url, new AsyncHttpResponseHandler() {
 			@Override
@@ -66,7 +76,8 @@ public class MyBBSRequest {
 		// 如果非强制从网络获取，先尝试读缓存
 		if (!isForcingWebGet) {
 			// 获取缓存文件名
-			String cacheFileName = getCacheFileName(url, keys, values);
+			String cacheFileName = MyBBSCache.getCacheFileName(url, keys,
+					values);
 			// 尝试读取缓存
 			String cacheContentString = MyBBSCache.getUrlCache(cacheFileName);
 			// 文件已缓存，则读缓存
@@ -105,7 +116,8 @@ public class MyBBSRequest {
 	private static void get(String url, ArrayList<String> keys,
 			ArrayList<String> values, final String activityName, Context context) {
 		// 获取缓存文件名
-		final String cacheFileName = getCacheFileName(url, keys, values);
+		final String cacheFileName = MyBBSCache.getCacheFileName(url, keys,
+				values);
 		// 获取Cookie
 		PersistentCookieStore cookieStore = getCookieStore(context);
 		MyHttpClient.setCookieStore(cookieStore);
@@ -152,7 +164,7 @@ public class MyBBSRequest {
 			ArrayList<String> values, final String activityName, Context context) {
 		// 检测网络状态
 		if (checkNetwork(context)) {
-			// 异步的get请求
+			// 异步的post请求
 			post(url, keys, values, activityName, context);
 		} else {
 			MyNetworkUtils.setNetworkState(context);
@@ -176,50 +188,36 @@ public class MyBBSRequest {
 	private static void post(String url, ArrayList<String> keys,
 			ArrayList<String> values, final String activityName, Context context) {
 		// 添加post请求参数
-		RequestParams params = new RequestParams();
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		for (int i = 0; i < keys.size(); ++i) {
-			params.put(keys.get(i), values.get(i));
+			params.add(new BasicNameValuePair(keys.get(i), values.get(i)));
 		}
-		// post请求
-		MyHttpClient.post(url, params, new AsyncHttpResponseHandler() {
-			@Override
-			public void onSuccess(String response) {
-				// 发送成功内容
-				MessageHandlerManager.getInstance().sendMessage(
-						MyConstants.REQUEST_SUCCESS, activityName);
-			}
+		try {
+			// 必须通过HttpEntity进行转码，否则post过去的数据是“UTF-8”编码
+			HttpEntity mHttpEntity = new UrlEncodedFormEntity(params, "GBK");
+			// 从web请求中捕获
+			String contentType = "application/x-www-form-urlencoded";
+			// post请求
+			MyHttpClient.post(context, url, mHttpEntity, contentType,
+					new AsyncHttpResponseHandler() {
+						@Override
+						public void onSuccess(String response) {
+							// 发送成功内容
+							MessageHandlerManager.getInstance().sendMessage(
+									MyConstants.REQUEST_SUCCESS, response,
+									activityName);
+						}
 
-			@Override
-			public void onFailure(Throwable error, String content) {
-				// 发送失败消息
-				MessageHandlerManager.getInstance().sendMessage(
-						MyConstants.REQUEST_FAIL, activityName);
-			}
-		});
-	}
-
-	/**
-	 * 构造缓存文件名
-	 * 
-	 * @param url
-	 *            请求的URL地址
-	 * @param keys
-	 *            get请求时键（key）
-	 * @param values
-	 *            get请求时值（value）
-	 * @return 缓存文件名，格式为：URL+get参数+Cookie+用户名
-	 */
-	private static String getCacheFileName(String url, ArrayList<String> keys,
-			ArrayList<String> values) {
-		// 缓存文件名中的参数部分
-		StringBuilder paramsString = new StringBuilder();
-		/* 构造 get请求的参数String */
-		for (int i = 0; i < keys.size(); ++i) {
-			paramsString.append(keys.get(i));
-			paramsString.append(values.get(i));
+						@Override
+						public void onFailure(Throwable error, String content) {
+							// 发送失败消息
+							MessageHandlerManager.getInstance().sendMessage(
+									MyConstants.REQUEST_FAIL, activityName);
+						}
+					});
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
-		// 返回构造的缓存文件名
-		return url + paramsString.toString() + MyConstants.MY_USER_NAME;
 	}
 
 	/**

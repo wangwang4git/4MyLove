@@ -3,6 +3,7 @@ package com.bbs.whu.activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,34 +16,31 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.bbs.whu.R;
+import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
+import com.bbs.whu.utils.MyFontManager;
 
 /**
  * 主界面Activity，
- * 包含5个tab，分别是“首页”，“分类”，“我的山水”，“消息”，“更多”
+ * 包含4个tab，分别是“首页”，“分类”，“我的山水”，“更多”
  * 
  * @author double
  * 
  */
 public class MainActivity extends TabActivity {
 	TabHost tabHost;
+	private Context context = this;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
+		MyFontManager.changeFontType(this);// 设置当前Activity的字体
 		tabHost = getTabHost();
 		// 添加tab
 		setTabs();
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		// 退出登陆
-		MyBBSRequest.mGet(MyConstants.LOG_OUT_URL, "MainActivity");
 	}
 
 	@Override
@@ -60,10 +58,11 @@ public class MainActivity extends TabActivity {
 	 */
 	private void setTabs() {
 		addTab("首页", R.drawable.tab_home, HomeActivity.class);
-		addTab("分类", R.drawable.tab_search, BoardActivity.class);
-		addTab("我的山水", R.drawable.tab_home, MineActivity.class);
-		addTab("消息", R.drawable.tab_search, MessageActivity.class);
-		addTab("更多", R.drawable.tab_home, MoreActivity.class);
+		addTab("分类", R.drawable.tab_board, BoardActivity.class);
+		// 非匿名用户添加“我的山水”
+		if (!MyApplication.getInstance().getName().equals("4MyLove"))
+			addTab("我的山水", R.drawable.tab_mine, MineActivity.class);
+		addTab("更多", R.drawable.tab_more, MoreActivity.class);
 	}
 
 	/**
@@ -101,15 +100,32 @@ public class MainActivity extends TabActivity {
 		builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				// 退出登陆
+				MyBBSRequest.mGet(MyConstants.LOG_OUT_URL, "MainActivity",
+						context);
+				
+				// 延时，留时间给请求BBS后台用户退出
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				// 清理Cookie
+				MyApplication.getInstance().clearCookieStore();
+				// 设置程序退出
+				MyApplication.getInstance().setExit(true);
+				// 关闭MainActivity
+				finish();
+				// 对话框退出
 				dialog.dismiss();
-				// 结束程序
-				android.os.Process.killProcess(android.os.Process.myPid());
 			}
 		});
 		builder.setNegativeButton("取消",
 				new android.content.DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						// 对话框退出
 						dialog.dismiss();
 					}
 				});

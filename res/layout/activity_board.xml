@@ -1,15 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textView1"
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/activity_board"
-        android:textColor="#000"
-        android:textSize="20sp" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/background_left_bottom_flower" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/background_right_top_flower" />
+
+    <LinearLayout
+        android:id="@+id/title_linearlayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/board_titlebar_bg"
+        android:gravity="center" >
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" >
+
+            <Button
+                android:id="@+id/board_search_show_linearlayout_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dip"
+                android:background="@drawable/search_normal"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/activity_board"
+                android:textColor="#FF7B7B7B"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/board_refresh_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:background="@drawable/reload" >
+            </Button>
+
+            <ImageView
+                android:id="@+id/board_refresh_imageView"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="right"
+                android:background="@anim/spinner"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/board_search_linearlayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="invisible" >
+
+                <AutoCompleteTextView
+                    android:id="@+id/board_search_autocompletetextview"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/board_search_edit"
+                    android:clickable="true"
+                    android:completionThreshold="1"
+                    android:hint="输入版面的首字符(支持中文)"
+                    android:singleLine="true"
+                    android:textColor="#FF000000" />
+
+                <ImageView
+                    android:id="@+id/board_search_confirm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dip"
+                    android:background="@drawable/board_search_btn"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+
+    <ExpandableListView
+        android:id="@+id/board_elist"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/title_linearlayout"
+        android:cacheColorHint="#00000000" />
 
 </RelativeLayout>

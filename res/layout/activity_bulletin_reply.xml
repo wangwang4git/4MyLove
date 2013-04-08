@@ -1,0 +1,136 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true" >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/background_left_bottom_flower" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/background_right_top_flower" />
+
+    <RelativeLayout
+        android:id="@+id/bulletin_reply_head_linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/darker_titlebar_bg" >
+        
+        <ImageView
+            android:id="@+id/bulletin_reply_back_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/back_icon" />
+
+        <TextView
+            android:id="@+id/bulletin_reply_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="#FF7B7B7B"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/bulletin_reply_publish_button"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/mail_send_submit_selector"
+            android:text="@string/bulletin_reply_publish"
+            android:textSize="15sp" >
+        </Button>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/bulletin_reply_title_inearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bulletin_reply_head_linearLayout"
+        android:background="#AAFAF7E3" >
+
+        <EditText
+            android:id="@+id/bulletin_reply_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dip"
+            android:layout_marginRight="15dip"
+            android:layout_marginTop="5dip"
+            android:hint="@string/bulletin_reply_title_hint" />
+    </RelativeLayout>
+
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="fill_parent" 
+		android:layout_below="@+id/bulletin_reply_title_inearLayout"
+		android:layout_alignParentBottom="true"
+		android:orientation="vertical" >
+
+	    <!-- 正文编辑框 -->
+	
+	    <EditText
+	        android:id="@+id/bulletin_reply_content"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="15dip"
+	        android:layout_marginRight="15dip"
+	        android:gravity="top"
+	        android:hint="@string/bulletin_reply_content"
+	        android:layout_weight="1"
+	        android:scrollbars="vertical" />
+	
+	    <LinearLayout
+	        android:id="@+id/bulletin_reply_bottom_linearLayout"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="right"
+	        android:orientation="horizontal" >
+	
+	        <ImageButton
+	            android:id="@+id/bulletin_reply_bottom_pic"
+	            android:layout_width="40dip"
+	            android:layout_height="40dip"
+	            android:layout_marginRight="10dp"
+	            android:src="@drawable/btn_insert_pic" />
+	
+	        <ImageButton
+	            android:id="@+id/bulletin_reply_bottom_face"
+	            android:layout_width="40dip"
+	            android:layout_height="40dip"
+	            android:layout_marginRight="15dp"
+	            android:src="@drawable/btn_insert_face" />
+	
+	        <ImageButton
+	            android:id="@+id/bulletin_reply_bottom_keyboard"
+	            android:layout_width="40dip"
+	            android:layout_height="40dip"
+	            android:layout_marginRight="15dp"
+	            android:src="@drawable/btn_insert_keyboard"
+	            android:visibility="gone" />
+	    </LinearLayout>
+	    
+	    <GridView android:id="@+id/bulletin_reply_grid_face"
+			android:layout_width="fill_parent"
+			android:layout_height="50dip"
+			android:numColumns="auto_fit"
+			android:verticalSpacing="10dip"
+			android:columnWidth="35dip"
+			android:stretchMode="columnWidth"
+			android:layout_weight="1"
+			android:visibility="gone" />
+			
+	</LinearLayout>
+	
+</RelativeLayout>

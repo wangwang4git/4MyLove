@@ -5,6 +5,11 @@
 	<classpathentry kind="lib" path="libs/android-async-http-1.4.2.jar"/>
 	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
 	<classpathentry kind="lib" path="libs/xstream-1.4.3.jar"/>
+	<classpathentry kind="lib" path="libs/universal-image-loader-1.7.0-with-src.jar"/>
+	<classpathentry kind="lib" path="libs/gson-2.1.jar"/>
+	<classpathentry kind="lib" path="libs/sunjce_provider.jar"/>
+	<classpathentry kind="lib" path="libs/US_export_policy.jar"/>
+	<classpathentry kind="lib" path="libs/local_policy.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin/classes"/>

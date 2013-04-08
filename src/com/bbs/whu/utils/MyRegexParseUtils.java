@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.content.Context;
+
 import com.bbs.whu.model.BulletinBean;
 import com.bbs.whu.model.bulletin.Page;
 import com.bbs.whu.model.bulletin.Page.Article;
@@ -38,7 +40,7 @@ public class MyRegexParseUtils {
 	// 获取签名档信息
 	final static private String SIGN_REGEX_STRING = "(?<=\\\\n)--.*?(?=\\\\n\\\\n\\\\r)";
 	// 获取来源信息
-	final static private String FROM_REGEX_STRING = "(※ 来源:).*?(?=\\\\r\\[m\\\\n)";
+	final static private String FROM_REGEX_STRING = "((?<=m)※ 来源:).*?(?=\\\\r\\[m\\\\n)";
 
 	// 获取发信人名称
 	static public String getAuthor(String content) {
@@ -108,7 +110,8 @@ public class MyRegexParseUtils {
 
 	// 获取帖子主体信息
 	static public String getBody(String content) {
-		return getBody(content, false).replaceAll("\\\\n", "\n").replaceAll("\\\\/", "/");
+		return getBody(content, false).replaceAll("\\\\n", "\n").replaceAll(
+				"\\\\/", "/");
 	}
 
 	static public String getBody(String content, boolean flag) {
@@ -123,7 +126,8 @@ public class MyRegexParseUtils {
 
 	// 获取帖子回复部分
 	static public String getReply(String content) {
-		return getReply(content, false).replaceAll("\\\\n", "\n").replaceAll("\\\\/", "/");
+		return getReply(content, false).replaceAll("\\\\n", "\n").replaceAll(
+				"\\\\/", "/");
 	}
 
 	static public String getReply(String content, boolean flag) {
@@ -186,16 +190,20 @@ public class MyRegexParseUtils {
 	}
 
 	// 返回帖子详情列表
-	public static List<BulletinBean> getContentList(Page page) {
+	public static List<BulletinBean> getContentList(Context context, Page page) {
 		List<BulletinBean> contents = new ArrayList<BulletinBean>();
 		List<Article> articles = page.getArticles();
 		for (int i = 0; i < articles.size(); ++i) {
 			BulletinBean content = new BulletinBean();
 			String temp = articles.get(i).getContent();
+			// 在content中插入图片URL
+			temp = insertImageURL(temp, MyXMLParseUtils.getBoardIdMap(context)
+					.get(getBoard(temp)), articles.get(i).getId());
 			content.setFloor(articles.get(i).getFloor());
 			content.setContent(temp);
 			content.setId(articles.get(i).getId());
 			content.setAuthor(getAuthor(temp));
+			content.setUserfaceImg(articles.get(i).getUserface_img());
 			content.setBoard(getBoard(temp));
 			content.setTitle(getTitle(temp));
 			content.setSite(getSite(temp));
@@ -209,5 +217,119 @@ public class MyRegexParseUtils {
 			contents.add(content);
 		}
 		return contents;
+	}
+
+	// 在content中提取图片的正则表达式
+	final static private String IMAGE_REGEX_STRING = "\\[upload=\\d+\\]\\[\\\\/upload\\](.*?)attach\\('.*?', .*?, (.*?)\\);";
+
+	// 在content中插入图片URL
+	static private String insertImageURL(String content, String boardId,
+			String contentId) {
+		Pattern pattern = Pattern.compile(IMAGE_REGEX_STRING);
+		while (true) {
+			Matcher matcher = pattern.matcher(content);
+			if (matcher.find()) {
+				// 插入图片URL
+				content = content.replaceAll(IMAGE_REGEX_STRING,
+						"<img src='img' />" + MyConstants.IMAGE_URL + "?bid="
+								+ boardId + "&id=" + contentId + "&ap=$2$1");
+			} else {
+				break;
+			}
+		}
+		return content;
+	}
+	
+	
+	// 获取二级版块信息
+	final static private String TWO_LEVEL_BOARD_REGEX_STRING = "<board[^<>]*?hasChildren=true >(.*?)</board>";
+	
+	// 去除二级目录信息
+	static public String delTwoLevelBoard(String content) {
+		return content.replaceAll(TWO_LEVEL_BOARD_REGEX_STRING, "$1");
+	}
+	
+	// 在文本中提取表情的正则表达式
+	final static private String EXPRESSION_REGEX_STRING = "\\[(em[0,1,2,3,4,5,6][0,1,2,3,4,5,6,7,8,9])\\]";
+	// 在文本中提取URL的正则表达式，来源《匹配URL或者网址》，URL：http://see.xidian.edu.cn/cpp/html/1435.html
+	final static private String URL_REGEX_STRING = "((http|ftp|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?)";
+	// 在文本中提取字体颜色的正则表达式
+	final static private String COLOR_REGEX_STRING = "(\\[color=(#[0-9A-Z]{6})\\])([\\s\\S]*?)(\\[/color\\])";
+	// 在文本中提取字体大小的正则表达式
+	final static private String SIZE_REGEX_STRING = "(\\[size=(\\d)\\])([\\s\\S]*?)(\\[/size\\])";
+	// 在文本中提取字体类型的正则表达式
+	final static private String FACE__REGEX_STRING = "(\\[face=(.*?)\\])([\\s\\S]*?)(\\[/face\\])";
+	// 在文本中提取粗体字的正则表达式
+	final static private String BOLD_REGEX_STRING = "\\[B\\]([\\s\\S]*?)\\[/B\\]";
+	// 在文本中提取斜体字的正则表达式
+	final static private String ITALIC_REGEX_STRING = "\\[I\\]([\\s\\S]*?)\\[/I\\]";
+	// 在文本中提取下划线的正则表达式
+	final static private String UNDERLINE_REGEX_STRING = "\\[U\\]([\\s\\S]*?)\\[/U\\]";
+	// 删除[URL=...](...)[/URL]标签
+	final static private String DEL_URL_REGEX_STRING = "\\[URL=.*?\\](.*?)\\[/URL\\]";
+	// 删除[IMG]...[/IMG]标签
+	final static private String DEL_IMG_REGEX_STRING = "\\[IMG\\](.*?)\\[/IMG\\]";
+	// 删除\r[4m...\r[m标签，插入下划线便签
+	final static private String DEL_UNDERLINE_REGEX_STRING = "\\\\r\\[4m(.*?)\\\\r\\[m";
+
+	// TextView富文本（表情、URL等）显示替换操作
+	// 替换规则，参见http://blog.csdn.net/a_mean/article/details/6930968
+	static public String getRichTextString(String source) {
+		source = source.replaceAll(EXPRESSION_REGEX_STRING, "<img src='$1' />");
+		source = source.replaceAll(DEL_URL_REGEX_STRING, "$1");
+		source = source
+				.replaceAll(DEL_IMG_REGEX_STRING, "<img src='img' />$1");
+		source = source.replaceAll(URL_REGEX_STRING,
+				"<img src='url' /><a href='$1'>$1</a>");
+		source = source.replaceAll(COLOR_REGEX_STRING,
+				"<font color=\"$2\">$3</font>");
+		source = source.replaceAll(SIZE_REGEX_STRING,
+				"<big><font size=\"$2\">$3</font></big>");
+		source = source.replaceAll(FACE__REGEX_STRING,
+				"<font face=\"$2\">$3</font>");
+		source = source.replaceAll(BOLD_REGEX_STRING, "<big><b>$1</b></big>");
+		source = source.replaceAll(ITALIC_REGEX_STRING, "<i>$1</i>");
+		source = source.replaceAll(UNDERLINE_REGEX_STRING, "<u>$1</u>");
+		source = source.replaceAll(DEL_UNDERLINE_REGEX_STRING, "<u>$1</u>");
+		source = source.replaceAll("\n", "<br>");
+		return source;
+	}
+	
+	// 获取用户信息签名档中的图片部分
+	static public String getSignView(String content) {
+		Pattern pattern = Pattern.compile(DEL_IMG_REGEX_STRING);
+		Matcher matcher = pattern.matcher(content);
+		// 输出第一个匹配项
+		while (matcher.find()) {
+			return matcher.group(1);
+		}
+		return "null";
+	}
+	
+	// 在文本中提取用户当前状态的正则表达式
+	final static private String USERMODE_REGEX_STRING = "&lt;span class='blue'&gt;(.*?)&lt;/span&gt;.*";
+
+	static public String getUserModeString(String content) {
+		Pattern pattern = Pattern.compile(USERMODE_REGEX_STRING);
+		Matcher matcher = pattern.matcher(content);
+		// 输出第一个匹配项的第一个分组
+		while (matcher.find()) {
+			return "目前在站上：" + matcher.group(1).replaceAll("\\\\/", "/");
+		}
+		return "目前不在站上";
+	}
+	
+	// 获取邮件正文
+	final static private String MAIL_TEXT_REGEX_STRING = "(来  源: .*?\\\\n\\\\n)(.*)(?='\\);)";
+
+	static public String getMailText(String content) {
+		Pattern pattern = Pattern.compile(MAIL_TEXT_REGEX_STRING);
+		Matcher matcher = pattern.matcher(content);
+		// 输出第一个匹配项
+		while (matcher.find()) {
+			return matcher.group(2).replaceAll("\\\\n", "\n")
+					.replaceAll("\\\\/", "/");
+		}
+		return "null";
 	}
 }

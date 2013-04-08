@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/background_right_top_flower" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/background_left_bottom_flower" />
+
+    <RelativeLayout
+        android:id="@+id/mail_list_title_linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/darker_titlebar_bg" >
+
+        <ImageView
+            android:id="@+id/mail_list_back_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/back_icon" />
+
+        <TextView
+            android:id="@+id/mail_list_title"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/mail_title"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="#FF7B7B7B"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="10dp"
+            android:layout_alignBottom="@+id/mail_list_title"
+            android:layout_marginLeft="-10dp"
+            android:layout_toRightOf="@+id/mail_list_title"
+            android:background="@drawable/mail_list_select"
+            android:scaleType="fitXY" />
+
+        <Button
+            android:id="@+id/mail_list_refresh_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/reload" />
+
+        <ImageView
+            android:id="@+id/mail_list_refresh_imageView"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@anim/spinner"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <com.bbs.whu.xlistview.XListView
+        android:id="@+id/mail_list_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/mail_list_new_mail_button"
+        android:layout_below="@+id/mail_list_title_linearLayout"
+        android:cacheColorHint="#00000000"
+        android:fastScrollEnabled="true" >
+    </com.bbs.whu.xlistview.XListView>
+
+    <Button
+        android:id="@+id/mail_list_new_mail_button"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_click"
+        android:text="@string/new_mail"
+        android:textSize="20sp" >
+    </Button>
+
+</RelativeLayout>

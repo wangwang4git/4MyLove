@@ -14,7 +14,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -22,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bbs.whu.R;
+import com.bbs.whu.utils.MyFontManager;
 
 public class HomeActivity extends ActivityGroup {
 
@@ -40,6 +40,8 @@ public class HomeActivity extends ActivityGroup {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_home);
+		MyFontManager.changeFontType(this);//设置当前Activity的字体
+		
 		initImageView();
 		initTextView();
 		initViewPager();
@@ -75,9 +77,10 @@ public class HomeActivity extends ActivityGroup {
 		mListView = new ArrayList<View>();
 		mListView.add(getLocalActivityManager().startActivity("TopTenActivity",
 				new Intent(this, TopTenActivity.class)).getDecorView());
-		LayoutInflater mInflater = getLayoutInflater();
-		mListView.add(mInflater.inflate(R.layout.activity_recommend, null));
-		mListView.add(mInflater.inflate(R.layout.activity_playbill, null));
+		mListView.add(getLocalActivityManager().startActivity("RecommendActivity",
+				new Intent(this, RecommendActivity.class)).getDecorView());
+		mListView.add(getLocalActivityManager().startActivity("PlaybillActivity",
+				new Intent(this, PlaybillActivity.class)).getDecorView());
 		mViewPager.setAdapter(new MyPagerAdapter(mListView));
 		mViewPager.setCurrentItem(0);
 		mTopten.setTextColor(0xFF000000);

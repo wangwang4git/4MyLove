@@ -365,7 +365,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 					// 关闭等待对话框
 					loginWaitDialog.cancel();
 					// 提示失败
-					System.out.println("REQUEST_FAIL");
 					break;
 				}
 			}

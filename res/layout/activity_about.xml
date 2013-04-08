@@ -78,7 +78,7 @@
                 android:layout_below="@+id/about_logo_text"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
-                android:text="1.1 版"
+                android:text="1.0 版"
                 android:textColor="#8e8e8e"
                 android:textSize="15sp" />
 

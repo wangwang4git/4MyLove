@@ -85,9 +85,6 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 	// 图片异步下载缓存设置变量
 	private DisplayImageOptions options;
 
-	// 进行手势动作时候的坐标
-	float x_temp1 = 0, y_temp1 = 0, x_temp2, y_temp2;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -139,32 +136,6 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 			onRefresh();
 			break;
 		}
-	}
-
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		// 获得当前坐标
-		float x = event.getX();
-		float y = event.getY();
-
-		switch (event.getAction()) {
-		case MotionEvent.ACTION_DOWN:
-			x_temp1 = x;
-			y_temp1 = y;
-			break;
-
-		case MotionEvent.ACTION_UP: {
-			x_temp2 = x;
-			y_temp2 = y;
-			// 右滑
-			if (x_temp1 != 0 && x_temp2 - x_temp1 > MyConstants.MIN_GAP_X
-					&& Math.abs(y_temp2 - y_temp1) < MyConstants.MAX_GAP_Y) {
-				onBackPressed();
-			}
-		}
-			break;
-		}
-		return super.onTouchEvent(event);
 	}
 
 	/**

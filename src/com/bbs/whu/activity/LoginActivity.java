@@ -111,8 +111,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 取出Activity的title
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
-		MyFontManager.changeFontType(this);//设置当前Activity的字体
-		
+		MyFontManager.changeFontType(this);// 设置当前Activity的字体
+
 		// 判断是否为第一次使用
 		firstUseSP = this.getSharedPreferences("firstUse", MODE_WORLD_READABLE);
 
@@ -143,6 +143,16 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	@Override
+	public void onStart() {
+		super.onStart();
+		if (MyApplication.getInstance().isExit())
+			finish();
+		// 情况用户名，密码
+		userNameEditText.setText("");
+		passwordEditText.setText("");
+	}
+
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		// 注销handler
@@ -150,8 +160,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 				MyConstants.REQUEST_SUCCESS, "LoginActivity");
 		MessageHandlerManager.getInstance().unregister(
 				MyConstants.REQUEST_FAIL, "LoginActivity");
+		// 结束程序
+		android.os.Process.killProcess(android.os.Process.myPid());
 	}
-	
+
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
@@ -167,7 +179,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			// 登陆后操作
 			loginAfter();
 			// 关闭登陆页面
-			finish();
+			// finish();
 			break;
 		}
 	}
@@ -323,7 +335,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 						// 登陆后操作
 						loginAfter();
 						// 关闭登陆页面
-						finish();
+						// finish();
 					} else if (loginWaitDialog.mStatus == MyWaitDialog.CANCELLED) {
 						// 登录成功但是取消了等待对话框则发送登出请求
 						MyBBSRequest.mGet(MyConstants.LOG_OUT_URL,

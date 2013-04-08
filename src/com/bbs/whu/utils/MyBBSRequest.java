@@ -31,7 +31,10 @@ public class MyBBSRequest {
 	 * @param activityName
 	 *            消息发往的activity
 	 */
-	public static void mGet(String url, final String activityName) {
+	public static void mGet(String url, final String activityName, Context context) {
+		// 获取Cookie
+		PersistentCookieStore cookieStore = getCookieStore(context);
+		MyHttpClient.setCookieStore(cookieStore);
 		// get请求
 		MyHttpClient.get(url, new AsyncHttpResponseHandler() {
 			@Override

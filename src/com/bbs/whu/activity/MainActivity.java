@@ -3,6 +3,7 @@ package com.bbs.whu.activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,13 +30,14 @@ import com.bbs.whu.utils.MyFontManager;
  */
 public class MainActivity extends TabActivity {
 	TabHost tabHost;
+	private Context context = this;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);  
+		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
-		MyFontManager.changeFontType(this);//设置当前Activity的字体
+		MyFontManager.changeFontType(this);// 设置当前Activity的字体
 		tabHost = getTabHost();
 		// 添加tab
 		setTabs();
@@ -99,11 +101,22 @@ public class MainActivity extends TabActivity {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// 退出登陆
-				MyBBSRequest.mGet(MyConstants.LOG_OUT_URL, "MainActivity");
+				MyBBSRequest.mGet(MyConstants.LOG_OUT_URL, "MainActivity",
+						context);
+				
+				// 延时，留时间给请求BBS后台用户退出
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
 				// 清理Cookie
 				MyApplication.getInstance().clearCookieStore();
-				// 结束程序
-				android.os.Process.killProcess(android.os.Process.myPid());
+				// 设置程序退出
+				MyApplication.getInstance().setExit(true);
+				// 关闭MainActivity
+				finish();
 				// 对话框退出
 				dialog.dismiss();
 			}

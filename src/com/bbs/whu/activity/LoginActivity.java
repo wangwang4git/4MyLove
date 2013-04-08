@@ -9,6 +9,7 @@ import org.apache.http.cookie.Cookie;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -60,6 +61,7 @@ import com.loopj.android.http.PersistentCookieStore;
  */
 
 public class LoginActivity extends Activity implements OnClickListener {
+	private Context context = this;
 	// 用户名输入框
 	private AutoCompleteTextView userNameEditText;
 	private AdvancedAutoCompleteAdapter mAdapter;
@@ -142,8 +144,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 			LoginActivity.this.startActivity(intent);
 		}
 
-		// 登录前操作
-		loginBefore();
 		// 初始化控件
 		init();
 
@@ -158,6 +158,19 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	@Override
+	public void onStart() {
+		super.onStart();
+		if (MyApplication.getInstance().isExit())
+			finish();
+		// 情况用户名，密码
+		userNameEditText.setText("");
+		passwordEditText.setText("");
+		
+		// 登录前操作
+		loginBefore();
+	}
+
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		// 注销handler
@@ -165,6 +178,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 				MyConstants.REQUEST_SUCCESS, "LoginActivity");
 		MessageHandlerManager.getInstance().unregister(
 				MyConstants.REQUEST_FAIL, "LoginActivity");
+		// 结束程序
+		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
 	@Override
@@ -182,7 +197,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			// 登陆后操作
 			loginAfter();
 			// 关闭登陆页面
-			finish();
+			// finish();
 			break;
 		}
 	}
@@ -404,25 +419,42 @@ public class LoginActivity extends Activity implements OnClickListener {
 								.setPassword(passwordEditText.getText()
 										.toString());
 
-						// 跳转的主页
-						startActivity(new Intent(LoginActivity.this,
-								MainActivity.class));
 						// 关闭等待对话框
 						loginWaitDialog.cancel();
 						// 登陆后操作
 						loginAfter();
+
+						// 跳转的主页
+						startActivity(new Intent(LoginActivity.this,
+								MainActivity.class));
+						
 						// 关闭登陆页面
-						finish();
+						// finish();
+						
 					} else if (loginWaitDialog.mStatus == MyWaitDialog.CANCELLED) {
 						// 登录成功但是取消了等待对话框则发送登出请求
 						MyBBSRequest.mGet(MyConstants.LOG_OUT_URL,
-								"MainActivity");// 设置为MainActivity是为了不接收退出的响应事件
+								"MainActivity", context);// 设置为MainActivity是为了不接收退出的响应事件
+						
+						// 延时，留时间给请求BBS后台用户退出
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						
+						// 清理Cookie
+						MyApplication.getInstance().clearCookieStore();
+						// 清理全局变量
+						MyApplication.getInstance().setName("4MyLove");
+						MyApplication.getInstance().setPassword("4MyLove");
 					}
 					break;
 				case MyConstants.REQUEST_FAIL:
 					// 关闭等待对话框
 					loginWaitDialog.cancel();
 					// 提示失败
+					System.out.println("REQUEST_FAIL");
 					break;
 				}
 			}
@@ -447,28 +479,28 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 添加post请求参数
 		ArrayList<String> keys = new ArrayList<String>();
 		ArrayList<String> values = new ArrayList<String>();
-		keys.add("id");
-		values.add(userNameEditText.getText().toString());
-		keys.add("passwd");
-		values.add(passwordEditText.getText().toString());
-		keys.add("webtype");
-		values.add("wforum");
-		// 添加支持多次登录参数
-		keys.add("kick_multi");
-		values.add("1");
-		// post请求
-		MyBBSRequest.mPost(MyConstants.LOGIN_URL, keys, values,
-				"LoginActivity", this);
-		// 采用登录URL 2.0接口登录
-		// keys.add("app");
-		// values.add("login");
 		// keys.add("id");
 		// values.add(userNameEditText.getText().toString());
 		// keys.add("passwd");
 		// values.add(passwordEditText.getText().toString());
+		// keys.add("webtype");
+		// values.add("wforum");
+		// // 添加支持多次登录参数
+		// keys.add("kick_multi");
+		// values.add("1");
 		// // post请求
-		// MyBBSRequest.mPost(MyConstants.LOGIN_URL_2, keys, values,
+		// MyBBSRequest.mPost(MyConstants.LOGIN_URL, keys, values,
 		// "LoginActivity", this);
+		// 采用登录URL 2.0接口登录
+		keys.add("app");
+		values.add("login");
+		keys.add("id");
+		values.add(userNameEditText.getText().toString());
+		keys.add("passwd");
+		values.add(passwordEditText.getText().toString());
+		// post请求
+		MyBBSRequest.mPost(MyConstants.LOGIN_URL_2, keys, values,
+				"LoginActivity", this);
 	}
 
 	/**
@@ -533,6 +565,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	 */
 	private void loginBefore() {
 		// 读取用户名、密码json文件，并反序列化
+		userPasswords = null;
 		userPasswords = (ArrayList<UserPasswordBean>) MyBBSCache
 				.getUserPasswordList(MyFileUtils.USERPASSWORDNAME);
 		// 如果userPasswords为空，当前还不存在用户名、密码json文件

@@ -22,7 +22,7 @@ public class MyApplication extends Application {
 	private static MyApplication instance;
 
 	PersistentCookieStore myCookieStore;
-	
+
 	public PersistentCookieStore getCookieStore() {
 		return myCookieStore;
 	}
@@ -68,7 +68,7 @@ public class MyApplication extends Application {
 	public void setReadedTag(HashMap<String, Byte> readedTagMap) {
 		this.readedTagMap = readedTagMap;
 	}
-	
+
 	public void clearReadedTag() {
 		if (this.readedTagMap != null) {
 			this.readedTagMap.clear();
@@ -102,6 +102,17 @@ public class MyApplication extends Application {
 				.build();
 		// Initialize ImageLoader with configuration.
 		ImageLoader.getInstance().init(config);
+	}
+
+	// 程序退出标志
+	private boolean isExit = false;
+
+	public void setExit(boolean isExit) {
+		this.isExit = isExit;
+	}
+
+	public boolean isExit() {
+		return isExit;
 	}
 
 	// 在任意位置获取Application Context，包括工具类

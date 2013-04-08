@@ -47,8 +47,6 @@ public class FavBoardActivity extends Activity implements OnClickListener,
 	Handler mHandler;
 	// 返回按钮
 	private ImageView backButton;
-	// 新增好友按钮
-	private ImageView addButton;
 	// 刷新按钮
 	private Button refreshButton;
 	// 刷新动态图
@@ -57,9 +55,6 @@ public class FavBoardActivity extends Activity implements OnClickListener,
 	private AnimationDrawable refreshAnimationDrawable;
 
 	private String select = "0";
-
-	// 进行手势动作时候的坐标
-	float x_temp1 = 0, y_temp1 = 0, x_temp2, y_temp2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,32 +79,6 @@ public class FavBoardActivity extends Activity implements OnClickListener,
 		getFavBoards();
 	}
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		// 获得当前坐标
-		float x = event.getX();
-		float y = event.getY();
-
-		switch (event.getAction()) {
-		case MotionEvent.ACTION_DOWN:
-			x_temp1 = x;
-			y_temp1 = y;
-			break;
-
-		case MotionEvent.ACTION_UP: {
-			x_temp2 = x;
-			y_temp2 = y;
-			// 右滑
-			if (x_temp1 != 0 && x_temp2 - x_temp1 > MyConstants.MIN_GAP_X
-					&& Math.abs(y_temp2 - y_temp1) < MyConstants.MAX_GAP_Y) {
-				onBackPressed();
-			}
-		}
-			break;
-		}
-		return super.onTouchEvent(event);
-	}
-
 	/**
 	 * 最先响应触屏事件，因为ListView会屏蔽掉Activity的onTouchEvent事件，所以需要重写此方法
 	 */
@@ -124,10 +93,6 @@ public class FavBoardActivity extends Activity implements OnClickListener,
 		switch (v.getId()) {
 		case R.id.fav_board_back_icon:
 			onBackPressed();
-			break;
-		case R.id.fav_board_add_icon:
-			// 显示新增好友对话框
-			// showAddFriendDialog();
 			break;
 		case R.id.fav_board_refresh_button:
 			// 刷新
@@ -148,9 +113,6 @@ public class FavBoardActivity extends Activity implements OnClickListener,
 		// 返回按钮
 		backButton = (ImageView) findViewById(R.id.fav_board_back_icon);
 		backButton.setOnClickListener(this);
-		// 新增按钮
-		addButton = (ImageView) findViewById(R.id.fav_board_add_icon);
-		addButton.setOnClickListener(this);
 		// 刷新按钮
 		refreshButton = (Button) findViewById(R.id.fav_board_refresh_button);
 		refreshButton.setOnClickListener(this);
@@ -202,11 +164,6 @@ public class FavBoardActivity extends Activity implements OnClickListener,
 				}
 			}
 		};
-		// 注册handler
-		MessageHandlerManager.getInstance().register(mHandler,
-				MyConstants.REQUEST_SUCCESS, "FavBoardActivity");
-		MessageHandlerManager.getInstance().register(mHandler,
-				MyConstants.REQUEST_FAIL, "FavBoardActivity");
 	}
 
 	/**
@@ -217,6 +174,12 @@ public class FavBoardActivity extends Activity implements OnClickListener,
 		refreshButton.setVisibility(View.GONE);
 		refreshImageView.setVisibility(View.VISIBLE);
 		refreshAnimationDrawable.start();
+
+		// 注册handler
+		MessageHandlerManager.getInstance().register(mHandler,
+				MyConstants.REQUEST_SUCCESS, "FavBoardActivity");
+		MessageHandlerManager.getInstance().register(mHandler,
+				MyConstants.REQUEST_FAIL, "FavBoardActivity");
 
 		// get参数
 		ArrayList<String> keys = new ArrayList<String>();

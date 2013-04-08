@@ -1,5 +1,5 @@
 <resources>
-
+	<string name="navigation_text">开启山水之旅</string>
     <string name="app_name">珞珈山水</string>
     <string name="login_title">武汉大学珞珈山水BBS</string>
     <string name="login_remember_user">记住密码</string>

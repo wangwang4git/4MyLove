@@ -48,6 +48,7 @@ public class TopicActivity extends Activity implements IXListViewListener,
 	private String name;// 版块名称
 	/* 帖子的页数用于加载内容，web端数据分页传入 */
 	int currentPage = 1;// 当前页号
+	int totalPage = -1;
 	// 是否强制从网络获取数据
 	boolean isForcingWebGet = false;
 	// 标题
@@ -83,8 +84,8 @@ public class TopicActivity extends Activity implements IXListViewListener,
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_topic);
-		MyFontManager.changeFontType(this);//设置当前Activity的字体
-		
+		MyFontManager.changeFontType(this);// 设置当前Activity的字体
+
 		// 获取传入的参数
 		board = getIntent().getStringExtra("board");
 		name = getIntent().getStringExtra("name");
@@ -97,7 +98,7 @@ public class TopicActivity extends Activity implements IXListViewListener,
 		// 请求帖子列表数据
 		getTopic();
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -275,8 +276,11 @@ public class TopicActivity extends Activity implements IXListViewListener,
 		}
 		// 获得当前页号
 		currentPage = Integer.parseInt(topics.getPage().toString());
+		// 获取总页号
+		totalPage = Integer.parseInt(topics.getTotalPages().toString());
 		// 最多加载的页数
-		if (currentPage == MyConstants.TOPIC_MAX_PAGES) {
+		if (currentPage == totalPage
+				|| currentPage == MyConstants.TOPIC_MAX_PAGES) {
 			// 禁用“显示更多”
 			mListView.setPullLoadEnable(false);
 		}

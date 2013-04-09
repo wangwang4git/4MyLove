@@ -1,54 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/login_background" >
+    android:background="@color/login_background"
+    android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/background_right_top_flower" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/background_left_bottom_flower" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/background_right_top_flower" />
-    </RelativeLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/background_left_bottom_flower" />
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/mine_title_linearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/lighter_titlebar_bg"
+        android:gravity="center" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/activity_mine"
+            android:textColor="#FF7B7B7B"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#00FAFAFA"
-        android:gravity="center_horizontal"
-        android:orientation="vertical" >
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/lighter_titlebar_bg"
-            android:gravity="center" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/activity_mine"
-                android:textColor="#FF7B7B7B"
-                android:textSize="20sp" />
-        </LinearLayout>
+        android:layout_below="@+id/mine_title_linearLayout" >
 
         <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_horizontal" >
 
             <LinearLayout
@@ -64,14 +58,12 @@
                 <ImageView
                     android:layout_width="40dip"
                     android:layout_height="40dip"
-                    android:layout_centerVertical="true"
                     android:scaleType="centerInside"
                     android:src="@drawable/mine_personal_information" />
 
                 <ImageView
                     android:layout_width="40dip"
                     android:layout_height="40dip"
-                    android:layout_centerVertical="true"
                     android:scaleType="centerInside"
                     android:src="@drawable/mine_segment" />
 
@@ -95,14 +87,12 @@
                 <ImageView
                     android:layout_width="40dip"
                     android:layout_height="40dip"
-                    android:layout_centerVertical="true"
                     android:scaleType="centerInside"
                     android:src="@drawable/mine_station_mail" />
 
                 <ImageView
                     android:layout_width="40dip"
                     android:layout_height="40dip"
-                    android:layout_centerVertical="true"
                     android:scaleType="centerInside"
                     android:src="@drawable/mine_segment" />
 
@@ -126,14 +116,12 @@
                 <ImageView
                     android:layout_width="40dip"
                     android:layout_height="40dip"
-                    android:layout_centerVertical="true"
                     android:scaleType="centerInside"
                     android:src="@drawable/mine_collect_board" />
 
                 <ImageView
                     android:layout_width="40dip"
                     android:layout_height="40dip"
-                    android:layout_centerVertical="true"
                     android:scaleType="centerInside"
                     android:src="@drawable/mine_segment" />
 
@@ -157,14 +145,12 @@
                 <ImageView
                     android:layout_width="40dip"
                     android:layout_height="40dip"
-                    android:layout_centerVertical="true"
                     android:scaleType="centerInside"
                     android:src="@drawable/mine_online_friend" />
 
                 <ImageView
                     android:layout_width="40dip"
                     android:layout_height="40dip"
-                    android:layout_centerVertical="true"
                     android:scaleType="centerInside"
                     android:src="@drawable/mine_segment" />
 
@@ -180,6 +166,7 @@
                 android:layout_height="30dip"
                 android:layout_alignParentBottom="true"
                 android:layout_below="@id/mine_friend"
+                android:layout_marginTop="40dip"
                 android:gravity="center"
                 android:orientation="horizontal" >
 
@@ -190,6 +177,6 @@
                     android:src="@drawable/mine_text" />
             </LinearLayout>
         </RelativeLayout>
-    </LinearLayout>
+    </ScrollView>
 
-</FrameLayout>
+</RelativeLayout>

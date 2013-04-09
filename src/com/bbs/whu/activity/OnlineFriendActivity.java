@@ -25,6 +25,8 @@ import com.bbs.whu.handler.MessageHandlerManager;
 import com.bbs.whu.model.FriendBean;
 import com.bbs.whu.model.FriendsAllBean;
 import com.bbs.whu.model.FriendsOnlineBean;
+import com.bbs.whu.model.friend.FriendsAll;
+import com.bbs.whu.model.friend.FriendsOnline;
 import com.bbs.whu.utils.MyBBSRequest;
 import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyFontManager;
@@ -207,11 +209,19 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 						} else {
 							// 添加数据
 							allFriends.clear();
-							allFriends.addAll(MyXMLParseUtils
-									.readXml2FriendsAll(res).getFriends());
-							// 请求在线好友
-							requestCode = SERVER_REQUEST_ONLINE_FRIEND;
-							getFriends();
+							FriendsAll friendsAll = null;
+							if ((friendsAll = MyXMLParseUtils
+									.readXml2FriendsAll(res)) == null) {
+								// 请求码归零，防止垃圾数据
+								requestCode = 0;
+								Toast.makeText(OnlineFriendActivity.this,
+										"无好友！", Toast.LENGTH_SHORT).show();
+							} else {
+								allFriends.addAll(friendsAll.getFriends());
+								// 请求在线好友
+								requestCode = SERVER_REQUEST_ONLINE_FRIEND;
+								getFriends();
+							}
 						}
 						break;
 
@@ -224,8 +234,14 @@ public class OnlineFriendActivity extends Activity implements OnClickListener,
 						else {
 							// 添加数据
 							onlineFriends.clear();
-							onlineFriends.addAll(MyXMLParseUtils
-									.readXml2FriendsOnline(res).getFriends());
+							FriendsOnline friendsOnline = null;
+							if ((friendsOnline = MyXMLParseUtils
+									.readXml2FriendsOnline(res)) == null) {
+
+							} else {
+								onlineFriends
+										.addAll(friendsOnline.getFriends());
+							}
 							// 刷新列表
 							refreshList();
 						}

@@ -56,6 +56,14 @@
         </Button>
     </RelativeLayout>
 
+	<ScrollView android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:orientation="vertical"
+		android:layout_below="@+id/mail_send_head_linearLayout">
+
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:layout_below="@+id/mail_send_head_linearLayout"
+		android:layout_alignParentBottom="true" android:orientation="vertical">
+
     <EditText
         android:id="@+id/mail_send_address"
         android:layout_width="match_parent"
@@ -89,13 +97,13 @@
         <EditText
             android:id="@+id/mail_send_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:gravity="top"
-            android:hint="邮件正文"
+            android:hint="@string/mail_content_text"
             android:maxEms="10"
             android:minEms="10"
             android:paddingLeft="15dp"
@@ -138,5 +146,8 @@
             android:verticalSpacing="10dip"
             android:visibility="gone" />
     </LinearLayout>
+
+	</LinearLayout>
+	</ScrollView>
 
 </RelativeLayout>

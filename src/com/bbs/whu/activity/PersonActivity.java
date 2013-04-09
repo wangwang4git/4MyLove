@@ -10,6 +10,7 @@ import android.os.Message;
 import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -62,6 +63,10 @@ public class PersonActivity extends Activity {
 	private TextView mPersonSign;
 	// 个性签名图片（部分bbs用户，个性签名为图片）
 	private ImageView mPersonSignView;
+	
+	// 返回按钮
+	private ImageView backButton;
+	
 	// 接收请求数据的handler
 	private Handler mHandler;
 
@@ -198,6 +203,16 @@ public class PersonActivity extends Activity {
 		mPersonUserMode = (TextView) findViewById(R.id.person_user_mode);
 		mPersonSign = (TextView) findViewById(R.id.person_sign);
 		mPersonSignView = (ImageView) findViewById(R.id.person_sign_image);
+		// 返回按钮
+		backButton = (ImageView) findViewById(R.id.person_back_icon);
+		backButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				onBackPressed();
+			}
+		});
 	}
 
 	/**

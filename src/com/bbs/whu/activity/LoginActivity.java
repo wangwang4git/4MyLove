@@ -19,12 +19,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager.LayoutParams;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
@@ -50,6 +51,7 @@ import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyFileUtils;
 import com.bbs.whu.utils.MyFontManager;
 import com.bbs.whu.utils.MyHttpClient;
+import com.bbs.whu.utils.MyResizeLayout;
 import com.bbs.whu.utils.MyWaitDialog;
 import com.loopj.android.http.PersistentCookieStore;
 
@@ -62,6 +64,8 @@ import com.loopj.android.http.PersistentCookieStore;
 
 public class LoginActivity extends Activity implements OnClickListener {
 	private Context context = this;
+	// 标题栏
+	private LinearLayout titleLinearLayout;
 	// 用户名输入框
 	private AutoCompleteTextView userNameEditText;
 	private AdvancedAutoCompleteAdapter mAdapter;
@@ -119,11 +123,26 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private SharedPreferences firstUseSP;
 	private SharedPreferences.Editor firstUseEditor;
 	private String firstUseSPKey = "isUsed";
-	private static int changeTimes = 0;
+
+	private int changeTimes = 0;
+	private boolean isSmall = false;// 是否为小屏幕
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		// 获取屏幕分辨率，根据分辨率判断是否需要显示标题栏
+		WindowManager windowManager = getWindowManager();
+		Display display = windowManager.getDefaultDisplay();
+		int screenHeight = display.getHeight();
+		if (screenHeight <= 400) {
+			isSmall = true;
+
+			// 设置android:windowSoftInputMode = "adjustPan"
+			getWindow().setSoftInputMode(
+					WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+		}
+
 		// 取出Activity的title
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
@@ -165,7 +184,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 情况用户名，密码
 		userNameEditText.setText("");
 		passwordEditText.setText("");
-		
+
 		// 登录前操作
 		loginBefore();
 	}
@@ -214,7 +233,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 			control = View.GONE;
 
 		// 控制顶部标题
-		titleLayout.setVisibility(control);
+		if (!isSmall) {
+			titleLayout.setVisibility(control);
+		}
 
 		// 控制登录标题
 		login_head.setVisibility(control);
@@ -238,6 +259,14 @@ public class LoginActivity extends Activity implements OnClickListener {
 	 * 初始化控件
 	 */
 	private void init() {
+		// 标题栏
+		titleLinearLayout = (LinearLayout) findViewById(R.id.title_linearLayout);
+
+		// 小屏幕不标题栏
+		if (isSmall) {
+			titleLinearLayout.setVisibility(View.GONE);
+		}
+
 		// 用户名、密码输入框
 		userNameEditText = (AutoCompleteTextView) findViewById(R.id.user_name_editText);
 		passwordEditText = (EditText) findViewById(R.id.password_editText);
@@ -272,33 +301,76 @@ public class LoginActivity extends Activity implements OnClickListener {
 			}
 		});
 
-		final View activityRootView = findViewById(R.id.login_RelativeLayout_edit);
-		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
-				new OnGlobalLayoutListener() {
-					@Override
-					public void onGlobalLayout() {
-						int rootHeight = activityRootView.getRootView()
-								.getHeight();
-						int acHeight = activityRootView.getHeight();
-						int heightDiff = rootHeight - acHeight;
-						if (acHeight < 0 && changeTimes == 0) {
-							changeTimes++;
-//							Toast.makeText(LoginActivity.this, "开启软键盘！",
-//									Toast.LENGTH_SHORT).show();
+		MyResizeLayout layout = (MyResizeLayout) findViewById(R.id.login_RelativeLayout_edit);
+		layout.setOnResizeListener(new MyResizeLayout.OnResizeListener() {
+			public void OnResize(int w, int h, int oldw, int oldh) {
+				if (changeTimes > 1) {
+					changeTimes--;
+					return;
+				}
 
-							// 隐藏控件
-							LoginActivity.this.controlView(false);
+				int change = MyConstants.SOFT_KEY_CLOSED;
+				if (h < oldh) {
+					change = MyConstants.SOFT_KEY_OPEN;
+				} else if (h >= oldh) {
+					change = MyConstants.SOFT_KEY_CLOSED;
+				}
 
-						} else if (acHeight > 152 && changeTimes == 1) {
-							changeTimes--;
-//							Toast.makeText(LoginActivity.this, "关闭软键盘！",
-//									Toast.LENGTH_SHORT).show();
+				Message msg = new Message();
+				msg.what = MyConstants.SOFT_KEY_MSG;
+				msg.arg1 = change;
+				mHandler.sendMessage(msg);
+			}
+		});
 
-							// 显示控件
-							LoginActivity.this.controlView(true);
-						}
-					}
-				});
+		// final View activityRootView =
+		// findViewById(R.id.login_RelativeLayout_edit);
+		// activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
+		// new OnGlobalLayoutListener() {
+		// @Override
+		// public void onGlobalLayout() {
+		// int rootHeight = activityRootView.getRootView()
+		// .getHeight();
+		// int acHeight = activityRootView.getHeight();
+		// int heightDiff = rootHeight - acHeight;
+		//
+		// InputMethodManager a = ((InputMethodManager)
+		// getSystemService(Context.INPUT_METHOD_SERVICE));
+		// if (a.isActive())
+		// Toast.makeText(LoginActivity.this, "open 1",
+		// Toast.LENGTH_SHORT).show();
+		// else
+		// Toast.makeText(LoginActivity.this, "close 1",
+		// Toast.LENGTH_SHORT).show();
+		// // a.hideSoftInputFromWindow(
+		// // activityRootView.getApplicationWindowToken(), 0);
+		//
+		// if (getResources().getConfiguration().keyboardHidden ==
+		// Configuration.KEYBOARDHIDDEN_NO) { // Check
+		// Toast.makeText(LoginActivity.this, "close 2",
+		// Toast.LENGTH_SHORT).show();
+		// } else
+		// Toast.makeText(LoginActivity.this, "open 2",
+		// Toast.LENGTH_SHORT).show();
+		//
+		// if (acHeight < 0 && changeTimes == 0) {
+		// changeTimes++;
+		// // Toast.makeText(LoginActivity.this, "开启软键盘！",
+		// // Toast.LENGTH_SHORT).show();
+		//
+		// // 隐藏控件
+		// LoginActivity.this.controlView(false);
+		//
+		// } else if (acHeight > 152 && changeTimes == 1) {
+		// changeTimes--;
+		// // Toast.makeText(LoginActivity.this, "关闭软键盘！",
+		// // Toast.LENGTH_SHORT).show();
+		//
+		// // 显示控件
+		// LoginActivity.this.controlView(true);
+		// }
+		// }
+		// });
 
 		// 确定按钮
 		loginButton = (Button) findViewById(R.id.login_button);
@@ -382,6 +454,27 @@ public class LoginActivity extends Activity implements OnClickListener {
 			public void handleMessage(Message msg) {
 				Bundle data = msg.getData();
 				switch (msg.what) {
+				case MyConstants.SOFT_KEY_MSG:
+					// 软键盘消息
+					if (msg.arg1 == MyConstants.SOFT_KEY_OPEN) {
+						// 隐藏控件
+						LoginActivity.this.controlView(false);
+						changeTimes++;
+					} else if (msg.arg1 == MyConstants.SOFT_KEY_CLOSED) {
+						// 显示控件
+						LoginActivity.this.controlView(true);
+						changeTimes++;
+
+						if (selectPopupWindow.isShowing()) {
+							parent = (LinearLayout) findViewById(R.id.login_user_parent);
+							selectPopupWindow.dismiss();
+							selectPopupWindow.showAsDropDown(parent, 0, 9);
+						}
+
+					}
+
+					break;
+
 				case MyConstants.LOGIN_SELECT_USER:
 					// 选中下拉项，下拉框消失
 					int selIndex = data.getInt("selIndex");
@@ -427,22 +520,22 @@ public class LoginActivity extends Activity implements OnClickListener {
 						// 跳转的主页
 						startActivity(new Intent(LoginActivity.this,
 								MainActivity.class));
-						
+
 						// 关闭登陆页面
 						// finish();
-						
+
 					} else if (loginWaitDialog.mStatus == MyWaitDialog.CANCELLED) {
 						// 登录成功但是取消了等待对话框则发送登出请求
 						MyBBSRequest.mGet(MyConstants.LOG_OUT_URL,
 								"MainActivity", context);// 设置为MainActivity是为了不接收退出的响应事件
-						
+
 						// 延时，留时间给请求BBS后台用户退出
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-						
+
 						// 清理Cookie
 						MyApplication.getInstance().clearCookieStore();
 						// 清理全局变量

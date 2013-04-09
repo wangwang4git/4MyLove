@@ -75,7 +75,7 @@
             android:layout_marginBottom="10dp"
             android:src="@drawable/login_head_text" />
 
-        <RelativeLayout
+        <com.bbs.whu.utils.MyResizeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/logo_text"
@@ -151,6 +151,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/login_pwdedit_Layout"
                     android:layout_width="230dip"
                     android:layout_height="50dip"
                     android:layout_marginTop="20dp"
@@ -229,7 +230,7 @@
                         android:textSize="20sp" />
                 </RelativeLayout>
             </LinearLayout>
-        </RelativeLayout>
+        </com.bbs.whu.utils.MyResizeLayout>
 
         <ImageView
             android:id="@+id/logo_text"

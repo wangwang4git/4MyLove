@@ -56,12 +56,13 @@
         </Button>
     </RelativeLayout>
 
-	<ScrollView android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:orientation="vertical"
+	<ScrollView android:id="@+id/mail_send_scrollView" 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="vertical"
 		android:layout_below="@+id/mail_send_head_linearLayout">
 
 	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:layout_below="@+id/mail_send_head_linearLayout"
+		android:layout_height="wrap_content" android:layout_below="@+id/mail_send_head_linearLayout"
 		android:layout_alignParentBottom="true" android:orientation="vertical">
 
     <EditText
@@ -71,7 +72,7 @@
         android:layout_below="@+id/mail_send_head_linearLayout"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:hint="收件人"
         android:singleLine="true" />
 
@@ -82,7 +83,7 @@
         android:layout_below="@+id/mail_send_address"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="0dp"
         android:hint="标题"
         android:singleLine="true" />
 
@@ -108,7 +109,7 @@
             android:minEms="10"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:paddingTop="15dp"
+            android:paddingTop="10dp"
             android:scrollbars="vertical" />
 
         <LinearLayout
@@ -117,7 +118,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="0dp"
             android:gravity="right"
             android:orientation="horizontal" >
 
@@ -135,19 +136,25 @@
                 android:visibility="gone" />
         </LinearLayout>
 
-        <GridView
-            android:id="@+id/mail_send_grid_face"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:columnWidth="35dip"
-            android:numColumns="auto_fit"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="10dip"
-            android:visibility="gone" />
     </LinearLayout>
 
 	</LinearLayout>
 	</ScrollView>
+	
+	<GridView
+		android:id="@+id/mail_send_grid_face"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:minHeight="70dip"
+		android:layout_below="@id/mail_send_scrollView"
+		android:layout_alignParentBottom="true"
+		android:layout_marginBottom="5dip"
+		android:numColumns="auto_fit"
+		android:verticalSpacing="10dip"
+		android:columnWidth="35dip"
+		android:stretchMode="columnWidth"
+		android:layout_weight="1"
+		android:visibility="gone" />
+            
 
 </RelativeLayout>

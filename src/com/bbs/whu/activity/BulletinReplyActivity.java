@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -58,7 +59,9 @@ public class BulletinReplyActivity extends Activity {
 	private ImageView backButton;
 	// 接收请求数据的handler
 	Handler mHandler;
-
+	
+	// 图片按钮
+	private ImageButton mBtnPic;
 	// 表情选择器切换按钮
 	private ImageButton mBtnFace;
 	// 软键盘切换按钮
@@ -148,6 +151,10 @@ public class BulletinReplyActivity extends Activity {
 		backButton.setOnClickListener(bulletinReplyClickListener);
 		
 
+		mBtnPic = (ImageButton) findViewById(R.id.bulletin_reply_bottom_pic);
+		// 设置按钮统一监听器
+		mBtnPic.setOnClickListener(bulletinReplyClickListener);
+		
 		mBtnFace = (ImageButton) findViewById(R.id.bulletin_reply_bottom_face);
 		// 设置按钮统一监听器
 		mBtnFace.setOnClickListener(bulletinReplyClickListener);
@@ -318,6 +325,10 @@ public class BulletinReplyActivity extends Activity {
 				// 回复帖子
 				replyPost();
 				break;
+			case R.id.bulletin_reply_bottom_pic:
+				Toast.makeText(BulletinReplyActivity.this, "当前不支持，请留意新版本",
+						Toast.LENGTH_SHORT).show();
+				break;
 			case R.id.bulletin_reply_bottom_face:
 				// 表情选择器显示
 				facesGridViewShow(true);
@@ -329,6 +340,9 @@ public class BulletinReplyActivity extends Activity {
 			case R.id.bulletin_reply_content:
 				if (mBBSFacesGridView.isShown()) {
 					mBBSFacesGridView.setVisibility(View.GONE);
+					
+					replyContent.getLayoutParams().height = LayoutParams.MATCH_PARENT;
+					
 					mBtnFace.setVisibility(View.VISIBLE);
 					mBtnKeyboard.setVisibility(View.GONE);
 				}
@@ -389,6 +403,8 @@ public class BulletinReplyActivity extends Activity {
 			mBtnFace.setVisibility(View.GONE);
 			mBtnKeyboard.setVisibility(View.VISIBLE);
 			mBBSFacesGridView.setVisibility(View.VISIBLE);
+			
+			replyContent.getLayoutParams().height = 100;
 		} else {
 			// 显示软键盘
 			InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -397,6 +413,8 @@ public class BulletinReplyActivity extends Activity {
 			mBtnFace.setVisibility(View.VISIBLE);
 			mBtnKeyboard.setVisibility(View.GONE);
 			mBBSFacesGridView.setVisibility(View.GONE);
+			
+			replyContent.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
 		}
 	}
 
@@ -420,6 +438,8 @@ public class BulletinReplyActivity extends Activity {
 			// 捕获返回键
 			if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 				mBBSFacesGridView.setVisibility(View.GONE);
+				
+				replyContent.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
 			}
 			return false;
 		}

@@ -52,6 +52,7 @@
     <string name="recommend_time_text">时间：</string>
     <string name="mail_send_text">发送信件</string>
     <string name="mail_send_submit_text">发 送</string>
+    <string name="mail_content_title">信件内容</string>
     <string name="mail_content_text">信件内容\n\n\n\n</string>
     <string name="new_mail">写 信</string>
     <string name="mail_reply">回 信</string>

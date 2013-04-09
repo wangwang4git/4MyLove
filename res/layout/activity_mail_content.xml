@@ -39,7 +39,7 @@
             android:layout_height="43dip"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="@string/mail_content_text"
+            android:text="@string/mail_content_title"
             android:textColor="#FF7B7B7B"
             android:textSize="20sp" />
 

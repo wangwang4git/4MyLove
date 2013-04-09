@@ -19,10 +19,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager.LayoutParams;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
@@ -60,6 +62,8 @@ import com.loopj.android.http.PersistentCookieStore;
 
 public class LoginActivity extends Activity implements OnClickListener {
 	private Context context = this;
+	// 标题栏
+	private LinearLayout titleLinearLayout;
 	// 用户名输入框
 	private AutoCompleteTextView userNameEditText;
 	private AdvancedAutoCompleteAdapter mAdapter;
@@ -150,7 +154,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 情况用户名，密码
 		userNameEditText.setText("");
 		passwordEditText.setText("");
-		
+
 		// 登录前操作
 		loginBefore();
 	}
@@ -191,12 +195,17 @@ public class LoginActivity extends Activity implements OnClickListener {
 	 * 初始化控件
 	 */
 	private void init() {
+		// 标题栏
+		titleLinearLayout = (LinearLayout) findViewById(R.id.title_linearLayout);
+		// 获取屏幕分辨率，根据分辨率判断是否需要显示标题栏
+		WindowManager windowManager = getWindowManager();
+		Display display = windowManager.getDefaultDisplay();
+		int screenHeight = display.getHeight();
+		if (screenHeight <= 400)
+			titleLinearLayout.setVisibility(View.GONE);
 		// 用户名、密码输入框
 		userNameEditText = (AutoCompleteTextView) findViewById(R.id.user_name_editText);
 		passwordEditText = (EditText) findViewById(R.id.password_editText);
-		// 设置用户名、密码初始值
-		// userNameEditText.setText(MyConstants.MY_USER_NAME);
-		// passwordEditText.setText(MyConstants.MY_PASSWORD);
 
 		// 设置userNameEditText适配器
 		mAdapter = new AdvancedAutoCompleteAdapter(this, userPasswords, 10);
@@ -330,30 +339,29 @@ public class LoginActivity extends Activity implements OnClickListener {
 								.setPassword(passwordEditText.getText()
 										.toString());
 
-						// 关闭等待对话框
-						loginWaitDialog.cancel();
 						// 登陆后操作
 						loginAfter();
-
+						// 关闭等待对话框
+						loginWaitDialog.cancel();
 						// 跳转的主页
 						startActivity(new Intent(LoginActivity.this,
 								MainActivity.class));
-						
+
 						// 关闭登陆页面
 						// finish();
-						
+
 					} else if (loginWaitDialog.mStatus == MyWaitDialog.CANCELLED) {
 						// 登录成功但是取消了等待对话框则发送登出请求
 						MyBBSRequest.mGet(MyConstants.LOG_OUT_URL,
 								"MainActivity", context);// 设置为MainActivity是为了不接收退出的响应事件
-						
+
 						// 延时，留时间给请求BBS后台用户退出
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-						
+
 						// 清理Cookie
 						MyApplication.getInstance().clearCookieStore();
 						// 清理全局变量

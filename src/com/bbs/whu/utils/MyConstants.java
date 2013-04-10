@@ -11,6 +11,12 @@ public class MyConstants {
 	public static final int REQUEST_SUCCESS = 0;
 	// 请求失败
 	public static final int REQUEST_FAIL = 1;
+	// 软键盘消息
+	public static final int SOFT_KEY_MSG = 2;
+	// 软键盘展开
+	public static final int SOFT_KEY_OPEN = 3;
+	// 软键盘关闭
+	public static final int SOFT_KEY_CLOSED= 4;
 	// 登录下拉框选中某项
 	public static final int LOGIN_SELECT_USER = 7;
 	// 登录下拉框删除某项

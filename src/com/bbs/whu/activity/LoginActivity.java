@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
@@ -50,6 +51,7 @@ import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyFileUtils;
 import com.bbs.whu.utils.MyFontManager;
 import com.bbs.whu.utils.MyHttpClient;
+import com.bbs.whu.utils.MyResizeLayout;
 import com.bbs.whu.utils.MyWaitDialog;
 import com.loopj.android.http.PersistentCookieStore;
 
@@ -75,6 +77,17 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private Button anonymousButton;
 	// 记住密码checkbox
 	private CheckBox rememberUserCheckBox;
+	// 顶部标题
+	private LinearLayout titleLayout;
+	// 登录标题
+	private ImageView login_head;
+	private ImageView login_head_text;
+	// 底部logo
+	private ImageView logo_text;
+	private ImageView logo_img;
+	// 记住密码的线性布局id
+	private LinearLayout remember_user_LinearLayout;
+
 	// 记住密码标志
 	private boolean rememberUserFlag = true;
 	// 接收请求数据的handler
@@ -111,9 +124,25 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private SharedPreferences.Editor firstUseEditor;
 	private String firstUseSPKey = "isUsed";
 
+	private int changeTimes = 0;
+	private boolean isSmall = false;// 是否为小屏幕
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		// 获取屏幕分辨率，根据分辨率判断是否需要显示标题栏
+		WindowManager windowManager = getWindowManager();
+		Display display = windowManager.getDefaultDisplay();
+		int screenHeight = display.getHeight();
+		if (screenHeight <= 400) {
+			isSmall = true;
+
+			// 设置android:windowSoftInputMode = "adjustPan"
+			getWindow().setSoftInputMode(
+					WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+		}
+
 		// 取出Activity的title
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
@@ -136,6 +165,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		// 初始化控件
 		init();
+
 		// 初始化handler
 		initHandler();
 
@@ -192,20 +222,68 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	/**
+	 * 重新布局控件
+	 */
+	private void controlView(boolean isVisible) {
+		int control = 0;
+
+		if (isVisible == true)
+			control = View.VISIBLE;
+		else
+			control = View.GONE;
+
+		// 控制顶部标题
+		if (!isSmall) {
+			titleLayout.setVisibility(control);
+		}
+
+		// 控制登录标题
+		login_head.setVisibility(control);
+		login_head_text.setVisibility(control);
+
+		// 控制记住密码的CheckBox控件
+		remember_user_LinearLayout.setVisibility(control);
+
+		// 控制确定按钮
+		loginButton.setVisibility(control);
+
+		// 控制匿名按钮
+		anonymousButton.setVisibility(control);
+
+		// 控制底部logo
+		logo_text.setVisibility(control);
+		logo_img.setVisibility(control);
+	}
+
+	/**
 	 * 初始化控件
 	 */
 	private void init() {
 		// 标题栏
 		titleLinearLayout = (LinearLayout) findViewById(R.id.title_linearLayout);
-		// 获取屏幕分辨率，根据分辨率判断是否需要显示标题栏
-		WindowManager windowManager = getWindowManager();
-		Display display = windowManager.getDefaultDisplay();
-		int screenHeight = display.getHeight();
-		if (screenHeight <= 400)
+
+		// 小屏幕不标题栏
+		if (isSmall) {
 			titleLinearLayout.setVisibility(View.GONE);
+		}
+
 		// 用户名、密码输入框
 		userNameEditText = (AutoCompleteTextView) findViewById(R.id.user_name_editText);
 		passwordEditText = (EditText) findViewById(R.id.password_editText);
+
+		// 初始化顶部标题
+		titleLayout = (LinearLayout) findViewById(R.id.title_linearLayout);
+
+		// 初始化登录标题
+		login_head = (ImageView) findViewById(R.id.login_head);
+		login_head_text = (ImageView) findViewById(R.id.login_head_text);
+
+		// 初始化底部logo
+		logo_text = (ImageView) findViewById(R.id.logo_text);
+		logo_img = (ImageView) findViewById(R.id.logo_img);
+
+		// 初始化记住密码的CheckBox控件
+		remember_user_LinearLayout = (LinearLayout) findViewById(R.id.remember_user_LinearLayout);
 
 		// 设置userNameEditText适配器
 		mAdapter = new AdvancedAutoCompleteAdapter(this, userPasswords, 10);
@@ -217,6 +295,28 @@ public class LoginActivity extends Activity implements OnClickListener {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				passwordEditText.setText(userPasswords.get(arg2).getPassword());
+			}
+		});
+
+		MyResizeLayout layout = (MyResizeLayout) findViewById(R.id.login_RelativeLayout_edit);
+		layout.setOnResizeListener(new MyResizeLayout.OnResizeListener() {
+			public void OnResize(int w, int h, int oldw, int oldh) {
+				if (changeTimes > 1) {
+					changeTimes--;
+					return;
+				}
+
+				int change = MyConstants.SOFT_KEY_CLOSED;
+				if (h < oldh) {
+					change = MyConstants.SOFT_KEY_OPEN;
+				} else if (h >= oldh) {
+					change = MyConstants.SOFT_KEY_CLOSED;
+				}
+
+				Message msg = new Message();
+				msg.what = MyConstants.SOFT_KEY_MSG;
+				msg.arg1 = change;
+				mHandler.sendMessage(msg);
 			}
 		});
 
@@ -302,6 +402,27 @@ public class LoginActivity extends Activity implements OnClickListener {
 			public void handleMessage(Message msg) {
 				Bundle data = msg.getData();
 				switch (msg.what) {
+				case MyConstants.SOFT_KEY_MSG:
+					// 软键盘消息
+					if (msg.arg1 == MyConstants.SOFT_KEY_OPEN) {
+						// 隐藏控件
+						LoginActivity.this.controlView(false);
+						changeTimes++;
+					} else if (msg.arg1 == MyConstants.SOFT_KEY_CLOSED) {
+						// 显示控件
+						LoginActivity.this.controlView(true);
+						changeTimes++;
+
+						if (selectPopupWindow.isShowing()) {
+							parent = (LinearLayout) findViewById(R.id.login_user_parent);
+							selectPopupWindow.dismiss();
+							selectPopupWindow.showAsDropDown(parent, 0, 9);
+						}
+
+					}
+
+					break;
+
 				case MyConstants.LOGIN_SELECT_USER:
 					// 选中下拉项，下拉框消失
 					int selIndex = data.getInt("selIndex");

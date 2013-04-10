@@ -55,6 +55,14 @@
         </Button>
     </RelativeLayout>
 
+	<ScrollView android:id="@+id/bulletin_reply_scrollView"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:orientation="vertical" android:layout_below="@+id/bulletin_reply_head_linearLayout">
+
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_below="@+id/bulletin_reply_title_inearLayout"
+		android:layout_alignParentBottom="true" android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/bulletin_reply_title_inearLayout"
         android:layout_width="match_parent"
@@ -83,7 +91,7 @@
 	    <EditText
 	        android:id="@+id/bulletin_reply_content"
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
+	        android:layout_height="match_parent"
 	        android:layout_marginLeft="15dip"
 	        android:layout_marginRight="15dip"
 	        android:gravity="top"
@@ -120,17 +128,24 @@
 	            android:src="@drawable/btn_insert_keyboard"
 	            android:visibility="gone" />
 	    </LinearLayout>
-	    
-	    <GridView android:id="@+id/bulletin_reply_grid_face"
-			android:layout_width="fill_parent"
-			android:layout_height="50dip"
-			android:numColumns="auto_fit"
-			android:verticalSpacing="10dip"
-			android:columnWidth="35dip"
-			android:stretchMode="columnWidth"
-			android:layout_weight="1"
-			android:visibility="gone" />
 			
 	</LinearLayout>
+	
+	</LinearLayout>
+	</ScrollView>
+	
+    <GridView android:id="@+id/bulletin_reply_grid_face"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:minHeight="70dip"
+		android:layout_below="@id/bulletin_reply_scrollView"
+		android:layout_alignParentBottom="true"
+		android:layout_marginBottom="5dip"
+		android:numColumns="auto_fit"
+		android:verticalSpacing="10dip"
+		android:columnWidth="35dip"
+		android:stretchMode="columnWidth"
+		android:layout_weight="1"
+		android:visibility="gone" />
 	
 </RelativeLayout>

@@ -270,9 +270,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 用户名、密码输入框
 		userNameEditText = (AutoCompleteTextView) findViewById(R.id.user_name_editText);
 		passwordEditText = (EditText) findViewById(R.id.password_editText);
-		// 设置用户名、密码初始值
-		// userNameEditText.setText(MyConstants.MY_USER_NAME);
-		// passwordEditText.setText(MyConstants.MY_PASSWORD);
 
 		// 初始化顶部标题
 		titleLayout = (LinearLayout) findViewById(R.id.title_linearLayout);
@@ -322,55 +319,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 				mHandler.sendMessage(msg);
 			}
 		});
-
-		// final View activityRootView =
-		// findViewById(R.id.login_RelativeLayout_edit);
-		// activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
-		// new OnGlobalLayoutListener() {
-		// @Override
-		// public void onGlobalLayout() {
-		// int rootHeight = activityRootView.getRootView()
-		// .getHeight();
-		// int acHeight = activityRootView.getHeight();
-		// int heightDiff = rootHeight - acHeight;
-		//
-		// InputMethodManager a = ((InputMethodManager)
-		// getSystemService(Context.INPUT_METHOD_SERVICE));
-		// if (a.isActive())
-		// Toast.makeText(LoginActivity.this, "open 1",
-		// Toast.LENGTH_SHORT).show();
-		// else
-		// Toast.makeText(LoginActivity.this, "close 1",
-		// Toast.LENGTH_SHORT).show();
-		// // a.hideSoftInputFromWindow(
-		// // activityRootView.getApplicationWindowToken(), 0);
-		//
-		// if (getResources().getConfiguration().keyboardHidden ==
-		// Configuration.KEYBOARDHIDDEN_NO) { // Check
-		// Toast.makeText(LoginActivity.this, "close 2",
-		// Toast.LENGTH_SHORT).show();
-		// } else
-		// Toast.makeText(LoginActivity.this, "open 2",
-		// Toast.LENGTH_SHORT).show();
-		//
-		// if (acHeight < 0 && changeTimes == 0) {
-		// changeTimes++;
-		// // Toast.makeText(LoginActivity.this, "开启软键盘！",
-		// // Toast.LENGTH_SHORT).show();
-		//
-		// // 隐藏控件
-		// LoginActivity.this.controlView(false);
-		//
-		// } else if (acHeight > 152 && changeTimes == 1) {
-		// changeTimes--;
-		// // Toast.makeText(LoginActivity.this, "关闭软键盘！",
-		// // Toast.LENGTH_SHORT).show();
-		//
-		// // 显示控件
-		// LoginActivity.this.controlView(true);
-		// }
-		// }
-		// });
 
 		// 确定按钮
 		loginButton = (Button) findViewById(R.id.login_button);
@@ -512,11 +460,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 								.setPassword(passwordEditText.getText()
 										.toString());
 
-						// 关闭等待对话框
-						loginWaitDialog.cancel();
 						// 登陆后操作
 						loginAfter();
-
+						// 关闭等待对话框
+						loginWaitDialog.cancel();
 						// 跳转的主页
 						startActivity(new Intent(LoginActivity.this,
 								MainActivity.class));
@@ -547,7 +494,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 					// 关闭等待对话框
 					loginWaitDialog.cancel();
 					// 提示失败
-					System.out.println("REQUEST_FAIL");
 					break;
 				}
 			}

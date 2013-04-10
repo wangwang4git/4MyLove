@@ -4,14 +4,24 @@
 	android:layout_height="match_parent" android:layout_gravity="top"
 	android:gravity="center_horizontal" android:background="#FFFAFAF7">
 
-	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:gravity="center"
+	<RelativeLayout android:id="@+id/person_title_linearLayout"
+		android:layout_width="match_parent" android:layout_height="wrap_content"
 		android:background="@drawable/darker_titlebar_bg">
+
+		<ImageView android:id="@+id/person_back_icon"
+			android:layout_width="40dp" android:layout_height="40dp"
+			android:layout_centerVertical="true" android:layout_marginLeft="5dp"
+			android:background="@drawable/back_icon" />
+
 		<TextView android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:layout_gravity="center"
-			android:text="@string/mine_person_text" android:textColor="#FF7B7B7B"
-			android:textSize="20sp" />
-	</LinearLayout>
+			android:layout_height="40dp" android:layout_centerHorizontal="true"
+			android:layout_centerVertical="true" android:clickable="true"
+			android:gravity="center" android:paddingLeft="10dp"
+			android:paddingRight="10dp" android:text="@string/mine_person_text"
+			android:textColor="#FF7B7B7B" android:textSize="20sp" />
+			
+	</RelativeLayout>
+
 
 	<ScrollView android:layout_width="fill_parent"
 		android:layout_height="wrap_content">

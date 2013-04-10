@@ -11,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -123,6 +124,18 @@ public class MailSendActivity extends Activity implements OnClickListener,
 		case R.id.mail_send_back_icon:
 			onBackPressed();
 			break;
+		case R.id.mail_send_content:
+			if (mBBSFacesGridView.isShown()) {
+				mBBSFacesGridView.setVisibility(View.GONE);
+				
+				mContent.getLayoutParams().height = LayoutParams.MATCH_PARENT;
+				
+				mBtnFace.setVisibility(View.VISIBLE);
+				mBtnKeyboard.setVisibility(View.GONE);
+			}
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -170,6 +183,7 @@ public class MailSendActivity extends Activity implements OnClickListener,
 		mTitle.setOnFocusChangeListener(this);
 		// 邮件内容
 		mContent = (EditText) findViewById(R.id.mail_send_content);
+		mContent.setOnClickListener(this);
 		mContent.setOnFocusChangeListener(this);
 		// 发送按钮
 		mSendSubmit = (TextView) findViewById(R.id.mail_send_submit);
@@ -226,6 +240,8 @@ public class MailSendActivity extends Activity implements OnClickListener,
 			mBtnFace.setVisibility(View.GONE);
 			mBtnKeyboard.setVisibility(View.VISIBLE);
 			mBBSFacesGridView.setVisibility(View.VISIBLE);
+			
+			mContent.getLayoutParams().height = 100;
 		} else {
 			// 显示软键盘
 			InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -234,6 +250,8 @@ public class MailSendActivity extends Activity implements OnClickListener,
 			mBtnFace.setVisibility(View.VISIBLE);
 			mBtnKeyboard.setVisibility(View.GONE);
 			mBBSFacesGridView.setVisibility(View.GONE);
+			
+			mContent.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
 		}
 	}
 
@@ -320,6 +338,8 @@ public class MailSendActivity extends Activity implements OnClickListener,
 			// 捕获返回键
 			if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 				mBBSFacesGridView.setVisibility(View.GONE);
+				
+				mContent.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
 			}
 			return false;
 		}

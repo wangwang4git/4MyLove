@@ -43,7 +43,7 @@ public class BulletinAdapter extends MyBaseAdapter {
 	private ImageLoader imageLoader;
 	// 图片异步下载缓存设置变量
 	private DisplayImageOptions options;
-	
+
 	// 定义不同Item视图的标志
 	public static final int AUTHOR_ITEM = 0;
 	public static final int COMMENT_ITEM = 1;
@@ -82,7 +82,8 @@ public class BulletinAdapter extends MyBaseAdapter {
 		// 作者
 		String author = ((BulletinBean) mItems.get(position)).getAuthor();
 		// 作者头像
-		String userfaceImg = ((BulletinBean) mItems.get(position)).getUserfaceImg();
+		String userfaceImg = ((BulletinBean) mItems.get(position))
+				.getUserfaceImg();
 		// 时间
 		String datetime = ((BulletinBean) mItems.get(position)).getTime();
 
@@ -195,6 +196,8 @@ public class BulletinAdapter extends MyBaseAdapter {
 						.findViewById(R.id.bulletin_comment_author_icon);
 				holder.holderBulletinCommentContent = (TextView) convertView
 						.findViewById(R.id.bulletin_comment_content);
+				holder.holderBulletinCommentTime = (TextView) convertView
+						.findViewById(R.id.bulletin_comment_time);
 				holder.holderBulletinCommentContent
 						.setOnLongClickListener(mOnLongClickListener);
 				holder.holderBulletinCommentReplyLinearLayout = (LinearLayout) convertView
@@ -210,6 +213,7 @@ public class BulletinAdapter extends MyBaseAdapter {
 			}
 			// 填充控件
 			holder.holderBulletinCommentAuthor.setText(author);
+			holder.holderBulletinCommentTime.setText(datetime);
 			imageLoader.displayImage(MyConstants.HEAD_URL + userfaceImg,
 					holder.holderBulletinCommentAuthorIcon, options);
 			// if (reply.equals("null"))

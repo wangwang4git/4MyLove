@@ -12,13 +12,13 @@ import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bbs.whu.R;
@@ -50,14 +50,8 @@ public class BoardActivity extends Activity {
 	private List<String> mSearchBoardsList = new ArrayList<String>();
 	// 搜索匹配适配器
 	private ArrayAdapter<String> mSearchAdapter;
-	// 搜索布局
-	private LinearLayout mSearchLinearLayout;
 	// 搜索输入框
 	private AutoCompleteTextView mSearchEditText;
-	// 搜索确定按钮
-	private ImageView mSearchConfirmButton;
-	// 触发搜索布局显示按钮
-	private Button mShowSearch;
 	// 刷新按钮
 	private Button refreshButton;
 	// 刷新动态图
@@ -97,11 +91,6 @@ public class BoardActivity extends Activity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// 只有捕获返回键，并返回false，才能在MainActivity中捕获返回键
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			// 如果版块搜索正在显示，则隐藏
-			if (mSearchLinearLayout.getVisibility() == View.VISIBLE) {
-				searchLayoutShow(false);
-				return true;
-			}
 			return false;
 		}
 		return false;
@@ -121,26 +110,12 @@ public class BoardActivity extends Activity {
 				R.layout.board_search_match_item, mSearchBoardsList);
 		// 给AutoCompleteTextView对象指定ArrayAdapter对象
 		mSearchEditText.setAdapter(mSearchAdapter);
-
-		// 获取确定按钮
-		mSearchConfirmButton = (ImageView) findViewById(R.id.board_search_confirm);
-		// 获取搜索布局
-		mSearchLinearLayout = (LinearLayout) findViewById(R.id.board_search_linearlayout);
-		// 获取触发搜索布局显示按钮
-		mShowSearch = (Button) findViewById(R.id.board_search_show_linearlayout_button);
-
-		mSearchConfirmButton.setOnClickListener(new OnClickListener() {
+		// 添加item点击事件
+		mSearchEditText.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onClick(View v) {
-				searchLayoutShow(false);
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
 				searchTheBoard(mSearchEditText.getText().toString());
-			}
-		});
-
-		mShowSearch.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				searchLayoutShow(true);
 			}
 		});
 
@@ -244,7 +219,6 @@ public class BoardActivity extends Activity {
 				// toast提醒
 				Toast.makeText(this, R.string.bbs_exception_text,
 						Toast.LENGTH_SHORT).show();
-				System.out.println(this.getString(R.string.bbs_exception_text));
 			}
 			return;
 		}
@@ -272,28 +246,6 @@ public class BoardActivity extends Activity {
 	}
 
 	/**
-	 * 搜索布局显示与隐藏切换
-	 * 
-	 * @param bool
-	 *            true，显示；false，隐藏
-	 */
-	void searchLayoutShow(boolean bool) {
-		if (true == bool) {
-			// 清空搜索输入框
-			mSearchEditText.setText("");
-			// 显示
-			mSearchLinearLayout.setVisibility(View.VISIBLE);
-			mShowSearch.setVisibility(View.INVISIBLE);
-		} else {
-			// 隐藏软键盘
-			InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), 0);
-			mSearchLinearLayout.setVisibility(View.INVISIBLE);
-			mShowSearch.setVisibility(View.VISIBLE);
-		}
-	}
-
-	/**
 	 * 搜索输入的版块名，并进行界面跳转
 	 * 
 	 * @param keyword
@@ -316,12 +268,16 @@ public class BoardActivity extends Activity {
 					mIntent.putExtra("name", childs.get(i).get(j).getName()
 							.getAttributeValue());
 					this.startActivity(mIntent);
+					// 清空搜索框
+					mSearchEditText.setText("");
 					return;
 				}
 			}
 		}
 		// 查询该版块名不存在
-		Toast.makeText(this, "版面不存在", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "版面不存在，请刷新版面列表", Toast.LENGTH_SHORT).show();
+		// 清空搜索框
+		mSearchEditText.setText("");
 		return;
 	}
 }

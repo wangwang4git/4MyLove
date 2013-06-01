@@ -15,6 +15,8 @@ public class BulletinCommentViewHolder {
 	TextView holderBulletinCommentAuthor;
 	// 评论作者头像
 	ImageView holderBulletinCommentAuthorIcon;
+	// 评论时间
+	TextView holderBulletinCommentTime;
 	// 评论内容
 	TextView holderBulletinCommentContent;
 	// 评论的“评论自”部分的框架

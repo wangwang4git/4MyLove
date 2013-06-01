@@ -50,6 +50,7 @@ import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyFileUtils;
 import com.bbs.whu.utils.MyFontManager;
 import com.bbs.whu.utils.MyHttpClient;
+import com.bbs.whu.utils.MySharedPreference;
 import com.bbs.whu.utils.MyWaitDialog;
 import com.loopj.android.http.PersistentCookieStore;
 
@@ -151,9 +152,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		super.onStart();
 		if (MyApplication.getInstance().isExit())
 			finish();
-		// 情况用户名，密码
-		userNameEditText.setText("");
-		passwordEditText.setText("");
 
 		// 登录前操作
 		loginBefore();
@@ -203,9 +201,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 		int screenHeight = display.getHeight();
 		if (screenHeight <= 400)
 			titleLinearLayout.setVisibility(View.GONE);
-		// 用户名、密码输入框
+		// 用户名、密码输入框，显示记录的默认登录名、密码
 		userNameEditText = (AutoCompleteTextView) findViewById(R.id.user_name_editText);
+		userNameEditText.setText(MySharedPreference.get(this,
+				MySharedPreference.DEFAULT_USER_NAME, ""));
 		passwordEditText = (EditText) findViewById(R.id.password_editText);
+		passwordEditText.setText(MySharedPreference.get(this,
+				MySharedPreference.DEFAULT_USER_PASSWORD, ""));
 
 		// 设置userNameEditText适配器
 		mAdapter = new AdvancedAutoCompleteAdapter(this, userPasswords, 10);
@@ -253,6 +255,15 @@ public class LoginActivity extends Activity implements OnClickListener {
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						// 清空用户名密码输入框
+						userNameEditText.setText("");
+						passwordEditText.setText("");
+						// 清空系统记录的默认用户名、密码
+						MySharedPreference.save(LoginActivity.this,
+								MySharedPreference.DEFAULT_USER_NAME, "");
+						MySharedPreference.save(LoginActivity.this,
+								MySharedPreference.DEFAULT_USER_PASSWORD, "");
+
 						datas.remove(delIndex);
 
 						// 删除缓存文件
@@ -332,12 +343,21 @@ public class LoginActivity extends Activity implements OnClickListener {
 							return;
 						}
 
+						String userName = userNameEditText.getText().toString();
+						String password = passwordEditText.getText().toString();
+
 						// 登录成功后，将用户名密码设为全局变量
 						((MyApplication) getApplicationContext())
-								.setName(userNameEditText.getText().toString());
+								.setName(userName);
 						((MyApplication) getApplicationContext())
-								.setPassword(passwordEditText.getText()
-										.toString());
+								.setPassword(password);
+
+						// 记录登陆用户名、密码，下一次登陆时自动显示
+						MySharedPreference.save(LoginActivity.this,
+								MySharedPreference.DEFAULT_USER_NAME, userName);
+						MySharedPreference.save(LoginActivity.this,
+								MySharedPreference.DEFAULT_USER_PASSWORD,
+								password);
 
 						// 登陆后操作
 						loginAfter();

@@ -147,9 +147,9 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		super.onDestroy();
 		// ×¢Ïúhandler
 		MessageHandlerManager.getInstance().unregister(
-				MyConstants.REQUEST_SUCCESS, "BulletinReplyActivity");
+				MyConstants.REQUEST_SUCCESS, "BulletinActivity");
 		MessageHandlerManager.getInstance().unregister(
-				MyConstants.REQUEST_FAIL, "BulletinReplyActivity");
+				MyConstants.REQUEST_FAIL, "BulletinActivity");
 	}
 
 	@Override

@@ -49,6 +49,8 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 	/* 帖子版块英文名与帖子ID由上一级Activity传入，用于请求帖子数据 */
 	// 帖子版块英文名
 	String board;
+	// 帖子版面中文名
+	String boardName;
 	// 帖子ID
 	String groupid;
 	/* 帖子的页数用于加载内容，web端数据分页传入 */
@@ -106,6 +108,7 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 		// 获取传入的参数
 		board = getIntent().getStringExtra("board");
 		groupid = getIntent().getStringExtra("groupid");
+		boardName = getIntent().getStringExtra("boardName");
 
 		options = new DisplayImageOptions.Builder()
 				.showStubImage(R.drawable.person_head_portrait)
@@ -216,8 +219,16 @@ public class BulletinActivity extends Activity implements IXListViewListener,
 	 */
 	private void initAdapter() {
 		// 创建适配器
-		mAdapter = new BulletinAdapter(this, items,
-				R.layout.bulletin_comment_item, imageLoader, options);
+		if (boardName == null || boardName.equals("")) {
+			// 普通帖子的帖子详情
+			mAdapter = new BulletinAdapter(this, items,
+					R.layout.bulletin_comment_item, imageLoader, options);
+		} else {
+			// 十大的帖子详情，需要传入版面信息
+			mAdapter = new BulletinAdapter(this, items,
+					R.layout.bulletin_comment_item, imageLoader, options,
+					board, boardName);
+		}
 		mListView.setAdapter(mAdapter);
 	}
 

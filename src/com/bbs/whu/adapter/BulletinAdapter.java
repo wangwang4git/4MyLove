@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.bbs.whu.R;
 import com.bbs.whu.activity.BulletinReplyActivity;
 import com.bbs.whu.activity.PersonActivity;
+import com.bbs.whu.activity.TopicActivity;
 import com.bbs.whu.model.BulletinBean;
 import com.bbs.whu.utils.MyApplication;
 import com.bbs.whu.utils.MyConstants;
@@ -44,6 +45,10 @@ public class BulletinAdapter extends MyBaseAdapter {
 	// 图片异步下载缓存设置变量
 	private DisplayImageOptions options;
 
+	/*帖子版块信息，TopTen跳转使用*/
+	private String board;// 帖子英文名
+	private String boardName;// 帖子中文名
+
 	// 定义不同Item视图的标志
 	public static final int AUTHOR_ITEM = 0;
 	public static final int COMMENT_ITEM = 1;
@@ -54,6 +59,16 @@ public class BulletinAdapter extends MyBaseAdapter {
 		super(context, items, rLayoutList);
 		this.imageLoader = imageLoader;
 		this.options = options;
+	}
+
+	public BulletinAdapter(Context context, ArrayList<BulletinBean> items,
+			int rLayoutList, ImageLoader imageLoader,
+			DisplayImageOptions options, String board, String boardName) {
+		super(context, items, rLayoutList);
+		this.imageLoader = imageLoader;
+		this.options = options;
+		this.board = board;
+		this.boardName = boardName;
 	}
 
 	@Override
@@ -116,16 +131,31 @@ public class BulletinAdapter extends MyBaseAdapter {
 				// 是否是匿名用户
 				final boolean isAnonymous = MyApplication.getInstance()
 						.getName().equals("4MyLove");
+				final boolean notTopTen = board == null || board.equals("");
 				// 如果是匿名用户，不能回复
 				String[] choices;
 				if (isAnonymous) {
-					choices = new String[1];
-					choices[0] = "查看作者资料";
+					if (notTopTen) {
+						choices = new String[1];
+						choices[0] = "查看作者资料";
+					} else {
+						choices = new String[2];
+						choices[0] = "查看作者资料";
+						choices[1] = "跳转到版块";
+					}
 				} else {
-					choices = new String[3];
-					choices[0] = "回复本楼";
-					choices[1] = "回复楼主";
-					choices[2] = "查看作者资料";
+					if (notTopTen) {
+						choices = new String[3];
+						choices[0] = "回复本楼";
+						choices[1] = "回复楼主";
+						choices[2] = "查看作者资料";
+					} else {
+						choices = new String[4];
+						choices[0] = "回复本楼";
+						choices[1] = "回复楼主";
+						choices[2] = "查看作者资料";
+						choices[3] = "跳转到版块";
+					}
 				}
 				// 弹出回复对话框
 				new AlertDialog.Builder(context)
@@ -137,7 +167,7 @@ public class BulletinAdapter extends MyBaseAdapter {
 											int which) {
 										// 处理
 										processLongClick(which, position,
-												isAnonymous);
+												isAnonymous, notTopTen);
 									}
 								}).show();
 				return false;
@@ -245,7 +275,8 @@ public class BulletinAdapter extends MyBaseAdapter {
 	 *            是否匿名登陆
 	 */
 
-	private void processLongClick(int which, int position, boolean isAnonymous) {
+	private void processLongClick(int which, int position, boolean isAnonymous,
+			boolean notTopTen) {
 		switch (which) {
 		case 0:
 			if (isAnonymous)
@@ -256,12 +287,20 @@ public class BulletinAdapter extends MyBaseAdapter {
 				goToBulletinReply(position);
 			break;
 		case 1:
-			// 回复楼主即回复第一个item
-			goToBulletinReply(0);
+			if (isAnonymous && !notTopTen)
+				// 跳转到版面
+				goToTopic();
+			else
+				// 回复楼主即回复第一个item
+				goToBulletinReply(0);
 			break;
 		case 2:
 			// 跳转到个人资料界面
 			goToPersonActivity(position);
+			break;
+		case 3:
+			// 跳转到版面
+			goToTopic();
 			break;
 		default:
 			break;
@@ -330,5 +369,17 @@ public class BulletinAdapter extends MyBaseAdapter {
 
 		// 启动Activity，并传递一个intend对象
 		context.startActivity(intent);
+	}
+
+	/**
+	 * 跳转到版面
+	 */
+	private void goToTopic() {
+		// 跳转到帖子列表界面
+		Intent mIntent = new Intent(context, TopicActivity.class);
+		// 添加参数 app=topics&board=PieFriends&page=1
+		mIntent.putExtra("board", board);
+		mIntent.putExtra("name", boardName);
+		context.startActivity(mIntent);
 	}
 }

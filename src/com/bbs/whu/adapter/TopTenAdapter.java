@@ -61,7 +61,7 @@ public class TopTenAdapter extends MyBaseAdapter {
 		// 帖子作者
 		String author = mItem.getAuthor();
 		// 帖子版面中文名
-		String boardName = mItem.getBoardname();
+		final String boardName = mItem.getBoardname();
 		// 帖子版面英文名
 		final String board = mItem.getBoard();
 		// 帖子ID
@@ -85,7 +85,7 @@ public class TopTenAdapter extends MyBaseAdapter {
 			holder.holderTopTenTitle.setTextColor(Color.BLACK);
 			readedTagMap.put(key, (byte) 0);
 		}
-		
+
 		// 填充控件
 		holder.holderTopTenTitle.setText(title);
 		holder.holderTopTenNumber.setText(number);
@@ -113,6 +113,7 @@ public class TopTenAdapter extends MyBaseAdapter {
 				// 添加参数
 				mIntent.putExtra("board", board);
 				mIntent.putExtra("groupid", groupid);
+				mIntent.putExtra("boardName", boardName);
 				context.startActivity(mIntent);
 			}
 		});

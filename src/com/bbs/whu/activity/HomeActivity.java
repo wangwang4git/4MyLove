@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -21,6 +23,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bbs.whu.R;
+import com.bbs.whu.handler.MessageHandlerManager;
+import com.bbs.whu.progresshud.ProgressHUDTask;
+import com.bbs.whu.utils.MyConstants;
 import com.bbs.whu.utils.MyFontManager;
 
 public class HomeActivity extends ActivityGroup {
@@ -34,6 +39,11 @@ public class HomeActivity extends ActivityGroup {
 	private int mOffset = 0; // 动画图片偏移量
 	private int mCurrIndex = 0; // 当前页卡编号
 	private int mBmpW; // 动画图片宽度
+	
+	// 接收请求数据的handler
+	private Handler mHandler;
+	// 等待对话框
+	private ProgressHUDTask mProgress;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,8 +55,23 @@ public class HomeActivity extends ActivityGroup {
 		initImageView();
 		initTextView();
 		initViewPager();
+		
+		// 初始化handler
+		initHandler();
+		
+		// 显示等待对话框
+		mProgress = new ProgressHUDTask(this);
+		mProgress.execute();
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// 注销handler
+		MessageHandlerManager.getInstance().unregister(
+				MyConstants.LOADING_DISAPPEAR, "HomeActivity");
+	}
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// 只有捕获返回键，并返回false，才能在MainActivity中捕获返回键
@@ -103,6 +128,31 @@ public class HomeActivity extends ActivityGroup {
 		mCursor.setImageMatrix(matrix); // 设置动画初始位置
 	}
 
+	/**
+	 * 初始化handler
+	 */
+	private void initHandler() {
+		// 初始化handler
+		mHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case MyConstants.LOADING_DISAPPEAR:
+					// 取消显示等待对话框
+					if (mProgress != null) {
+						mProgress.dismiss();
+						mProgress = null;
+					}
+					break;
+				}
+				return;
+			}
+		};
+		// 注册handler
+		MessageHandlerManager.getInstance().register(mHandler,
+				MyConstants.LOADING_DISAPPEAR, "HomeActivity");
+	}
+	
 	/**
 	 * ViewPager适配器
 	 */

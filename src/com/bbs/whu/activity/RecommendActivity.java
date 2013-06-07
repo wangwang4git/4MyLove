@@ -57,8 +57,24 @@ public class RecommendActivity extends Activity implements IXListViewListener {
 		initAdapter();
 		// 初始化handler
 		initHandler();
-		// 请求推荐文章数据
-		getRecommend(false);
+		
+		Runnable runnable = new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				// 请求推荐文章数据
+				getRecommend(false);
+			}
+		};
+		Thread thread = new Thread(runnable);
+		thread.start();
 	}
 
 	@Override

@@ -57,8 +57,25 @@ public class PlaybillActivity extends Activity implements IXListViewListener {
 		initAdapter();
 		// 初始化handler
 		initHandler();
-		// 请求校园海报数据
-		getPlaybill(false);
+		
+		Runnable runnable = new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				// 请求校园海报数据
+				getPlaybill(false);
+			}
+		};
+		Thread thread = new Thread(runnable);
+		thread.start();
+
 		mAdapter.notifyDataSetChanged();
 	}
 

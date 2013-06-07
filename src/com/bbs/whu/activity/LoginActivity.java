@@ -141,8 +141,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		initHandler();
 
 		// 设定loginWaitDialog的属性
-		// loginWaitDialog = new WaitDialog(LoginActivity.this, "提示",
-		// "正在登录...");
 		loginWaitDialog = new MyWaitDialog(LoginActivity.this, "登录",
 				"正在登录，稍安勿躁......");
 	}
@@ -181,8 +179,19 @@ public class LoginActivity extends Activity implements OnClickListener {
 		case R.id.anonymous_button:
 			// 跳转的主页
 			startActivity(new Intent(LoginActivity.this, MainActivity.class));
-			// 登陆后操作
-			loginAfter();
+			
+			Runnable runnable = new Runnable() {
+				
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					// 登陆后操作
+					loginAfter();
+				}
+			};
+			Thread thread = new Thread(runnable);
+			thread.start();
+
 			// 关闭登陆页面
 			// finish();
 			break;
@@ -355,18 +364,34 @@ public class LoginActivity extends Activity implements OnClickListener {
 						// 记录登陆用户名、密码，下一次登陆时自动显示
 						MySharedPreference.save(LoginActivity.this,
 								MySharedPreference.DEFAULT_USER_NAME, userName);
-						MySharedPreference.save(LoginActivity.this,
-								MySharedPreference.DEFAULT_USER_PASSWORD,
-								password);
+						if (rememberUserFlag) {
+							MySharedPreference.save(LoginActivity.this,
+									MySharedPreference.DEFAULT_USER_PASSWORD,
+									password);
+						} else {
+							MySharedPreference.save(LoginActivity.this,
+									MySharedPreference.DEFAULT_USER_PASSWORD,
+									"");
+						}
 
-						// 登陆后操作
-						loginAfter();
+						Runnable runnable = new Runnable() {
+							
+							@Override
+							public void run() {
+								// TODO Auto-generated method stub
+								// 登陆后操作
+								loginAfter();
+							}
+						};
+						Thread thread = new Thread(runnable);
+						thread.start();
+						
 						// 关闭等待对话框
 						loginWaitDialog.cancel();
+
 						// 跳转的主页
 						startActivity(new Intent(LoginActivity.this,
 								MainActivity.class));
-
 						// 关闭登陆页面
 						// finish();
 

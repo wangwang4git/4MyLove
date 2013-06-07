@@ -57,8 +57,24 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 		initAdapter();
 		// 初始化handler
 		initHandler();
-		// 请求“十大”数据
-		getTopTen(false);
+		
+		Runnable runnable = new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				// 请求“十大”数据
+				getTopTen(false);
+			}
+		};
+		Thread thread = new Thread(runnable);
+		thread.start();
 	}
 
 	@Override
@@ -181,6 +197,10 @@ public class TopTenActivity extends Activity implements IXListViewListener {
 			return;
 		}
 		items.addAll(topTens);
+		
+		MessageHandlerManager.getInstance().sendMessage(
+				MyConstants.LOADING_DISAPPEAR, null, "HomeActivity");
+		
 		// 刷新ListView
 		mAdapter.notifyDataSetChanged();
 	}

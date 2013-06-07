@@ -11,6 +11,8 @@ public class MyConstants {
 	public static final int REQUEST_SUCCESS = 0;
 	// 请求失败
 	public static final int REQUEST_FAIL = 1;
+	// Loading对话框消失
+	public static final int LOADING_DISAPPEAR = 2;
 	// 登录下拉框选中某项
 	public static final int LOGIN_SELECT_USER = 7;
 	// 登录下拉框删除某项
